@@ -44,6 +44,9 @@ Telegram @coworking_place_phuket
 - Локация: Chalong south audience
 - Trial = 1 day floor 3
 
+## Routing note (пока 6 red на live)
+Не линковать на прайс/часы сайта. CTA = TG @coworking_place_phuket / WA / Direct / менеджер.
+
 ## Статус
 - [x] Brief → SMM
 - [ ] Canva + текст в календаре
