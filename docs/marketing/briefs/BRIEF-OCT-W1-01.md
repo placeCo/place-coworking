@@ -48,6 +48,9 @@ DM / Telegram @coworking_place_phuket
 - **Нет** public 5h@150
 - Не снимать floor 2 / крышу как «наши open zones»
 
+## Routing note (пока 6 red на live)
+Не линковать на прайс/часы сайта. CTA = TG @coworking_place_phuket / WA / Direct / менеджер.
+
 ## Статус
 - [x] Brief → SMM
 - [ ] Canva + текст в календаре
