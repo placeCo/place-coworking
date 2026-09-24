@@ -43,6 +43,9 @@ DM / Telegram @coworking_place_phuket
 - Не копировать сайт «Filming 500฿/hour»
 - Showcase: Studio ≠ Pass open space
 
+## Routing note (пока 6 red на live)
+Не линковать на прайс/часы сайта. CTA = TG @coworking_place_phuket / WA / Direct / менеджер.
+
 ## Статус
 - [x] Brief → SMM
 - [ ] Canva + текст в календаре
