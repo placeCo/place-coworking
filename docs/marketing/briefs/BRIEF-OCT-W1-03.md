@@ -43,6 +43,9 @@ RU (subtitle / caption alt)
 - 24/7 только как 9000 + key
 - Не обещать wifi Mbps
 
+## Routing note (пока 6 red на live)
+Не линковать на прайс/часы сайта. CTA = TG @coworking_place_phuket / WA / Direct / менеджер.
+
 ## Статус
 - [x] Brief → SMM
 - [ ] Canva + текст в календаре
