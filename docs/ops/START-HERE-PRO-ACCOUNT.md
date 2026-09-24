@@ -16,6 +16,7 @@
 2) https://github.com/placeCo/place-coworking/blob/main/docs/ops/MIGRATION-TZ-PRO-ACCOUNT-2026-09-25.md
 3) https://github.com/placeCo/place-coworking/blob/main/CANON.md
 4) папку https://github.com/placeCo/place-coworking/tree/main/kb/archive/chat-history-2026-09-25
+5) https://github.com/placeCo/place-coworking/blob/main/docs/ops/ROUTINES-AND-REMINDERS-EXPORT-2026-09-25.md
 Подключи: Gmail/Sheets/Docs/Drive/Calendar = info@placecoworking.com, Canva, Telegram Web (+66 804309823 на экране бота), gh = placeCo.
 Не публикуй live без моего OK. Отчёты — один свод от тебя. Цель: единый прайс + витрина Pass/Offices/Studio + Thai ops.
 Открытый фронт — раздел «Шаг 7» в MIGRATION-TZ. Контакт с тайской командой только 10:00–22:00 ICT.
@@ -36,6 +37,7 @@
 | Полный ТЗ приёмки | `docs/ops/MIGRATION-TZ-PRO-ACCOUNT-2026-09-25.md` |
 | Канон | `CANON.md` |
 | Архив переписок | `kb/archive/chat-history-2026-09-25/` |
+| Routines + напоминания | `docs/ops/ROUTINES-AND-REMINDERS-EXPORT-2026-09-25.md` |
 | Сайт-драфты | `docs/site/` |
 | SMM календарь | https://docs.google.com/spreadsheets/d/1YjIN-j7jw_i-rCRdF_Xfpq2AD-ZIxKV1qAobmQH8ds8/ |
 | Репо | https://github.com/placeCo/place-coworking |
