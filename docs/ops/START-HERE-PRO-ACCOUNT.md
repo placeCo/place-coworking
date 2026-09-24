@@ -1,55 +1,36 @@
-# НАЧНИ ОТСЮДА — перенос на Pro (другой email)
+# НАЧНИ ОТСЮДА — перенос Place на Pro
 
-**Для George.** Один чеклист. Остальное — ссылки ниже.
+**Для George · 25 сентября 2026 · Asia/Bangkok (ICT)**
 
-## Твои 6 шагов
+## Простая проверка
 
-1. **На этом (старом) аккаунте** подтверди карточку шаблона **Place Lead** (publish/confirm), если ещё не подтвердил.
-2. **Выйди / зайди** в Grok Bot под **Pro-email**.
-3. **Импортируй** шаблон Place Lead → новый бот.
-4. В первый чат нового бота **вставь целиком**:
+1. **Подтверди карточку шаблона Place Lead** на старом аккаунте (publish/confirm).
+2. На **Pro-аккаунте импортируй** шаблон Place Lead и открой новый бот.
+3. Вставь в первый чат этот kickoff:
 
-```
-Ты lead Place Coworking для George. Работай по-русски, конкретно.
-Прочитай по порядку:
-1) https://github.com/placeCo/place-coworking/blob/main/docs/ops/START-HERE-PRO-ACCOUNT.md
-2) https://github.com/placeCo/place-coworking/blob/main/docs/ops/MIGRATION-TZ-PRO-ACCOUNT-2026-09-25.md
-3) https://github.com/placeCo/place-coworking/blob/main/CANON.md
-4) папку https://github.com/placeCo/place-coworking/tree/main/kb/archive/chat-history-2026-09-25
-5) https://github.com/placeCo/place-coworking/blob/main/docs/ops/ROUTINES-AND-REMINDERS-EXPORT-2026-09-25.md
-Подключи: Gmail/Sheets/Docs/Drive/Calendar = info@placecoworking.com, Canva, Telegram Web (+66 804309823 на экране бота), gh = placeCo.
-Не публикуй live без моего OK. Отчёты — один свод от тебя. Цель: единый прайс + витрина Pass/Offices/Studio + Thai ops.
-Открытый фронт — раздел «Шаг 7» в MIGRATION-TZ. Контакт с тайской командой только 10:00–22:00 ICT.
+```text
+Ты lead Place Coworking для George. Работай по-русски и конкретно.
+Прочитай CANON.md, docs/ops/MIGRATION-TZ-PRO-ACCOUNT-2026-09-25.md,
+docs/ops/ROUTINES-AND-REMINDERS-EXPORT-2026-09-25.md и
+kb/archive/chat-history-2026-09-25/.
+Подключи Gmail/Sheets/Docs/Drive/Calendar = info@placecoworking.com,
+Telegram Web (+66 804309823 на экране бота) и gh = placeCo.
+Не публикуй live без моего OK. Проверь Шаг 8 в MIGRATION-TZ и доложи.
+Цель: единый прайс, витрина Pass/Offices/Studio и Thai ops.
 ```
 
-5. На экране **нового** бота логины (ты сам, пароли в чат не кидать):
-   - Google info@
-   - Telegram Web
-   - Teamly (если нужен)
-   - `gh auth login` → placeCo
-6. Скажи новому боту: «проверь чеклист Шаг 8 в MIGRATION-TZ и доложи».
+4. На экране нового бота подключи **info@**, Telegram Web и `gh auth login` → **placeCo** (Teamly — если нужен). Пароли в чат не отправляй.
+5. Прочитай по порядку: **CANON → MIGRATION-TZ → ROUTINES → memories-export → chat archive**.
+6. Открой фронт на сегодня: раздел **«Шаг 7»** в MIGRATION-TZ; тайская команда — только **10:00–22:00 ICT**.
 
-## Что уже лежит в GitHub (не потеряется)
+## Ключевые ссылки
 
-| Что | Ссылка |
-|-----|--------|
-| Этот чеклист | `docs/ops/START-HERE-PRO-ACCOUNT.md` |
-| Полный ТЗ приёмки | `docs/ops/MIGRATION-TZ-PRO-ACCOUNT-2026-09-25.md` |
-| Канон | `CANON.md` |
-| Архив переписок | `kb/archive/chat-history-2026-09-25/` |
-| Routines + напоминания | `docs/ops/ROUTINES-AND-REMINDERS-EXPORT-2026-09-25.md` |
-| Сайт-драфты | `docs/site/` |
-| SMM календарь | https://docs.google.com/spreadsheets/d/1YjIN-j7jw_i-rCRdF_Xfpq2AD-ZIxKV1qAobmQH8ds8/ |
-| Репо | https://github.com/placeCo/place-coworking |
+- [Репозиторий](https://github.com/placeCo/place-coworking)
+- [Этот чеклист](https://github.com/placeCo/place-coworking/blob/main/docs/ops/START-HERE-PRO-ACCOUNT.md)
+- [MIGRATION-TZ](https://github.com/placeCo/place-coworking/blob/main/docs/ops/MIGRATION-TZ-PRO-ACCOUNT-2026-09-25.md)
+- [CANON](https://github.com/placeCo/place-coworking/blob/main/CANON.md)
+- [Routines + reminders](https://github.com/placeCo/place-coworking/blob/main/docs/ops/ROUTINES-AND-REMINDERS-EXPORT-2026-09-25.md)
+- [Архив чатов](https://github.com/placeCo/place-coworking/tree/main/kb/archive/chat-history-2026-09-25)
+- [SMM calendar](https://docs.google.com/spreadsheets/d/1YjIN-j7jw_i-rCRdF_Xfpq2AD-ZIxKV1qAobmQH8ds8/)
 
-## Что НЕ приедет само (ожидаемо)
-
-История чатов платформы → поэтому архив в GitHub.  
-Сессии TG/Google/Teamly → логин на новом боте.  
-Place SMM / Site / Ops → создать заново по ТЗ (или отдельные шаблоны позже).
-
-## Сегодня после переноса (25 Sep)
-
-- 10:00 ICT — Lena room 3 (если ещё не ушло)
-- Booking plan → архив вкладки
-- Ждём фото Алены (Deskimo + Sep-01)
+**Правило:** drafts в GitHub можно готовить; сайт, цены, public TG/IG, Deskimo и внешние письма — только после OK George. Отчитывается один lead в Place Ops room; food-bot отдельно.

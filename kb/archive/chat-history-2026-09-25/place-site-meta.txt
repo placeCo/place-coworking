@@ -1,0 +1,6 @@
+agent_id=bbc5504c-b9e7-44a6-9a0e-ee1a5a931651
+name=Place Site
+export_date=2026-09-25 ICT
+status=unavailable: ReadTranscript tool not exposed in this execution context
+user_turns=0
+bot_turns=0

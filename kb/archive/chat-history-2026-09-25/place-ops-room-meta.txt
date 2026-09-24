@@ -1,0 +1,6 @@
+agent_id=8c359e43-2eb0-44b3-a6eb-352d099b7c8b
+name=Place Ops room
+export_date=2026-09-25 ICT
+status=unavailable: ReadTranscript tool not exposed in this execution context
+user_turns=0
+bot_turns=0

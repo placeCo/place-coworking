@@ -1,0 +1,6 @@
+agent_id=b66d465d-9147-4f56-85b1-244b262ddce4
+name=Grok Bot
+export_date=2026-09-25 ICT
+status=unavailable: ReadTranscript tool not exposed in this execution context
+user_turns=0
+bot_turns=0

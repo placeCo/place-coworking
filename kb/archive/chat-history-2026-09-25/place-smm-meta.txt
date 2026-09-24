@@ -1,0 +1,6 @@
+agent_id=7a363867-8a5a-46b0-b56b-334904045fc5
+name=Place SMM
+export_date=2026-09-25 ICT
+status=unavailable: ReadTranscript tool not exposed in this execution context
+user_turns=0
+bot_turns=0
