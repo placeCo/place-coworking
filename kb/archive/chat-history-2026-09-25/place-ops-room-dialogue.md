@@ -1,12 +1,6 @@
-# Place Ops room — архив диалога
+# Place Ops room — краткий архив
+Комната создана ~25 Sep 01:00 ICT. Участники: Grok Bot (lead), Place SMM, Place Site, Place Ops.
 
-**Дата выгрузки:** 2026-09-25 (ICT)  
-**Agent ID:** `8c359e43-2eb0-44b3-a6eb-352d099b7c8b`
+Суть треда: правила отчётов (один lead), цель единый прайс/витрина, Thai ops green light 10–22, GitHub push freely, merge site-redesign, SMM blockers Sep-01/06/08, октябрь слоты «Идея».
 
-## Статус
-В этой среде инструмент `ReadTranscript` / `CallDynamicTool(namespace=cursor)` недоступен, поэтому содержимое этого диалога не удалось получить. Файл оставлен явно помеченным, чтобы новый бот не принял неполный экспорт за историю.
-
-**User turns:** 0 экспортировано  
-**Bot turns:** 0 экспортировано  
-
-После появления доступа к `ReadTranscript` выгрузить страницы `limit=200` до исчерпания поля `before`, затем заменить этот файл хронологическим диалогом (`**George:**` / `**Bot:**`) и обновить meta.
+Полная хронология lead: `lead-grok-bot-dialogue.md`.
