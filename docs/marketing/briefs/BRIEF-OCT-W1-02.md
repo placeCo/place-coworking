@@ -62,6 +62,9 @@ DM / Telegram @coworking_place_phuket
 - Trial = 1 day floor 3 only
 - Studio/offices без полного публичного меню цен
 
+## Routing note (пока 6 red на live)
+Не линковать на прайс/часы сайта. CTA = TG @coworking_place_phuket / WA / Direct / менеджер.
+
 ## Статус
 - [x] Brief → SMM
 - [ ] Canva + текст в календаре
