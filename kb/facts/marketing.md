@@ -47,4 +47,9 @@ Do **not** shoot floor 2 or roof as “our coworking zones”.
 1. RU remote south (Chalong, Rawai, Nai Harn)  
 2. EN nomads with night calls → 9000  
 3. Creators → studio via manager  
-4. Teams 2–4 → floor 5 office  
+4. Teams 2–4 → floor 5 office
+
+## Ops split (after marketer exit)
+- Full-time маркетолога нет: роли разнесены — George (OK/strategy/logins), SMM **@dftnsss** (Canva + календарь → «Готово»), Grok Bot (drafts/briefs/kb). См. `docs/ops/ROLES.md`, `WORKFLOW-MARKETING.md`, `SOURCES.md`, `templates/`.
+- Пайплайн: календарь → Готово → OK George → Postiz draft (когда Meta готов) → OK → publish. Postiz/Meta на паузе до заполнения календаря + Meta login.
+- Не выдумывать историю ухода предыдущего маркетолога; только факт exit + текущий split.

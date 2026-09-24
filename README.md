@@ -17,6 +17,22 @@ Account: [placeCo](https://github.com/placeCo) · Repo: `place-coworking`
 
 ---
 
+## Инфраструктура / Infrastructure
+
+Full-time маркетолога **нет** — работа через роли + календарь SMM (`docs/ops/ROLES.md`).
+
+| Doc | Зачем |
+|-----|--------|
+| [`docs/ops/ROLES.md`](docs/ops/ROLES.md) | Кто что делает (George, SMM @dftnsss, Bot, ресепшен, Nikita, John, Lena) |
+| [`docs/ops/WORKFLOW-MARKETING.md`](docs/ops/WORKFLOW-MARKETING.md) | idea → календарь → Готово → OK → Postiz draft → OK → publish |
+| [`docs/ops/SOURCES.md`](docs/ops/SOURCES.md) | Карта ссылок (sheet, каналы, Deskimo, Best Lap, Teamly) |
+| [`docs/ops/TG-OUTBOUND.md`](docs/ops/TG-OUTBOUND.md) | Канон исходящих Telegram |
+| [`templates/`](templates/) | BRIEF-SMM, POST-SLOT, HANDOFF, WEEKLY-MARKETING-CHECK |
+
+SMM calendar: https://docs.google.com/spreadsheets/d/1YjIN-j7jw_i-rCRdF_Xfpq2AD-ZIxKV1qAobmQH8ds8/  
+Postiz/Meta на паузе, пока календарь не «Готово» и Meta login не сделан. Ops mode выше — без изменений.
+
+
 ## Layout
 
 ```
@@ -29,7 +45,8 @@ docs/
   site/                   — FAQ, TZ сайта, offices/meeting rooms, meeting notes, redesign TZ
   events/                 — Garmin Best Lap, Strava, QR png, best-lap pack
   marketing/              — IG draft, Teamly coordinator, SMM calendars, playbooks
-  ops/                    — Sheets inventory, meeting decisions, TG audit (md)
+  ops/                    — roles, workflow, sources, TG outbound, sheets inventory, audits
+templates/                — BRIEF-SMM, POST-SLOT, HANDOFF, WEEKLY-MARKETING-CHECK
 kb/
   README.md · INDEX.md · PRIORITY-CONNECTORS.md
   facts/                  — condensed canon, marketing, ops-sources, MCP status
@@ -60,6 +77,8 @@ teamly/
 
 ## Next (suggested)
 
+- SMM: октябрьские слоты → «Готово» (см. issues `smm` / `marketing`)  
+- Meta/IG login `info@` + Postiz drafts only после календаря  
 - Branch for site redesign from `docs/site/SITE-REDESIGN-TZ-2026-09-24.md`  
-- Sync SMM calendar drafts with George before any Postiz/IG publish  
+- Deskimo: добрать поля → OK George перед publish  
 - Connect priority connectors (see `kb/PRIORITY-CONNECTORS.md`) via George screen login  

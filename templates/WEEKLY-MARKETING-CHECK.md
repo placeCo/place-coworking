@@ -1,0 +1,39 @@
+# Weekly marketing check
+
+Неделя: YYYY-MM-DD → YYYY-MM-DD · Автор: Bot / George
+
+## Календарь SMM
+Лист: https://docs.google.com/spreadsheets/d/1YjIN-j7jw_i-rCRdF_Xfpq2AD-ZIxKV1qAobmQH8ds8/
+
+- Заполнение октября до «Готово»: __% (N/M слотов)
+- Слоты в работе: …
+- Слоты «Готово», ждут OK George: …
+- Опубликовано за неделю: …
+
+## Pending OK George
+- [ ] …
+- Issue `needs-george-ok`: …
+
+## Leads / TG
+- Висящие из аудита: …
+- PLACE Team group: подтверждён? да/нет
+- Исходящие TG: только по `TG-OUTBOUND.md`
+
+## Deskimo / listings
+- Форма: частично · блокеры (фото / WiFi / банк): …
+- Publish: **нет** без OK
+
+## Events (Best Lap и др.)
+- Промо-пакет: готов / не готов
+- Даты / каналы распространения: решено? …
+
+## Postiz / Meta
+- Календарь готов к Postiz? …
+- Meta login `info@`: сделан? …
+- Postiz: всё ещё **не live** до готовности
+
+## Блокеры / next week
+1. …
+2. …
+
+Full-time маркетолога нет — драйвер = роли + календарь (`docs/ops/ROLES.md`).
