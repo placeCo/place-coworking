@@ -1,0 +1,32 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*credentials*
+*secret*
+*token*
+cookies*
+*.cookie
+
+# Backups / junk
+*.bak
+*.bak.*
+*_archived*/
+node_modules/
+dist/
+build/
+.tmp/
+.cache/
+
+# Large / local-only binaries (keep intentional small QR in docs/)
+*.pdf

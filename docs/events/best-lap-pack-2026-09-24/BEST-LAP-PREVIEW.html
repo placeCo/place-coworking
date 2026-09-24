@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>BEST LAP — QR preview</title>
+<style>
+  @page { size: A4 landscape; margin: 10mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: #111; font-family: Arial, Helvetica, sans-serif; }
+  header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #111; padding-bottom: 5mm; margin-bottom: 6mm; }
+  h1 { margin: 0 0 2mm; font-size: 25pt; }
+  h2 { margin: 0; font-size: 13pt; }
+  .facts { text-align: right; font-size: 10pt; line-height: 1.35; max-width: 55%; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5mm; align-items: start; }
+  .card { border: 1px solid #bbb; padding: 3mm; text-align: center; min-height: 104mm; }
+  .card.primary { border: 3px solid #111; }
+  .card h3 { min-height: 16mm; margin: 0 0 2mm; font-size: 11pt; line-height: 1.15; }
+  .card img { display: block; width: 100%; max-width: 53mm; height: auto; margin: 0 auto 3mm; image-rendering: pixelated; }
+  .label { font-size: 8pt; word-break: break-word; line-height: 1.2; }
+  footer { margin-top: 6mm; display: flex; justify-content: space-between; font-size: 9pt; border-top: 1px solid #bbb; padding-top: 3mm; }
+</style>
+</head>
+<body>
+<header>
+  <div><h1>BEST LAP</h1><h2>Garmin + Strava QR preview · draft only</h2></div>
+  <div class="facts"><strong>Mon 28 Sep 2026 · 08:00 Bangkok · ~1 km</strong><br>Finish: Place, 59/2 Chao Fah Tawan Tok Rd, Chalong<br>One free smoothie at the desk, one per day; walk/run only, not bike/car</div>
+</header>
+<section class="grid">
+  <article class="card primary"><h3>Garmin Running<br>event · primary</h3><img src="qr-garmin-run-event.png" alt="QR Garmin Running event"><div class="label">connect.garmin.com/app/event/0/30146138</div></article>
+  <article class="card primary"><h3>Strava<br>event</h3><img src="qr-strava-event.png" alt="QR Strava event"><div class="label">strava.com group event</div></article>
+  <article class="card"><h3>Garmin Walking<br>event</h3><img src="qr-garmin-walk-event.png" alt="QR Garmin Walking event"><div class="label">Garmin event</div></article>
+  <article class="card"><h3>Strava<br>club</h3><img src="qr-strava-club.png" alt="QR Strava club"><div class="label">@place_coworking_phuket</div></article>
+  <article class="card"><h3>Garmin Running<br>course</h3><img src="qr-garmin-run-course.png" alt="QR Garmin Running course"><div class="label">Garmin course</div></article>
+</section>
+<footer><span>placecoworking.com · @place_coworking_phuket</span><span>For George approval before any publication</span></footer>
+</body>
+</html>
