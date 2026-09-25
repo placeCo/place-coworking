@@ -15,6 +15,8 @@
 
 Длины ниже — `len()` строки (символ ฿ = 1). В Tilda смотреть превью: CJK и тайский шире латиницы.
 
+Цену дня в title, description и OG специально не пишем: 01.10–31.10.2026 день **400฿**, с 01.11.2026 снова **500฿**. Google держит сниппет неделями, и цена дня в meta устареет раньше страницы. В сниппете остаются месяц **6000** и **1 бесплатный день (только 3 этаж)**.
+
 ## Куда вешать
 
 Один и тот же title и description — в SEO title, meta description и OG title / OG description. Иначе сниппет и шаринг снова разъедутся (сейчас OG повторяет бан «3 free days»).
@@ -35,10 +37,10 @@ Coworking Phuket | Place Coworking, Chalong
 Phuket Coworking Space in Chalong | Place
 ```
 
-**Description (148):**
+**Description (138):**
 
 ```
-Phuket coworking space in Chalong: Place Coworking. Co-working space, hours 08:00–23:00. Day 500฿, month 6,000฿. One free trial day on floor 3 only.
+Phuket coworking space in Chalong: Place Coworking. Co-working space, hours 08:00–23:00. Month 6,000฿. One free trial day on floor 3 only.
 ```
 
 ## RU — `/ru`
@@ -49,10 +51,10 @@ Phuket coworking space in Chalong: Place Coworking. Co-working space, hours 08:0
 Коворкинг Пхукет в Чалонге | Place Coworking
 ```
 
-**Description (130):**
+**Description (119):**
 
 ```
-Коворкинг на Пхукете: Place в Чалонге (не Kathu). Часы 08:00–23:00. День 500฿, месяц 6 000฿. Один бесплатный день — только 3 этаж.
+Коворкинг на Пхукете: Place в Чалонге (не Kathu). Часы 08:00–23:00. Месяц 6 000฿. Один бесплатный день — только 3 этаж.
 ```
 
 ## 中文 — `/zh`
@@ -65,10 +67,10 @@ Phuket coworking space in Chalong: Place Coworking. Co-working space, hours 08:0
 普吉岛共享办公 | Place Coworking，查龙
 ```
 
-**Description (85):**
+**Description (77):**
 
 ```
-Place Coworking，查龙 Chalong（不是 Kathu）。每天 08:00–23:00。日票 500฿，月票 6,000฿。免费试用 1 天，仅 3 楼。
+Place Coworking，查龙 Chalong（不是 Kathu）。每天 08:00–23:00。月票 6,000฿。免费试用 1 天，仅 3 楼。
 ```
 
 ## TH stub — `/th`
@@ -81,14 +83,14 @@ Place Coworking，查龙 Chalong（不是 Kathu）。每天 08:00–23:00。日�
 Co Working Space ภูเก็ต | Place ฉลอง
 ```
 
-**Description (117):**
+**Description (108):**
 
 ```
-Place Coworking ย่านฉลอง Chalong ไม่ใช่ Kathu เปิดทุกวัน 08:00–23:00 วัน 500฿ เดือน 6,000฿ ทดลองฟรี 1 วัน เฉพาะชั้น 3
+Place Coworking ย่านฉลอง Chalong ไม่ใช่ Kathu เปิดทุกวัน 08:00–23:00 เดือน 6,000฿ ทดลองฟรี 1 วัน เฉพาะชั้น 3
 ```
 
 ## В этих строках уже есть / чего в них нет
 
-Есть: Place, Chalong, 08:00–23:00, день 500, месяц 6000, триал = 1 бесплатный день только 3 этаж.
+Есть: Place, Chalong, 08:00–23:00, месяц 6000, триал = 1 бесплатный день только 3 этаж.
 
-Нет и не добавлять в title, description, OG: бесплатный 24/7, «open 24 hours», день 300, «3 free days» / «any floor», Kathu, Patong. Ночь (месяц 24/7 = 9000) в этот сниппет не класть — иначе снова читается как «мы открыты всем ночью».
+Нет и не добавлять в title, description, OG: цену дня (ни 400, ни 500), бесплатный 24/7, «open 24 hours», день 300, «3 free days» / «any floor», Kathu, Patong. Ночь (месяц 24/7 = 9000) в этот сниппет не класть — иначе снова читается как «мы открыты всем ночью».
