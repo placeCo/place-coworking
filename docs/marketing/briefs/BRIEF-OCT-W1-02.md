@@ -35,7 +35,7 @@ Place Pass — простая вилка.
 Месяц с ночами 9000฿
 
 Рабочий зал — 3 этаж.
-1 этаж — вход и библиотека. 2 этаж не продаём.
+1 этаж — вход, библиотека, кафе и переговорки.
 Студия и офисы — через менеджера.
 
 08:00–23:00. Не «круглосуточно для всех».
@@ -50,7 +50,7 @@ Hour 50฿ · Day 500฿ · Week 1,800฿
 Month 6,000฿ (until 23:00) · 3 months 15,000฿
 Month with nights 9,000฿
 
-Work hall = floor 3. Floor 1 = entrance/library. Floor 2 not for sale.
+Work hall = floor 3. Floor 1 = entrance, library, café, meeting rooms.
 Studio & offices = via manager.
 08:00–23:00. Not 24/7 for everyone.
 
