@@ -15,7 +15,7 @@ Private **offices on 2 and 5**.
 **Studio on 4** — via manager.
 
 First Pass day free on floor 3.  
-Day **500฿** · Week **1,800฿** · Month **6,000฿** · With nights **9,000฿**.
+Day **400฿** (until 31 Oct; from 1 Nov — 500฿) · Week **1,800฿** · Month **6,000฿** · With nights **9,000฿**.
 
 **Hours:** 08:00–23:00  
 **Address:** 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130 · Not Kathu  
@@ -25,7 +25,7 @@ Day **500฿** · Week **1,800฿** · Month **6,000฿** · With nights **9,000
 
 **1. Place Pass**  
 One entry to floors **1 + 3**. You work in the open space on **floor 3** (trial there too). Floor 1: library, glassed café zone, meeting rooms.  
-CTA → Free trial day (floor 3) · Day 500 · Week 1,800 · Month 6,000
+CTA → Free trial day (floor 3) · Day 400 (until 31 Oct) · Week 1,800 · Month 6,000
 
 **2. Offices**  
 Dedicated office space on **floors 2 and 5** — not a public hot desk. Floor 5 from **30,000฿/mo** (or **20,000฿/mo** yearly). Details & tour via manager.  
@@ -47,7 +47,7 @@ Public Place Pass: **08:00–23:00**. Not 24/7 by default. Overnight only with M
 
 ### Short pointers (Home footer or secondary links)
 - **Meeting rooms** — from 250฿/h · Pass residents −20% · book via us → see Meeting block / FAQ
-- **FAQ** — day 500, trial, hours, floors, offices, studio → FAQ-SITE-EN-RU.md
+- **FAQ** — day (400 until 31 Oct, 500 from 1 Nov), trial, hours, floors, offices, studio → FAQ-SITE-EN-RU.md
 
 ---
 
@@ -61,7 +61,7 @@ Public Place Pass: **08:00–23:00**. Not 24/7 by default. Overnight only with M
 **Студия на 4** — через менеджера.
 
 Первый день Pass бесплатно на 3 этаже.  
-День **500฿** · Неделя **1 800฿** · Месяц **6 000฿** · С ночами **9 000฿**.
+День **400฿** (до 31.10; с 01.11 — 500฿) · Неделя **1 800฿** · Месяц **6 000฿** · С ночами **9 000฿**.
 
 **Часы:** 08:00–23:00  
 **Адрес:** 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130 · Не Kathu  
@@ -71,7 +71,7 @@ Public Place Pass: **08:00–23:00**. Not 24/7 by default. Overnight only with M
 
 **1. Place Pass**  
 Один вход на этажи **1 + 3**. Работаете в open space на **3 этаже** (триал тоже там). На 1-м: библиотека, застеклённая кафе-зона, переговорки.  
-CTA → Бесплатный день (3 этаж) · День 500 · Неделя 1 800 · Месяц 6 000
+CTA → Бесплатный день (3 этаж) · День 400 (до 31.10) · Неделя 1 800 · Месяц 6 000
 
 **2. Офисы**  
 Офисное пространство на **2 и 5 этажах** — не публичный hot desk. 5 этаж от **30 000฿/мес** (или **20 000฿/мес** при годе). Детали и тур — у менеджера.  
@@ -93,14 +93,14 @@ CTA → Написать менеджеру (4 этаж)
 
 ### Короткие указатели
 - **Переговорки** — от 250฿/ч · резидентам Pass −20% · бронь через нас
-- **FAQ** — день 500, триал, часы, этажи, офисы, студия → FAQ-SITE-EN-RU.md
+- **FAQ** — день (400 до 31.10, с 01.11 — 500), триал, часы, этажи, офисы, студия → FAQ-SITE-EN-RU.md
 
 ---
 
 ## 中文 (ZH stub)
 
 **TODO translate — same facts as EN/RU. Do not invent ZH copy.**  
-Facts to keep identical: Pass 1+3 · Offices 2+5 · Studio 4 via manager · hours 08:00–23:00 · Chalong (not Kathu) · trial = 1 free day floor 3 only · prices 50 / 500 / 1800 / 6000 / 15000 / 9000 · floor 5 offices 30000 or 20000 yearly · meeting from 250 −20% residents.  
+Facts to keep identical: Pass 1+3 · Offices 2+5 · Studio 4 via manager · hours 08:00–23:00 · Chalong (not Kathu) · trial = 1 free day floor 3 only · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 / 9000 · floor 5 offices 30000 or 20000 yearly · meeting from 250 −20% residents.  
 When FAQ ZH exists, align wording; until then keep stub + EN facts.
 
 ---

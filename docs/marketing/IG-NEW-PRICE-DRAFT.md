@@ -4,7 +4,7 @@
 Place Pass — простая вилка.
 
 1 день бесплатно на 3 этаже (первый визит)  
-Час 50฿ · День 500฿ · Неделя 1800฿  
+Час 50฿ · День 400฿ (до 31.10; с 01.11 — 500฿) · Неделя 1800฿  
 Месяц 6000฿ (до 23:00) · 3 месяца 15 000฿  
 Месяц с ночами 9000฿  
 
@@ -21,7 +21,7 @@ Place Pass — простая вилка.
 Place Pass — clear ladder.
 
 1 free trial day on floor 3 (first visit)  
-Hour 50฿ · Day 500฿ · Week 1,800฿  
+Hour 50฿ · Day 400฿ (until 31 Oct; from 1 Nov — 500฿) · Week 1,800฿  
 Month 6,000฿ (until 23:00) · 3 months 15,000฿  
 Month with nights 9,000฿  
 
