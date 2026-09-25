@@ -50,7 +50,7 @@ Quiet work floors, on-site amenities, and three clear product lines in one build
 |---------|-------------|
 | Trial | 1 free day, floor 3 only |
 | Hour | 50 |
-| Day | 500 |
+| Day | 400 until 31 Oct 2026 · 500 from 1 Nov 2026 |
 | Week | 1,800 |
 | Month (08:00–23:00) | 6,000 |
 | 3 months | 15,000 |
@@ -78,7 +78,7 @@ Wi‑Fi speed / SSID / bank fields: **BLOCKED — Lena** (do not invent).
 - Avoid roof-as-coworking; showcase Pass 1+3 + Offices 2+5 + Studio 4
 
 ## RU short (optional caption)
-Place в Чалонге: Pass на 1+3 (зал на 3-м), офисы на 2 и 5, студия на 4 через менеджера. Первый день Pass бесплатно на 3-м. День 500 · неделя 1800 · месяц 6000 · с ночами 9000. Часы 08:00–23:00.
+Place в Чалонге: Pass на 1+3 (зал на 3-м), офисы на 2 и 5, студия на 4 через менеджера. Первый день Pass бесплатно на 3-м. День 400 (до 31.10; с 01.11 — 500) · неделя 1800 · месяц 6000 · с ночами 9000. Часы 08:00–23:00.
 
 ---
 Publish / submit onboarding: **only after OK George**.

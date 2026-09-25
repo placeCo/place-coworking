@@ -92,7 +92,7 @@ Skill: `place-daily-intel-check` (TG обязателен первым).
 - Язык с George: **русский**, конкретно, без вайб-воды
 - Витрина всегда: **Pass (1+3) + Offices (2+5) + Studio (4 via manager)**
 - Часы: **08:00–23:00**; Chalong **не** Kathu
-- Публичный прайс: trial 1д floor 3; 50/500/1800/6000/15000/9000; **без 5ч@150**
+- Публичный прайс: trial 1д floor 3; 50/400 (до 31.10; с 01.11 — 500)/1800/6000/15000/9000; **без 5ч@150**
 - Компания Google: **только** info@placecoworking.com
 - Ops mode: connect/collect/drafts; **не** live prices/posts/mail/sheets-critical без OK (исключение: George дал зелёный свет Thai micromangement 25 Sep — см. ниже)
 - TG literacy: полный текст → проверка → send; clipboard для RU; garbled → delete first

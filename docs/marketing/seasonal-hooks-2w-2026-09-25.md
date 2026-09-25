@@ -16,7 +16,7 @@ Trial = **1** free day, **floor 3 only**. Hours 08:00–23:00. **Нет** public
 | День | ID | Формат | Рубрика | Хук (1 строка) | CTA | Цель |
 |------|----|--------|---------|----------------|-----|------|
 | Пн 28 | OCT-W1-01 | Reel 15–25с | B Floor 3 vs 1 | «Работаешь на 3-м, кофе и библиотека на 1-м — один Pass» | Trial / TG | TG/WA (не сайт-цены) |
-| Вт 29 | OCT-W1-02 | Static / carousel | A Ladder | Вилка на одной карточке: 0 → 500 → 1800 → 6000 → 9000 | Week 1800 / Month 6000 | TG/WA (не сайт-цены) |
+| Вт 29 | OCT-W1-02 | Static / carousel | A Ladder | Вилка на одной карточке: 0 → 400 (окт) → 1800 → 6000 → 9000 | Week 1800 / Month 6000 | TG/WA (не сайт-цены) |
 | Ср 30 | OCT-W1-03 | Reel | C Hours + 9000 | EN nomad: night calls → не «24/7 для всех», а 9000 + key | Month 9000 | TG/WA (не сайт-цены) |
 | Чт 01 | OCT-W1-04 | Carousel | E Chalong / parking | Phuket south: Chalong, парковка, не Патонг | Trial / TG | TG/WA (не сайт-цены) |
 | Пт 02 | OCT-W1-05 | Static | D Studio | Studio 4 без полного меню — «через менеджера» + proof кадра | Studio → manager | TG/WA (не сайт-цены) |
@@ -30,7 +30,7 @@ Trial = **1** free day, **floor 3 only**. Hours 08:00–23:00. **Нет** public
 | День | ID | Формат | Рубрика | Хук (1 строка) | CTA | Цель |
 |------|----|--------|---------|----------------|-----|------|
 | Пн 05 | OCT-W2-01 | Carousel | Offices | Команда 2–4: этаж 5, не open space | Office → manager | office→manager (Deskimo после O5+OK) |
-| Вт 06 | OCT-W2-02 | Reel | A Ladder | «4 платных дня > неделя 1800» — математика без 5ч | Week 1800 | TG/WA (не сайт-цены) |
+| Вт 06 | OCT-W2-02 | Reel | A Ladder | «5 дней по 400 = 2000 > неделя 1800» — математика без 5ч (день 400 до 31.10) | Week 1800 | TG/WA (не сайт-цены) |
 | Ср 07 | OCT-W2-03 | Static | B Proof hall | Wide hall / свет / розетки — proof, без wifi Mbps | Trial / TG | TG/WA (не сайт-цены) |
 | Чт 08 | OCT-W2-04 | Carousel | Offices | До/после «работаем из кафе» → кабинет на 5 | Office → manager | office→manager (Deskimo после O5+OK) |
 | Пт 09 | OCT-W2-05 | Reel | C / EN | Honest hours card EN: 8–23 base; nights = 9000 | Month 9000 | TG/WA (не сайт-цены) |

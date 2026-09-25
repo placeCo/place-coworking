@@ -16,7 +16,7 @@ Place Pass is one entry to floors 1 and 3. You work in the open space on floor 3
 
 **What are the prices?**  
 • 1 hour — 50฿ (short call / quick stop)  
-• 1 day (10h) — 500฿  
+• 1 day (10h) — 400฿ until 31 Oct 2026 (from 1 Nov — 500฿)  
 • 1 week — 1,800฿  
 • 1 month (08:00–23:00) — 6,000฿  
 • 3 months — 15,000฿  
@@ -26,7 +26,7 @@ Place Pass is one entry to floors 1 and 3. You work in the open space on floor 3
 • Studio floor 4 — ask the manager (no self-booking menu on the site)
 
 **Do you still have 5 hours for 150฿ / day for 300฿ / month from 3,000฿ / floor 1–2 price lists?**  
-No. Those public offers are removed. Short drop-in without a longer pass is day 500฿; better value is week 1,800฿ or month 6,000฿.
+No. Those public offers are removed. Short drop-in without a longer pass is day 400฿ (until 31 Oct; from 1 Nov — 500฿); better value is week 1,800฿ or month 6,000฿.
 
 **Is it 24/7?**  
 Only on Month 24/7 (9,000฿). Otherwise until 23:00.
@@ -64,7 +64,7 @@ Place Pass — один вход на 1 и 3 этажи. Работаешь в o
 
 **Какие цены?**  
 • 1 час — 50฿ (короткий созвон)  
-• 1 день (10ч) — 500฿  
+• 1 день (10ч) — 400฿ до 31.10.2026 (с 01.11 — 500฿)  
 • 1 неделя — 1 800฿  
 • 1 месяц (08:00–23:00) — 6 000฿  
 • 3 месяца — 15 000฿  
@@ -74,7 +74,7 @@ Place Pass — один вход на 1 и 3 этажи. Работаешь в o
 • Студия 4 этаж — через менеджера (без самозаписи по сайту)
 
 **Есть ещё 5 часов за 150 / день за 300 / месяц от 3 000 / прайс 1–2 этажа?**  
-Нет. С публичной витрины снято. Короткий заход без срока — день 500฿; выгоднее неделя 1 800฿ или месяц 6 000฿.
+Нет. С публичной витрины снято. Короткий заход без срока — день 400฿ (до 31.10; с 01.11 — 500฿); выгоднее неделя 1 800฿ или месяц 6 000฿.
 
 **А 24/7?**  
 Только тариф месяц 24/7 за 9 000฿. Иначе до 23:00.

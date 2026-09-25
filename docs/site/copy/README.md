@@ -24,7 +24,7 @@ Rule: draft in git only — no live CMS, no Tilda publish without written OK fro
 ### Canon facts (all locales same)
 - Hours **08:00–23:00** · address **Chalong** (not Kathu)
 - Trial = **1 free day floor 3 only**
-- Pass prices: **50 / 500 / 1800 / 6000 / 15000 / 9000**
+- Pass prices: **50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 / 9000**
 - Floor 5 offices: **30000** or **20000** yearly
 - Meeting: from **250** · residents **−20%**
 
@@ -47,7 +47,7 @@ Without OK George — **do not publish**. No hard calendar deadline.
 
 ### Quick spot-check list (copy pack)
 - [ ] Home shows all three cards: Pass / Offices / Studio
-- [ ] Pass table: 50 · 500 · 1800 · 6000 · 15000 · 9000 (+ trial 1 free day floor 3)
+- [ ] Pass table: 50 · 400 (until 31 Oct; 500 from 1 Nov) · 1800 · 6000 · 15000 · 9000 (+ trial 1 free day floor 3)
 - [ ] Offices: one 2+5 card; floor 5 30000 / 20000 yearly; no floor-2 hot-desk menu
 - [ ] Studio: short + manager CTA; no Filming 500/h
 - [ ] Meeting pointer: from 250 · −20% residents

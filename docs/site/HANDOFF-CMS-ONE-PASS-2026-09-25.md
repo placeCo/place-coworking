@@ -67,7 +67,7 @@
 |---------|------|
 | Trial | 1 free day · floor 3 only |
 | 1 hour | 50฿ |
-| 1 day | **500฿** |
+| 1 day | **400฿** until 31 Oct · **500฿** from 1 Nov |
 | 1 week | **1,800฿** |
 | 1 month 08–23 | **6,000฿** |
 | 3 months | **15,000฿** |
@@ -78,7 +78,7 @@
 ### Шаг 4 — Три карточки витрины (Home)
 Не «5 floors + rooftop на выбор». Поставить:
 
-1. **Pass (1+3)** → CTA триал / 500 / 1800 / 6000  
+1. **Pass (1+3)** → CTA триал / 400 (до 31.10; с 01.11 — 500) / 1800 / 6000  
 2. **Offices (2+5)** → из `copy/OFFICES-EN-RU.md` (5-й: 30k / 20k год; 2-й через менеджера, не hot desk)  
 3. **Studio (4)** → CTA менеджеру; **без** меню Filming 500/h  
 
@@ -113,7 +113,7 @@
 |-------|------|------|
 | Wanderlog | `DRAFT-NAP-LISTINGS…` | Kathu→Chalong, 24h→08–23, 3-day tip→1 day / floor 3 |
 | Searchremotely | то же | убрать Mon–Fri 24h |
-| Thailand Stuff / Phuket Insider | то же | часы/день 500 |
+| Thailand Stuff / Phuket Insider | то же | часы/день 400 до 31.10, с 01.11 — 500 |
 | GBP | уже 08–23 pending | только дождаться Google |
 | Ads / IG | вне сайта | не трогать из этого handoff |
 

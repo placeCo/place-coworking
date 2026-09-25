@@ -48,8 +48,8 @@ A) Place Pass (1+3) · B) Offices (2+5) · C) Studio (4 via manager) · Meeting 
 | Trial | **1 free day**, 3rd floor only | Not 3 days; not any floor; not studio/office/roof |
 | 1 hour | **50฿** | Short call / drop-in hour only |
 | 5 hours | **REMOVED** from public showcase | Old 150 cannibalized day — do not restore at 150 |
-| 1 day (10h) | **500฿** | Was 300; penalty for one-off |
-| 1 week | **1800฿** | Beats 4×500 |
+| 1 day (10h) | **400฿** until 31 Oct 2026 · **500฿** from 1 Nov 2026 | George 25 Sep 2026 (CANON §15). Was 300; penalty for one-off |
+| 1 week | **1800฿** | Oct: beats 5×400 = 2000 · from 1 Nov: beats 4×500 = 2000 |
 | 1 month 08–23 | **6000฿** | Year-round round price |
 | 3 months | **15 000฿** | 5000/mo; only long “deal” on showcase |
 | Month 24/7 | **9000฿** | Nights + key deposit |
@@ -63,7 +63,7 @@ Separate floor-1 column; 10-day packs; all public floor-2 tariffs; “3 free day
 - Studio 4 — via manager. Internal leaflet orientation (**do not publish blindly**): Podcast 3 cameras 6000; Talking head 1h 3000; Webinar from 14 000; Interview on location from 5000; Editing podcast from 4000; Photo studio 1h 2000 / 2h 3000; Photographer/operator 5000; “price includes equipment”
 
 ## Position phrase (CORE)
-> Place in Chalong: Pass on 1+3 (hall on 3rd), offices on 2 and 5, studio on 4 via manager. First Pass day free on 3rd. Day 500 · week 1800 · month 6000 · with nights 9000.
+> Place in Chalong: Pass on 1+3 (hall on 3rd), offices on 2 and 5, studio on 4 via manager. First Pass day free on 3rd. Day 400 (until 31 Oct; from 1 Nov — 500) · week 1800 · month 6000 · with nights 9000.
 
 ## Short-tail sales fact (canon §6) — OLD prices
 20 Jul – 20 Sep 2026 at old rates (hour 50 / 5h 150 / day ~300):  
