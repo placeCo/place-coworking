@@ -16,7 +16,7 @@ Trial = **1** free day, **floor 3 only**. Hours 08:00–23:00. **Нет** public
 | День | ID | Формат | Рубрика | Хук (1 строка) | CTA | Цель |
 |------|----|--------|---------|----------------|-----|------|
 | Пн 28 | OCT-W1-01 | Reel 15–25с | B Floor 3 vs 1 | «Работаешь на 3-м, кофе и библиотека на 1-м — один Pass» | Trial / TG | TG/WA (не сайт-цены) |
-| Вт 29 | OCT-W1-02 | Static / carousel | A Ladder | Вилка на одной карточке: 0 → 500 → 1800 → 6000 → 9000 | Week 1800 / Month 6000 | TG/WA (не сайт-цены) |
+| Вт 29 | OCT-W1-02 | Static / carousel | A Ladder | Вилка на одной карточке: 0 → 400 (окт) → 1800 → 6000 → 9000 | Week 1800 / Month 6000 | TG/WA (не сайт-цены) |
 | Ср 30 | OCT-W1-03 | Reel | C Hours + 9000 | EN nomad: night calls → не «24/7 для всех», а 9000 + key | Month 9000 | TG/WA (не сайт-цены) |
 | Чт 01 | OCT-W1-04 | Carousel | E Chalong / parking | Phuket south: Chalong, парковка, не Патонг | Trial / TG | TG/WA (не сайт-цены) |
 | Пт 02 | OCT-W1-05 | Static | D Studio | Studio 4 без полного меню — «через менеджера» + proof кадра | Studio → manager | TG/WA (не сайт-цены) |
