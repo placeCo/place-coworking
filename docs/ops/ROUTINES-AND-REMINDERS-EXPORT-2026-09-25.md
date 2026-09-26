@@ -4,31 +4,26 @@
 
 ---
 
-## A. Routines восстановить (cron ICT)
+## A. Актуальное расписание routines (ICT, ежедневно, включая выходные)
 
-| Имя | Cron | Что делает | Тихо если пусто? |
-|-----|------|------------|------------------|
-| Place TG morning digest | `52 8 * * 1-5` | TG first + Gmail; сводка George | короткий «тихо» ок |
-| Place inbound watch | `23,53 8-20 * * 1-5` | TG+Gmail каждые ~30м днём | **да — молчать** |
-| Place evening wrap-up | `43 19 * * 1-5` | Итог дня / открытые OK | если ноль — коротко |
-| Place TG social drafts | `52 10 * * 1,3,5` | Статусы слотов SMM, без publish | — |
-| Place Apps Script reminder watch | `31 12 * * 1-5` | Здоровье renewals email | только если fail |
-| Place Thai ops 10:00 kick (room 3) | `0 10 25 9 *` (разово 25 Sep) | Текст Лене room 3 → отчёт → **удалить routine** | если уже sent — skip |
+| Время | Routine | Что делает |
+|-------|---------|------------|
+| 10:07 | Place TG morning sales report | Отчёт продаж за вчера Лене в DM через бота, для сверки с кассой |
+| 13:00 | Place midday inbox | Только Gmail с label `TG-inbox` и вкладка `queue`; Telegram Web не использовать |
+| 23:10 | Place evening wrap-up | Вечерний wrap-up и отчёт продаж George; перенесено с 19:30 |
+| Пн/Ср/Пт 10:52 | Place TG social drafts | Черновики TG social |
 
-**Skill к digests:** `place-daily-intel-check` (TG обязателен первым).
+После вечернего wrap-up сообщения команде в TG отправляются только с **10:00 ICT**. Коворкинг работает по выходным, поэтому расписание выше — ежедневно. Apps Script reminder watch — **на паузе**.
 
-**Жёсткое окно команды:** TG Thai team / Lena / Nikita / PLACE Team **только 10:00–22:00 ICT**.
-
----
 
 ## B. Что George не должен помнить сам (бот напоминает)
 
 ### Ежедневно / по расписанию
-- [ ] Утренний TG+Gmail digest
-- [ ] Inbound watch без спама
-- [ ] Вечерний wrap
+- [ ] 10:07 — утренний отчёт продаж за вчера Лене через бота
+- [ ] 13:00 — midday inbox: только Gmail `TG-inbox` + queue, без Telegram Web
+- [ ] 23:10 — вечерний wrap-up и отчёт продаж George
 - [ ] Пн/Ср/Пт — SMM слоты / блокеры Алене
-- [ ] Полдень — Apps Script renewals не молчат об ошибках
+- [ ] Apps Script reminder watch — на паузе
 
 ### Открытый фронт на 25 Sep (пока не закрыто)
 | ID | Хвост | Кто | Срок | Статус |
