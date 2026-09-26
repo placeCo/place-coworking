@@ -8,6 +8,7 @@
 
 | Время | Routine | Что делает |
 |-------|---------|------------|
+| 00:08 | Place nightly TG Web DM sweep | Открыть Telegram Web аккаунта Place, собрать новые ЛС в Place Inbox `queue` (source «TG Web DM»); ночью никому не отвечать: команде — после 10:00 через бота, лидам/клиентам — черновик на OK George |
 | 10:07 | Place TG morning sales report | Отчёт продаж за вчера Лене в DM через бота, для сверки с кассой |
 | 13:00 | Place midday inbox | Только Gmail с label `TG-inbox` и вкладка `queue`; Telegram Web не использовать |
 | 23:10 | Place evening wrap-up | Вечерний wrap-up и отчёт продаж George; перенесено с 19:30 |
@@ -15,10 +16,13 @@
 
 После вечернего wrap-up сообщения команде в TG отправляются только с **10:00 ICT**. Коворкинг работает по выходным, поэтому расписание выше — ежедневно. Apps Script reminder watch — **на паузе**.
 
+С **26.09.2026** Lead не видит ЛС аккаунту Place в Telegram в реальном времени: рабочие сообщения — в бот @PlaceLeadBot или рабочие группы (PLACE Team / PlaceCo / «Тех вопросы»), не в личку. Telegram Web аккаунта Place открывается только в 00:08 (nightly sweep); в 13:00 — по-прежнему без Telegram Web. Подробно: [`TG-BOT.md`](TG-BOT.md).
+
 
 ## B. Что George не должен помнить сам (бот напоминает)
 
 ### Ежедневно / по расписанию
+- [ ] 00:08 — nightly TG Web DM sweep: новые ЛС аккаунта Place → Place Inbox (source «TG Web DM»), без ответов ночью
 - [ ] 10:07 — утренний отчёт продаж за вчера Лене через бота
 - [ ] 13:00 — midday inbox: только Gmail `TG-inbox` + queue, без Telegram Web
 - [ ] 23:10 — вечерний wrap-up и отчёт продаж George

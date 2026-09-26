@@ -72,6 +72,7 @@ George хочет «передать всё». Чаты и живые сесси
 | Place evening wrap-up | weekdays ~19:43 | Итог дня |
 | Place inbound watch | weekdays :23/:53 8–20 | TG+Gmail; тихо если пусто |
 | Place TG social drafts | Mon/Wed/Fri ~10:52 | Соц-драфты |
+| Place nightly TG Web DM sweep | daily ~00:08 | С 26.09.2026: Telegram Web аккаунта Place → новые ЛС в Place Inbox (source «TG Web DM»); ночью без ответов |
 | Place Apps Script reminder watch | weekdays ~12:31 | Renewals email health |
 | Place Thai ops 10:00 kick | one-shot 25 Sep 10:00 | Lena room 3 — **если ещё не ушло** |
 
