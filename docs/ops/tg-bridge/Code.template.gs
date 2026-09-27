@@ -53,7 +53,7 @@ function opsFlush_() {
 
 function opsWake_(payload) {
   var props = PropertiesService.getScriptProperties();
-  var url = props.getProperty('OPS_URL'), auth = props.getProperty('OPS_AUTH');
+  var url = props.getProperty('OPS_URL') || OPS_URL, auth = props.getProperty('OPS_AUTH') || OPS_AUTH;
   if (!url || !auth) return 'NO_CFG';
   try {
     var r = UrlFetchApp.fetch(url, {method: 'post', contentType: 'application/json', headers: {Authorization: 'Bearer ' + auth}, payload: JSON.stringify(payload), muteHttpExceptions: true});
