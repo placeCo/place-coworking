@@ -178,6 +178,9 @@ function digest_(items, warnings, today) {
   };
 }
 
+// Assignee of the electricity-bill task: Lena (approved role, George 29.09 19:40)
+var ELEC_ASSIGNEE = 'Lena';
+
 /** Rent-month start today? -> tech task. log = SENT_LOG object (dedupe key ELEC|row|yyyy-MM). */
 function electricityTasks_(active, today, log, runMode) {
   var p = PropertiesService.getScriptProperties();
@@ -193,17 +196,17 @@ function electricityTasks_(active, today, log, runMode) {
     var text = 'выставить счёт за электричество: ' + office + ', ' + t.tenant;
     var key = 'ELEC|' + t.row + '|' + Utilities.formatDate(today, TZ, 'yyyy-MM');
     if (log[key]) return;
-    out.push(text);
+    out.push(text + ' → ' + ELEC_ASSIGNEE);
     if (mode === 'issues') {
       var id = p.getProperty('ISSUES_SHEET_ID');
       var sh = id && SpreadsheetApp.openById(id).getSheetByName('Issues');
       if (!sh) { Logger.log('ELEC: no Issues tab / ISSUES_SHEET_ID -> dry'); Logger.log('[elec dry] ' + text); return; }
       var now = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH:mm');
-      // same columns as issues-log.gs ISSUES_HEAD
-      sh.appendRow(['elec:' + t.row + ':' + Utilities.formatDate(today, TZ, 'yyyy-MM'), now, t.floor, 'Place Ops (auto)', text, 'open', '', now, '', '', '', '']);
+      // same columns as issues-log.gs ISSUES_HEAD (last = assignee)
+      sh.appendRow(['elec:' + t.row + ':' + Utilities.formatDate(today, TZ, 'yyyy-MM'), now, t.floor, 'Place Ops (auto)', text, 'open', '', now, '', '', '', '', ELEC_ASSIGNEE]);
       log[key] = d_(today);
       PropertiesService.getScriptProperties().setProperty('SENT_LOG', JSON.stringify(log));
-    } else Logger.log('[elec dry] ' + text);
+    } else Logger.log('[elec dry] ' + text + ' (assignee: ' + ELEC_ASSIGNEE + ')');
   });
   return out;
 }

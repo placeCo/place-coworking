@@ -18,7 +18,7 @@
 
 var ISSUES_CHAT_RE = /тех\s*вопрос/i;
 var ISSUES_TAB = 'Issues';
-var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id'];
+var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id', 'assignee'];
 var DONE_RE = /(готово|сделано|сделал|починил|починили|исправил|решено|закрыто|fixed|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
 var BOT_RE = /placeleadbot/i;
 
@@ -59,7 +59,7 @@ function issuesHandle_(sh, m, text, sender) {
     return 'reply-untracked';
   }
   var floor = typeof parseFloor_ === 'function' ? parseFloor_(text) : issuesFloor_(text);
-  var newRow = [m.chat.id + ':' + m.message_id, when, floor, sender, text.slice(0, 1000), 'open', '', when, '', '', String(m.chat.id), String(m.message_id)];
+  var newRow = [m.chat.id + ':' + m.message_id, when, floor, sender, text.slice(0, 1000), 'open', '', when, '', '', String(m.chat.id), String(m.message_id), ''];
   if (live) sh.appendRow(newRow); else Logger.log('[issues dry] new: ' + JSON.stringify(newRow));
   return 'open';
 }
