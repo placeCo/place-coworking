@@ -1,0 +1,104 @@
+/**
+ * Place Coworking — 2.1.5 / 10.1 Breakdown & issue log. DRAFT TEMPLATE, NOT DEPLOYED.
+ *
+ * Plugs into the TG bridge (docs/ops/tg-bridge/Code.template.gs). Every new
+ * top-level message in the «Тех вопросы» chat becomes a row in tab «Issues»
+ * (same Place Inbox spreadsheet as «Заказы»). A reply to that message with a
+ * "done" word (готово / починил / fixed / เสร็จ / แก้แล้ว / ซ่อมแล้ว …) closes it;
+ * any other reply marks it in_progress and is kept as the last note.
+ * issuesDigest_() builds the text for the existing 10:07 (open list) and
+ * 23:10 (closed today + still open) runs. No new Lead runs, no TG sends here.
+ *
+ * Hook (one line in poll(), after the orders hook):
+ *   if (ISSUES_CHAT_RE.test(chat) && !(u.edited_message)) try { issuesHandle_(issuesSheet_(), m, text, name); } catch (e) { Logger.log('ISSUES_ERR ' + e); }
+ *
+ * SAFETY: ISSUES_MODE (Script Property) defaults to 'dry' = log only, no sheet
+ * writes. 'live' writes to the «Issues» tab — only after George OK.
+ */
+
+var ISSUES_CHAT_RE = /тех\s*вопрос/i;
+var ISSUES_TAB = 'Issues';
+var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id'];
+var DONE_RE = /(готово|сделано|сделал|починил|починили|исправил|решено|закрыто|fixed|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
+var BOT_RE = /placeleadbot/i;
+
+function issuesSheet_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sh = ss.getSheetByName(ISSUES_TAB);
+  if (!sh) {
+    if (issuesMode_() !== 'live') return null;
+    sh = ss.insertSheet(ISSUES_TAB);
+    sh.appendRow(ISSUES_HEAD);
+  }
+  return sh;
+}
+
+function issuesMode_() { return PropertiesService.getScriptProperties().getProperty('ISSUES_MODE') || 'dry'; }
+
+function issuesHandle_(sh, m, text, sender) {
+  var f = m.from || {};
+  if (BOT_RE.test(f.username || '')) return 'skip-bot';
+  var when = Utilities.formatDate(new Date(m.date * 1000), 'Asia/Bangkok', 'yyyy-MM-dd HH:mm');
+  var live = issuesMode_() === 'live' && sh;
+  var rows = sh ? sh.getDataRange().getValues() : [ISSUES_HEAD];
+  var col = {}; ISSUES_HEAD.forEach(function (h, i) { col[h] = i; });
+  var replyTo = m.reply_to_message ? String(m.reply_to_message.message_id) : null;
+  if (replyTo) {
+    for (var r = 1; r < rows.length; r++) {
+      if (String(rows[r][col.tg_message_id]) === replyTo && String(rows[r][col.tg_chat_id]) === String(m.chat.id)) {
+        var row = rows[r].slice();
+        row[col.last_note] = (sender + ': ' + text).slice(0, 500);
+        row[col.last_update_ict] = when;
+        if (DONE_RE.test(text)) { row[col.status] = 'closed'; row[col.closed_at_ict] = when; row[col.closed_by] = sender; }
+        else if (row[col.status] === 'open') row[col.status] = 'in_progress';
+        if (live) sh.getRange(r + 1, 1, 1, ISSUES_HEAD.length).setValues([row]);
+        else Logger.log('[issues dry] update row ' + (r + 1) + ': ' + JSON.stringify(row));
+        return row[col.status];
+      }
+    }
+    return 'reply-untracked';
+  }
+  var floor = typeof parseFloor_ === 'function' ? parseFloor_(text) : issuesFloor_(text);
+  var newRow = [m.chat.id + ':' + m.message_id, when, floor, sender, text.slice(0, 1000), 'open', '', when, '', '', String(m.chat.id), String(m.message_id)];
+  if (live) sh.appendRow(newRow); else Logger.log('[issues dry] new: ' + JSON.stringify(newRow));
+  return 'open';
+}
+
+function issuesFloor_(text) {
+  var m = String(text).match(/(\d)\s*(?:этаж|эт\.?|floor|fl\.?|ชั้น)|(?:этаж|floor|ชั้น)\s*(\d)/i);
+  return m ? (m[1] || m[2]) : '';
+}
+
+/** kind: 'morning' (10:07) | 'evening' (23:10). Returns text for the Lead report. */
+function issuesDigest_(kind, now) {
+  var sh = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ISSUES_TAB);
+  if (!sh) return 'Issues: вкладки нет (ещё не запущено).';
+  var rows = sh.getDataRange().getValues(), col = {}; ISSUES_HEAD.forEach(function (h, i) { col[h] = i; });
+  var today = Utilities.formatDate(now || new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
+  var nowMs = (now || new Date()).getTime();
+  var open = [], closedToday = [];
+  for (var r = 1; r < rows.length; r++) {
+    var x = rows[r], st = x[col.status];
+    var line = (x[col.floor] ? x[col.floor] + ' эт. ' : '') + String(x[col.text]).slice(0, 80);
+    if (st === 'closed') { if (String(x[col.closed_at_ict]).indexOf(today) === 0) closedToday.push('✅ ' + line + ' (' + x[col.closed_by] + ')'); }
+    else {
+      var opened = new Date(String(x[col.opened_at_ict]).replace(' ', 'T') + ':00+07:00').getTime();
+      var days = Math.floor((nowMs - opened) / 86400000);
+      open.push({d: days, s: (st === 'in_progress' ? '🔧 ' : '🔴 ') + line + ' (' + (days ? days + ' дн.' : 'сегодня') + ')'});
+    }
+  }
+  open.sort(function (a, b) { return b.d - a.d; });
+  var txt = 'Поломки: открыто ' + open.length + (kind === 'evening' ? ', закрыто сегодня ' + closedToday.length : '') + '\n' + open.map(function (o) { return o.s; }).join('\n');
+  if (kind === 'evening' && closedToday.length) txt += '\n' + closedToday.join('\n');
+  return txt;
+}
+
+/** Offline test with fake updates. In dry mode only logs. */
+function dryRunIssues() {
+  var chat = {id: -100123, title: 'Тех вопросы', type: 'supergroup'}, t = 1790700000;
+  var log = [];
+  log.push(issuesHandle_(null, {chat: chat, message_id: 501, date: t, from: {username: 'som'}}, 'Кондиционер на 3 этаже течёт', 'Som'));
+  log.push(issuesHandle_(null, {chat: chat, message_id: 502, date: t + 60, from: {username: 'tangmo'}}, 'ชั้น 1 ไฟดับ 2 ดวง', 'Tangmo'));
+  Logger.log(JSON.stringify(log));
+  return log;
+}
