@@ -109,6 +109,7 @@ Skill: `place-daily-intel-check` (TG обязателен первым).
 5. **Никита / Lena:** Deskimo фото / Wi‑Fi+банк — следить inbound
 6. **Meta/Postiz:** paused до календаря+Meta login
 7. **Apps Script renewals:** watch после fail Invalid email 24 Sep
+8. **Интернет-мониторинг (нужно решить, добавлено 29.09):** мониторинг будет (решение George 29.09 19:34). Сейчас мониторов нет: UptimeRobot на info@ существует с 18.02.2025, мониторов и алертов 0. Схему сети и железо George решает без бота. Предлагаемый подход (heartbeat с каждой сети → Healthchecks.io → алерты 10:00–22:00 в PLACE Team, ночью George): [`handover/INTERNET-MONITOR.md`](handover/INTERNET-MONITOR.md). **Владелец: TBD (George).** Статус: open.
 
 ## Шаг 8 — Критерий «всё передали»
 Новый lead-бот может без старого бота:

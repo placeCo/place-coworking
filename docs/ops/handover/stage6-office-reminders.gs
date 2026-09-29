@@ -24,6 +24,14 @@
  *   MODE                'dry' | 'draft'
  *   TENANT_DRAFTS       'true' (default) = also create per-tenant drafts in draft mode
  *   COL_*               header overrides, e.g. COL_EMAIL='E-mail' (see HEADERS below)
+ *   ELEC_TASK_MODE      'dry' (default, log only) | 'issues' = (only with MODE=draft) append a row to the «Issues»
+ *                       tech-task tab (see issues-log.gs). No TG post from here.
+ *   ISSUES_SHEET_ID     spreadsheet with the «Issues» tab (Place Inbox), required for 'issues'
+ *
+ * ELECTRICITY BILL TASK (George 29.09): on the first day of each tenant's rent
+ * month (= day-of-month of «Contract start», e.g. start 10.09 -> every 10th;
+ * 31st -> last day of shorter months) create a tech task
+ * «выставить счёт за электричество: <office>, <tenant>». Deduplicated per month.
  *
  * Time zone of the project: (GMT+07:00) Bangkok.
  * Principle (George 29.09): no new separate runs. Preferred: Lead calls dryRun()
@@ -127,8 +135,10 @@ function run_(mode) {
       log[key] = d_(today); created.push(d.getId());
     }
   });
+  var elec = electricityTasks_(active, today, log, mode);
   var digest = digest_(items, warnings, today);
-  if (mode === 'draft' && (items.length || warnings.length)) {
+  if (elec.length) digest.body = 'Задачи «счёт за электричество» сегодня:\n• ' + elec.join('\n• ') + '\n\n' + digest.body;
+  if (mode === 'draft' && (items.length || warnings.length || elec.length)) {
     GmailApp.createDraft(c.digestTo, digest.subject, digest.body);
     PropertiesService.getScriptProperties().setProperty('SENT_LOG', JSON.stringify(log));
   }
@@ -166,6 +176,36 @@ function digest_(items, warnings, today) {
     body: (lines.length ? lines.join('\n') : 'No reminders today.') + (warnings.length ? '\n\nWarnings:\n• ' + warnings.join('\n• ') : '') +
       '\n\n(Drafts only. Review in Gmail Drafts and send manually.)'
   };
+}
+
+/** Rent-month start today? -> tech task. log = SENT_LOG object (dedupe key ELEC|row|yyyy-MM). */
+function electricityTasks_(active, today, log, runMode) {
+  var p = PropertiesService.getScriptProperties();
+  // writes only when the whole run is in draft mode AND ELEC_TASK_MODE=issues; dryRun() never writes
+  var mode = runMode === 'draft' ? (p.getProperty('ELEC_TASK_MODE') || 'dry') : 'dry';
+  var out = [];
+  active.forEach(function (t) {
+    if (!t.start || (t.end && t.end < today) || t.start > today) return;
+    var dim = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    var due = Math.min(t.start.getDate(), dim);
+    if (today.getDate() !== due) return;
+    var office = [t.floor ? t.floor + ' эт.' : '', t.room].filter(String).join(' ');
+    var text = 'выставить счёт за электричество: ' + office + ', ' + t.tenant;
+    var key = 'ELEC|' + t.row + '|' + Utilities.formatDate(today, TZ, 'yyyy-MM');
+    if (log[key]) return;
+    out.push(text);
+    if (mode === 'issues') {
+      var id = p.getProperty('ISSUES_SHEET_ID');
+      var sh = id && SpreadsheetApp.openById(id).getSheetByName('Issues');
+      if (!sh) { Logger.log('ELEC: no Issues tab / ISSUES_SHEET_ID -> dry'); Logger.log('[elec dry] ' + text); return; }
+      var now = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH:mm');
+      // same columns as issues-log.gs ISSUES_HEAD
+      sh.appendRow(['elec:' + t.row + ':' + Utilities.formatDate(today, TZ, 'yyyy-MM'), now, t.floor, 'Place Ops (auto)', text, 'open', '', now, '', '', '', '']);
+      log[key] = d_(today);
+      PropertiesService.getScriptProperties().setProperty('SENT_LOG', JSON.stringify(log));
+    } else Logger.log('[elec dry] ' + text);
+  });
+  return out;
 }
 
 // ---------- helpers ----------
