@@ -13,10 +13,24 @@
 - Проект Apps Script: **«Place TG Bridge»**, аккаунт **info@placecoworking.com**.
 - ID проекта: `1b6HRWG7y33yeGUwAkc5zaibuV-4TXCtpghU5Go-nQy65Pjpz6LAGIf7_`.
 - Скрипт вызывает `getUpdates` раз в минуту. **`setWebhook` запрещён:** он сломает polling-мост.
+- Заказы из PLACE Team дополнительно пишутся во вкладку `Заказы` (см. ниже).
 - Каждое сообщение попадает письмом на `info@placecoworking.com` с темой `TG | name | chat`, а также строкой в Place Inbox: таблица `1uMHYp6d-Ji9VQj5xtESiXummBNX9bC8vTruPRQLs8jw`, вкладка `queue`.
 - Gmail-фильтр переносит письма с `TG |` из inbox, помечает их прочитанными и ставит label `TG-inbox`.
 
 Шаблон кода без секретов: [`tg-bridge/Code.template.gs`](tg-bridge/Code.template.gs). В нём допустимы только плейсхолдеры `__TOKEN__`, `__OPS_URL__`, `__OPS_AUTH__`.
+
+## Заказы PLACE Team → вкладка «Заказы» (этап 3, 6.1.3; код от 29.09.2026)
+
+- Таблица Place Inbox, вкладка **«Заказы»** (gid `1541299951`): https://docs.google.com/spreadsheets/d/1uMHYp6d-Ji9VQj5xtESiXummBNX9bC8vTruPRQLs8jw/edit#gid=1541299951
+- Пишутся только сообщения из **PLACE Team**, похожие на заказ: содержат `order` (любой регистр, в т.ч. «New order …») или `สั่งของ`/`สั่งซื้อ` (закупки KA TE).
+- Колонки: `posted_time_ICT | sender | full_text | floor | status | edited_at | tg_message_id | status_history`.
+  - `floor`: `1st…6th floor` (терпит опечатки вроде «fooor»), `Meeting room`, `Library`, `Terrace`, `Takeaway`; несколько — через запятую.
+  - `status`: `✅<слово>` (`✅cash`, `✅transfer`, `✅point`…), `❌` (также «not paid / not pay yet / unpaid»), иначе `none`.
+- **Правка (`edited_message`)** не создаёт новую строку: строка с тем же `tg_message_id` обновляется (text/floor/status/sender), ставится `edited_at`, а прежний статус дописывается в `status_history` как `<статус> @<время>` через ` | `. Если строки нет, а правка похожа на заказ — вставляется новая строка.
+- Запись в таблицу обёрнута в `try/catch` (`ORDERS_ERR` в логах) и идёт **после** письма на info@ — письма `TG | name | chat` и строка в `queue` работают как раньше. Новых триггеров/webhook нет (тот же `poll` раз в минуту).
+- Если вкладки нет, код создаёт её в конце (чтобы `getSheets()[0]` оставался `queue`).
+- Проверка без Telegram/почты/записи: функция `dryRunOrders()` (in-memory лист, результат в Logger).
+- Деплой: вставить новый `Code.template.gs` в проект «Place TG Bridge» **сохранив текущие значения констант** `TOKEN`/`OPS_URL`/`OPS_AUTH` из live-проекта (или оставить плейсхолдеры: код берёт `TOKEN`, `OPS_URL`, `OPS_AUTH` из Script Properties), сохранить; триггер `poll` подхватит новый код. Секреты в репозиторий не коммитить.
 
 ## Wake Place Ops
 

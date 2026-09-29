@@ -124,6 +124,7 @@ function poll() {
       GmailApp.sendEmail(TO, 'TG | ' + name + ' | ' + chat, body);
       sh.appendRow([when, chat, String(m.chat.id), name, f.username ? '@' + f.username : '', text, '', '']);
       sent++;
+      if (ORDERS_CHAT_RE.test(chat)) try { ordersUpsert_(ordersSheet_(), m, text, name, !!(u.edited_message || u.edited_channel_post)); } catch (e) { Logger.log('ORDERS_ERR ' + e); }
       if (opsNeeded_(m, text)) opsQueue_({chat: chat, chat_id: m.chat.id, from: name + (f.username ? ' @' + f.username : ''), text: text, date: when, message_id: m.message_id, reply_to: m.reply_to_message ? (describe_(m.reply_to_message) || '').slice(0, 300) : null});
     }
     opsFlush_();
@@ -134,4 +135,90 @@ function poll() {
   } finally {
     lock.releaseLock();
   }
+}
+
+// ===== Stage 3 (6.1.3): PLACE Team orders -> tab «Заказы» in the same Place Inbox spreadsheet =====
+// Never breaks email: poll() calls ordersUpsert_ inside try/catch. No extra triggers/webhooks.
+const ORDERS_TAB = 'Заказы';
+const ORDERS_HDR = ['posted_time_ICT', 'sender', 'full_text', 'floor', 'status', 'edited_at', 'tg_message_id', 'status_history'];
+const ORDERS_CHAT_RE = /place\s*team/i;
+const ORDER_RE = /(order|สั่งของ|สั่งซื้อ)/i;   // 'New order ...' + KA TE purchase lists
+const KATE_RE = /^ka\s*te/i;                    // KA TE (kitchen) purchase orders
+
+function ordersSheet_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sh = ss.getSheetByName(ORDERS_TAB);
+  if (!sh) {
+    sh = ss.insertSheet(ORDERS_TAB, ss.getNumSheets()); // at the end: getSheets()[0] stays «queue»
+    sh.appendRow(ORDERS_HDR);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+function isOrder_(chatTitle, sender, text) {
+  if (!ORDERS_CHAT_RE.test(chatTitle || '')) return false;
+  return ORDER_RE.test(text || '') || (KATE_RE.test(sender || '') && /สั่ง/.test(text || ''));
+}
+
+function parseFloor_(text) {
+  var t = String(text || ''), out = [], re = /([1-6])\s*(st|nd|rd|th)?\s*f[lo]+r\b/ig, mm;
+  var suf = {1: 'st', 2: 'nd', 3: 'rd'};
+  while ((mm = re.exec(t))) { var f = mm[1] + (suf[mm[1]] || 'th') + ' floor'; if (out.indexOf(f) < 0) out.push(f); }
+  var rooms = [[/meeting\s*room/i, 'Meeting room'], [/library/i, 'Library'], [/terrace|rooftop/i, 'Terrace'], [/take\s*-?away/i, 'Takeaway']];
+  rooms.forEach(function (r) { if (r[0].test(t)) out.push(r[1]); });
+  return out.join(', ');
+}
+
+function parseStatus_(text) {
+  var t = String(text || ''), paid = t.match(/✅\s*([A-Za-z\u0E00-\u0E7F]+)?/);
+  if (paid) return '✅' + (paid[1] ? paid[1].toLowerCase() : '');
+  if (/❌|not\s*pa(y|id)|unpaid/i.test(t)) return '❌';
+  return 'none';
+}
+
+function ictTime_(unix) { return Utilities.formatDate(new Date(unix * 1000), 'Asia/Bangkok', 'yyyy-MM-dd HH:mm'); }
+
+// Insert a new order row, or (for edits) update the row with the same tg_message_id.
+function ordersUpsert_(sh, m, text, sender, isEdit) {
+  var chat = m.chat.title || '';
+  var id = String(m.message_id);
+  var row = 0;
+  if (isEdit && sh.getLastRow() > 1) {
+    var ids = sh.getRange(2, 7, sh.getLastRow() - 1, 1).getValues();
+    for (var i = ids.length - 1; i >= 0; i--) if (String(ids[i][0]) === id) { row = i + 2; break; }
+  }
+  if (!row && !isOrder_(chat, sender, text)) return 'skip';
+  if (!ORDERS_CHAT_RE.test(chat)) return 'skip';
+  var floor = parseFloor_(text), status = parseStatus_(text);
+  var editedAt = isEdit ? ictTime_(m.edit_date || Math.floor(Date.now() / 1000)) : '';
+  if (row) {
+    var cur = sh.getRange(row, 1, 1, 8).getValues()[0];
+    var hist = String(cur[7] || '');
+    hist = (hist ? hist + ' | ' : '') + (cur[4] || 'none') + ' @' + (cur[5] || cur[0]);
+    sh.getRange(row, 1, 1, 8).setValues([[cur[0], sender, text, floor, status, editedAt, cur[6], hist]]);
+    return 'updated ' + row;
+  }
+  sh.appendRow([ictTime_(m.date), sender, text, floor, status, editedAt, id, '']);
+  return 'inserted';
+}
+
+// Dry run: in-memory sheet only. No Telegram, no email, no spreadsheet writes. Run from the editor, read Logger.
+function dryRunOrders() {
+  var fake = {rows: [ORDERS_HDR.slice()],
+    getLastRow: function () { return this.rows.length; },
+    appendRow: function (r) { this.rows.push(r.slice()); },
+    getRange: function (r, c, nr, nc) { var self = this; return {
+      getValues: function () { return self.rows.slice(r - 1, r - 1 + nr).map(function (x) { return x.slice(c - 1, c - 1 + nc); }); },
+      setValues: function (v) { for (var i = 0; i < nr; i++) for (var j = 0; j < nc; j++) self.rows[r - 1 + i][c - 1 + j] = v[i][j]; } }; }};
+  var chat = {id: -1003641241156, title: 'PLACE Team', type: 'supergroup'};
+  var t0 = 1790000000;
+  var log = [];
+  log.push(ordersUpsert_(fake, {chat: chat, message_id: 900001, date: t0}, 'New order for Anna Latte , separate 1 sugar 4th floor ❌ Not pay yet', 'Liang K', false));
+  log.push(ordersUpsert_(fake, {chat: chat, message_id: 900001, date: t0, edit_date: t0 + 600}, 'New order for Anna Latte , separate 1 sugar 4th floor ✅ cash', 'Liang K', true));
+  log.push(ordersUpsert_(fake, {chat: chat, message_id: 900002, date: t0 + 60}, 'Кто закрывает сегодня?', 'Leena', false));
+  log.push(ordersUpsert_(fake, {chat: chat, message_id: 900003, date: t0 + 120, edit_date: t0 + 180}, 'New order for Saif Al Iced americano 3rd fooor', 'Aiz', true));
+  log.push(ordersUpsert_(fake, {chat: chat, message_id: 900004, date: t0 + 200}, 'สั่งของ29.09.69 นมเมจิ5ลิตร 1แกลลอน', 'KA TE', false));
+  Logger.log(JSON.stringify({ops: log, rows: fake.rows}, null, 1));
+  return {ops: log, rows: fake.rows};
 }
