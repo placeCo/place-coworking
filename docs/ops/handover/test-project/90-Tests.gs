@@ -2,7 +2,7 @@
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
+  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -175,5 +175,44 @@ function test_techRoute() {
     } finally { T_CTX = prev; }
     if (fail.length) throw new Error('TECH ROUTE FAIL ' + fail.join('; '));
     return 'OK: header «Тех вопросы (TG группа, сводка 10:07)»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID';
+  });
+}
+
+/** Payment reminders: dates (3 days before + on the day; contracts 30/3/0), no bank account numbers, TEST header, PAY_CHAT_ID empty → WARN, no send. */
+function test_payments() {
+  return T_fixture_('payments', 'PAY.payDue_ / payText_ / payRemindersRun_ (fake ids, fake sender)', function () {
+    var fail = [], D = function (s) { return new Date(s + 'T09:15:00+07:00'); };
+    var names = function (d) { return PAY.payDue_(D(d)).map(function (x) { return x.entry.name + '@' + x.daysLeft; }).sort().join(' | '); };
+    var cases = {
+      '2026-10-05': ['Electricity (PEA)@3', 'Internet 3BB line …4746@3', 'Internet 3BB line …4751@3', 'Billboard (advertising)@0'],
+      '2026-10-08': ['Electricity (PEA)@0', 'Internet 3BB line …4746@0', 'Internet 3BB line …4751@0'],
+      '2026-10-17': ['Water@3'],
+      '2026-10-25': ['Internet 3BB line …7790@3'],
+      '2026-10-29': ['Garbage (Chalong municipality)@3', 'Office mobile (Dtac)@3'],
+      '2027-01-28': ['Printer contract ends@30', 'Billboard contract ends@30', 'Internet 3BB line …7790@0'],
+      '2027-01-29': ['Secom (emergency button)@3', 'Office mobile (Dtac)@3'],
+      '2027-02-24': ['Printer contract ends@3', 'Billboard contract ends@3'],
+      '2026-10-14': []
+    };
+    Object.keys(cases).forEach(function (d) {
+      var want = cases[d].slice().sort().join(' | '), got = names(d);
+      if (want !== got) fail.push(d + ': want [' + want + '] got [' + got + ']');
+    });
+    // all texts of a year: no bank-account-like numbers (10+ digits, or xxx-x-xxxxx-x / xxx xxx xxxx)
+    for (var i = 0; i < 400; i++) {
+      var t = PAY.payText_(new Date(D('2026-10-01').getTime() + i * 86400000));
+      if (/\d{10,}|\b\d{3}[- ]\d{1,3}[- ]\d{4,5}(?:[- ]\d)?\b/.test(t)) { fail.push('bank-like number in text ' + i); break; }
+    }
+    // relay: header + PAY label to George and Lena; production path with empty PAY_CHAT_ID sends nothing
+    var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
+    try {
+      T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {PAY_CHAT_ID: ''}};
+      T_relay_('PAY_CHAT_ID (группа, уточняется)', PAY.payText_(D('2026-10-08')));
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ' || sent[0].text.split('\n')[1] !== 'Куда ушло бы: PAY_CHAT_ID (группа, уточняется)') fail.push('relay header');
+      sent = []; var buf0 = T_BUF.length, r = PAY.payRemindersRun_(D('2026-10-08'));
+      if (r.sent !== false || sent.length || !/WARN PAY_CHAT_ID not set/.test(T_BUF.slice(buf0).join('\n'))) fail.push('empty PAY_CHAT_ID: ' + JSON.stringify(r));
+    } finally { T_CTX = prev; }
+    if (fail.length) throw new Error('PAYMENTS FAIL ' + fail.join('; '));
+    return {ok: Object.keys(cases).length + ' dates OK, no bank numbers, header OK, empty PAY_CHAT_ID → not sent', sample: PAY.payText_(D('2026-10-05'))};
   });
 }

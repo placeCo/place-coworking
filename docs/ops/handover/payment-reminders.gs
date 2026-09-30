@@ -1,0 +1,86 @@
+/**
+ * Place Coworking — recurring payment reminders. DRAFT, NOT DEPLOYED (George OK 30.09.2026 22:01 for TEST).
+ *
+ * Source: Aiz's «Supplier and Product detail» (30.09.2026). The file itself (with bank accounts) stays OFF git;
+ * this table has NO bank account numbers — only how to pay. Edit PAY_SCHEDULE when amounts/dates change.
+ *
+ * Rules: reminder 3 days before the due date and on the day. Contract ends: 30 days before, 3 days before, on the day.
+ * One message per day with all reminders of that day, sent to the Telegram group PAY_CHAT_ID (Script Property,
+ * group id, negative). Empty PAY_CHAT_ID → WARN in Logger, nothing is sent. Token: Script Property TOKEN (bridge bot).
+ * Daily trigger ~09:15 Asia/Bangkok: payRemindersRun_().
+ */
+var PAY_TZ = 'Asia/Bangkok';
+/** kind: monthly {day} | yearly {month, day} | months {months:[..], day} | once {date:'yyyy-MM-dd'} (contract end).
+ *  offsets: days before the due date to remind (0 = on the day). */
+var PAY_SCHEDULE = [
+  {name: 'Electricity (PEA)',              kind: 'monthly', day: 8,  amount: '43,000–57,000 ฿', who: 'Sak (controls)',        how: 'QR or at the PEA office'},
+  {name: 'Water',                          kind: 'monthly', day: 20, amount: '900–1,500 ฿',     who: 'bill to Lena',          how: 'QR or at the office'},
+  {name: 'Internet 3BB line …7174',        kind: 'monthly', day: 12, amount: '1,924.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
+  {name: 'Internet 3BB line …4746',        kind: 'monthly', day: 8,  amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
+  {name: 'Internet 3BB line …4751',        kind: 'monthly', day: 8,  amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
+  {name: 'Internet 3BB line …7790',        kind: 'monthly', day: 28, amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
+  {name: 'Printer rental',                 kind: 'monthly', day: 10, amount: '2,675 ฿',         who: 'Lena',                  how: 'bank transfer (details in the supplier file)', note: 'after the 10th'},
+  {name: 'Billboard (advertising)',        kind: 'monthly', day: 5,  amount: '5,000 ฿',         who: 'Lena',                  how: 'bank transfer (details in the supplier file)'},
+  {name: 'Office mobile (Dtac)',           kind: 'monthly', day: 1,  amount: '300–400 ฿',       who: 'inform Lena',           how: 'top-up by phone number', note: 'no fixed date in the file: check balance on the 1st'},
+  {name: 'Secom (emergency button)',       kind: 'months',  months: [2, 7], day: 1, amount: '24,396 ฿', who: 'Lena',          how: 'QR code', note: 'twice a year, February and July'},
+  {name: 'Garbage (Chalong municipality)', kind: 'yearly',  month: 11, day: 1, amount: '7,200 ฿/year', who: 'inform Sak and Lena', how: 'cash or QR at the municipality', note: '«after October»'},
+  {name: 'Printer contract ends',          kind: 'once',    date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George + Lena', how: 'renew or cancel', note: 'file says «February, 27»: taken as 27.02.2027'},
+  {name: 'Billboard contract ends',        kind: 'once',    date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George + Lena', how: 'renew or cancel', note: 'file says «February, 27»: taken as 27.02.2027'}
+];
+var PAY_OFFSETS = [3, 0];
+
+function payYmd_(d) { return Utilities.formatDate(d, PAY_TZ, 'yyyy-MM-dd'); }
+function payDate_(y, m, d) { return new Date(Date.UTC(y, m - 1, d, 5, 0, 0)); }  // 12:00 ICT, safe for formatDate
+function payParts_(d) { var s = payYmd_(d).split('-'); return {y: +s[0], m: +s[1], d: +s[2]}; }
+
+/** Due dates of an entry in [from, to] (inclusive, ICT days). */
+function payDueDates_(e, from, to) {
+  var out = [], a = payParts_(from), b = payParts_(to);
+  if (e.kind === 'once') { var p = e.date.split('-'); var d = payDate_(+p[0], +p[1], +p[2]); if (payYmd_(d) >= payYmd_(from) && payYmd_(d) <= payYmd_(to)) out.push(d); return out; }
+  for (var y = a.y; y <= b.y; y++) for (var m = 1; m <= 12; m++) {
+    if (e.kind === 'yearly' && m !== e.month) continue;
+    if (e.kind === 'months' && e.months.indexOf(m) < 0) continue;
+    var last = new Date(Date.UTC(y, m, 0)).getUTCDate(), d = payDate_(y, m, Math.min(e.day, last)), k = payYmd_(d);
+    if (k >= payYmd_(from) && k <= payYmd_(to)) out.push(d);
+  }
+  return out;
+}
+
+/** Reminders for day `today`: [{entry, due, daysLeft}]. */
+function payDue_(today) {
+  var t = payParts_(today), base = payDate_(t.y, t.m, t.d), res = [];
+  PAY_SCHEDULE.forEach(function (e) {
+    (e.offsets || PAY_OFFSETS).forEach(function (off) {
+      var due = new Date(base.getTime() + off * 86400000);
+      if (payDueDates_(e, due, due).length) res.push({entry: e, due: due, daysLeft: off});
+    });
+  });
+  res.sort(function (x, y) { return x.daysLeft - y.daysLeft || (x.entry.name < y.entry.name ? -1 : 1); });
+  return res;
+}
+
+/** Message text for the day, or '' if nothing is due. */
+function payText_(today) {
+  var r = payDue_(today); if (!r.length) return '';
+  var lines = ['💳 Payment reminders ' + Utilities.formatDate(today, PAY_TZ, 'dd.MM.yyyy')];
+  r.forEach(function (x) {
+    var e = x.entry, when = x.daysLeft === 0 ? '🔴 TODAY' : '⏰ in ' + x.daysLeft + ' days';
+    lines.push(when + ' (' + Utilities.formatDate(x.due, PAY_TZ, 'dd.MM') + ') — ' + e.name + (e.amount ? ', ~' + e.amount : ''));
+    lines.push('    ' + [e.who, e.how, e.note].filter(Boolean).join(' · '));
+  });
+  lines.push('Paid? Reply here with a photo of the receipt.');
+  return lines.join('\n');
+}
+
+/** Production run: sends the day's text to PAY_CHAT_ID. Empty PAY_CHAT_ID/TOKEN → WARN, nothing sent. */
+function payRemindersRun_(today) {
+  today = today || new Date();
+  var text = payText_(today);
+  if (!text) return {sent: false, text: '', note: 'nothing due'};
+  var p = PropertiesService.getScriptProperties(), chat = String(p.getProperty('PAY_CHAT_ID') || '').trim(), tok = p.getProperty('TOKEN');
+  if (!chat) { Logger.log('WARN PAY_CHAT_ID not set → payment reminders NOT sent'); return {sent: false, warning: 'PAY_CHAT_ID not set', text: text}; }
+  if (!tok) { Logger.log('WARN TOKEN not set → payment reminders NOT sent'); return {sent: false, warning: 'TOKEN not set', text: text}; }
+  var r = UrlFetchApp.fetch('https://api.telegram.org/bot' + tok + '/sendMessage', {method: 'post', contentType: 'application/json',
+    payload: JSON.stringify({chat_id: chat, text: text, disable_web_page_preview: true}), muteHttpExceptions: true});
+  return {sent: r.getResponseCode() === 200, code: r.getResponseCode(), text: text};
+}

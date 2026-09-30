@@ -111,7 +111,7 @@ var T_SS = {
 // ---------- per-module Script Properties ----------
 /** Script Properties shared by all modules, read unprefixed. TECH_CHAT_ID = «Тех вопросы» group (real target of the
  *  issues digests, unknown yet → empty). */
-var T_SHARED_PROPS = ['TECH_CHAT_ID'];
+var T_SHARED_PROPS = ['TECH_CHAT_ID', 'PAY_CHAT_ID'];   // PAY_CHAT_ID = payment-reminders group (George is adding the bot; empty for now)
 function T_props_(mod) {
   var real = PropertiesService.getScriptProperties(), pre = 'T_' + mod + '_';
   var api = {

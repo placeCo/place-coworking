@@ -92,6 +92,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
 | `job_issuesEvening` | daily 23:10 | same, evening digest (closed today + open), relayed as «Тех вопросы (TG группа, сводка 23:10)» |
 | `job_timesheet` | **28th** of each month, 09:30 | timesheet for the current calendar month, counted to the 28th; days 29..end = «after cutoff → next month adjustments»; previous month 29..end = adjustments. The accountant draft is relayed. |
 | `job_cashReminder` | every 3 days, 20:00 | cash for the Thai partner. Recipients are evening admins from Schedule 26 (shift to 23:00); the reminder is relayed as «TG DM evening admin». |
+| `job_paymentReminders` | daily 09:15 | recurring payments from Aiz's supplier sheet (config `PAY_SCHEDULE` in `payment-reminders.gs`, no bank account numbers): 3 days before + on the day; contract ends 30/3/0 days. Relayed as «PAY_CHAT_ID (группа, уточняется)». Real target: Script Property `PAY_CHAT_ID` (empty → WARN; in production nothing is sent). Test: `test_payments` in `test_all`. |
 
 **Harness check 30.09** (node, snapshots, fake token/chat):
 - all 9 functions OK;

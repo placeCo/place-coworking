@@ -5,12 +5,13 @@
  *
  * One-time setup (see TEST-PLAN.md §2b):
  *   1. Project Settings ▸ Script properties ▸ add TG_TOKEN = <token of @PlaceLeadBot>  (never in code, never in Log).
+ *      PAY_CHAT_ID = chat id of the payments group (job_paymentReminders; empty for now → WARN).
  *      TECH_CHAT_ID = chat id of the TG group «Тех вопросы» (real target of the issues digests; unknown yet, may stay empty).
  *      LENA_CHAT_ID = Lena's private chat id with @PlaceLeadBot (every test message goes to George AND Lena).
  *      Optional: GEORGE_CHAT_ID (if known), GEORGE_TG_USERNAME (e.g. without @), CASH_ANCHOR_DATE (yyyy-mm-dd).
  *   2. Run setupTestProperties()  -> checks the token (getMe), finds/sets GEORGE_CHAT_ID, writes a summary to Log.
  *   3. Run sendTestPing()          -> George and Lena get «🧪 ТЕСТ … ping».
- *   4. Run installTestTriggers()   -> 7 time triggers (Asia/Bangkok).
+ *   4. Run installTestTriggers()   -> 8 time triggers (Asia/Bangkok).
  */
 var T_JOBS = [
   // handler,            kind,     when (Asia/Bangkok; Apps Script runs within ~±15 min of nearMinute)
@@ -20,7 +21,8 @@ var T_JOBS = [
   ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning → TG group «Тех вопросы» (TECH_CHAT_ID)'],
   ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening → TG group «Тех вопросы» (TECH_CHAT_ID)'],
   ['job_timesheet',      'month28', 9, 30, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
-  ['job_cashReminder',   'every3', 20, 0, 'cash-deposit reminder for the evening admin (every 3 days)']
+  ['job_cashReminder',   'every3', 20, 0, 'cash-deposit reminder for the evening admin (every 3 days)'],
+  ['job_paymentReminders', 'daily', 9, 15, 'recurring payments: 3 days before + on the day (contracts: 30/3/0) → PAY_CHAT_ID']
 ];
 
 // ---------- setup ----------
@@ -185,6 +187,18 @@ function job_cashReminder() {
     return {eveningAdmins: names};
   });
 }
+/** Daily ~09:15: recurring payment reminders (Aiz's supplier sheet, config PAY_SCHEDULE in payment-reminders.gs).
+ *  Real target: TG group PAY_CHAT_ID (unknown yet). TEST: relayed to George + Lena; empty PAY_CHAT_ID → WARN. */
+function job_paymentReminders() {
+  return T_job_('payments', 'job_paymentReminders', null, function () {
+    var chat = T_props_('PAY').getScriptProperties().getProperty('PAY_CHAT_ID');
+    if (!chat) T_BUF.push('WARN PAY_CHAT_ID not set → in production the reminders would NOT be sent (relayed in TEST anyway)');
+    var text = PAY.payText_(new Date());
+    if (!text) return 'nothing due today';
+    T_relay_('PAY_CHAT_ID (группа, уточняется)', text);
+    return {payChatId: chat ? 'set' : 'EMPTY (warning)', text: text};
+  });
+}
 function T_eveningAdmins_(d) {
   var c = SC.scCfg_(), sh = T_SS.openById(c.id).getSheetByName(c.tabs[d.getMonth()]);
   var m = SC.scReadTab_(sh, c); if (!m) return [];
@@ -195,6 +209,6 @@ function T_eveningAdmins_(d) {
 /** Dry check of all jobs right now (relay ON: George gets the messages if TG_TOKEN + GEORGE_CHAT_ID are set). */
 function runAllJobsOnce() {
   var fns = {job_stage6: job_stage6, job_coverage: job_coverage, job_bookings: job_bookings, job_issuesMorning: job_issuesMorning,
-    job_issuesEvening: job_issuesEvening, job_timesheet: job_timesheet, job_cashReminder: job_cashReminder};
+    job_issuesEvening: job_issuesEvening, job_timesheet: job_timesheet, job_cashReminder: job_cashReminder, job_paymentReminders: job_paymentReminders};
   return T_JOBS.map(function (j) { return j[0] + ': ' + fns[j[0]]().status; });
 }
