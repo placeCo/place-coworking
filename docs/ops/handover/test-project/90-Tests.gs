@@ -67,11 +67,12 @@ function test_bookings() {
 /** C8: active 24/7 key holders (TEST rows 303-305 in Лист1). */
 function test_keyholders() { return T_fixture_('keyholders', 'KH.keyholders247_', function () { return KH.keyholders247_(new Date('2026-09-30T22:30:00+07:00')); }); }
 
-/** Stage 5: timesheet dry run + "draft" (stub, not created) for 21.08–20.09.2026. */
+/** Stage 5: timesheet dry run + "draft" (stub). Calendar month, counted to the 28th; 29..end = after cutoff; prev month 29..end = adjustments. */
 function test_timesheet() {
   return T_fixture_('timesheet', 'ST5.dryRun + createTimesheetDraft(stub)', function () {
     var r = ST5.dryRun();
-    return {subject: r.subject, warnings: r.warnings, people: (r.csv || '').split('\n').length - 1, draft: ST5.createTimesheetDraft()};
+    return {subject: r.subject, period: r.fromIso + '..' + r.toIso, countedTo: r.cutIso, warnings: r.warnings, people: r.rows.length,
+      afterCutoff: r.afterCutoff, prevAdjustments: r.prevAdjustments, draft: ST5.createTimesheetDraft()};
   });
 }
 

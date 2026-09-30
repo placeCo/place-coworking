@@ -17,7 +17,7 @@ var T_JOBS = [
   ['job_bookings',       'daily',  10, 7, 'bookings-today (10:07 summary)'],
   ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning'],
   ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening'],
-  ['job_timesheet',      'month21', 9, 30, 'timesheet draft for the accountant (21st)'],
+  ['job_timesheet',      'month28', 9, 30, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
   ['job_cashReminder',   'every3', 20, 0, 'cash-deposit reminder for the evening admin (every 3 days)']
 ];
 
@@ -83,7 +83,7 @@ function installTestTriggers() {
     var b = ScriptApp.newTrigger(j[0]).timeBased().inTimezone('Asia/Bangkok');
     if (j[1] === 'daily') b = b.everyDays(1).atHour(j[2]).nearMinute(j[3]);
     else if (j[1] === 'every3') b = b.everyDays(3).atHour(j[2]).nearMinute(j[3]);
-    else if (j[1] === 'month21') b = b.onMonthDay(21).atHour(j[2]).nearMinute(j[3]);
+    else if (j[1] === 'month28') b = b.onMonthDay(28).atHour(j[2]).nearMinute(j[3]);
     b.create();
     return j[0] + ' ' + j[1] + ' ' + j[2] + ':' + ('0' + j[3]).slice(-2);
   });

@@ -54,7 +54,7 @@ var T_PROFILES = {
     ISS: {ISSUES_MODE: 'live'},
     BKG: {EVENTS_SHEET_ID: P_IDS.events, BOOKING_TABS: T_BOOKING_TABS},
     ST5: {SCHEDULE_SHEET_ID: P_IDS.schedule, SHEET_YEAR: '2026', DRAFT_ENABLED: 'true', EXCLUDE_NAMES: '',
-          ACCOUNTANT_TO: 'accountant Khun Sirikanya (real address not configured in TEST)'},
+          ACCOUNTANT_TO: 'new accountant Pat (address not known yet; not configured in TEST)'},
     KH:  {RESIDENT_SHEET_ID: P_IDS.resident, KEY_TAB: 'Лист1'},
     SC:  {SCHEDULE_SHEET_ID: P_IDS.schedule, EXCLUDE_NAMES: 'Aiz', COVERAGE_MODE: 'draft', DIGEST_TO: 'info@placecoworking.com'},
     LV:  {LEAVE_SHEET_ID: T_IDS.inbox, SCHEDULE_SHEET_ID: T_IDS.schedule, LEAVE_APPROVER: 'George'}  // staged: TEST copies only, never production

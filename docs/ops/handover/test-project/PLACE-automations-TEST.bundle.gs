@@ -57,7 +57,7 @@ var T_PROFILES = {
     ISS: {ISSUES_MODE: 'live'},
     BKG: {EVENTS_SHEET_ID: P_IDS.events, BOOKING_TABS: T_BOOKING_TABS},
     ST5: {SCHEDULE_SHEET_ID: P_IDS.schedule, SHEET_YEAR: '2026', DRAFT_ENABLED: 'true', EXCLUDE_NAMES: '',
-          ACCOUNTANT_TO: 'accountant Khun Sirikanya (real address not configured in TEST)'},
+          ACCOUNTANT_TO: 'new accountant Pat (address not known yet; not configured in TEST)'},
     KH:  {RESIDENT_SHEET_ID: P_IDS.resident, KEY_TAB: 'Лист1'},
     SC:  {SCHEDULE_SHEET_ID: P_IDS.schedule, EXCLUDE_NAMES: 'Aiz', COVERAGE_MODE: 'draft', DIGEST_TO: 'info@placecoworking.com'},
     LV:  {LEAVE_SHEET_ID: T_IDS.inbox, SCHEDULE_SHEET_ID: T_IDS.schedule, LEAVE_APPROVER: 'George'}  // staged: TEST copies only, never production
@@ -668,8 +668,15 @@ var ST5 = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlFe
  *
  * Reads a Schedule-26-style sheet (one tab per month: Jan..Dec;
  * columns: Position | Name | day1..dayN | Total Hrs.), computes hours per staff
- * member for a period (default 21st of previous month .. 20th of the current
- * month) and builds a timesheet email for the accountant.
+ * member and builds a timesheet email for the accountant.
+ *
+ * PAYROLL RULES (Aiz 30.09.2026, kb/ops/payroll-rules.md b3a8c49):
+ *  - payroll period = calendar month (1st .. last day);
+ *  - the timesheet goes to the accountant on the 28th (CUTOFF_DAY);
+ *  - leave taken after the 28th is deducted in NEXT month's payroll.
+ * So a run on the 28th covers the current month: days 1..28 are the timesheet table; days 29..end (not yet worked)
+ * are listed as «after cutoff → next month adjustments» (planned shifts / leave), and the previous month's
+ * days 29..end are listed as «adjustments from previous month» (leave actually taken after last cutoff).
  *
  * SAFETY:
  *  - The script NEVER sends email. There is no GmailApp.sendEmail / MailApp call.
@@ -693,14 +700,15 @@ var ST5 = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlFe
  *     FIRST_DAY_COL       default '' = auto-detect the row with day numbers 1..31
  *     DAY_HEADER_ROW      default '' = auto-detect (scans first HEADER_SCAN_ROWS rows)
  *     HEADER_SCAN_ROWS    default 10
- *     PERIOD_START_DAY    default 21
- *     PERIOD_END_DAY      default 20
- *     PERIOD_FROM / PERIOD_TO  optional explicit ISO dates (yyyy-mm-dd), override the above
+ *     PERIOD_MODE         'month' (default): calendar month; run on/after CUTOFF_DAY -> current month, before -> previous month
+ *                         'custom': PERIOD_START_DAY (21) .. PERIOD_END_DAY (20), the old 21–20 scheme
+ *     CUTOFF_DAY          default 28 (timesheet sent to the accountant; later leave -> next month)
+ *     PERIOD_FROM / PERIOD_TO  optional explicit ISO dates (yyyy-mm-dd), override the above (cutoff = PERIOD_TO)
  *     BREAK_HOURS         unpaid break deducted per shift, default 0 (to confirm)
  *     EXCLUDE_NAMES       comma list of names to skip (e.g. owners)
  *     ACCOUNTANT_TO       accountant address (NOT stored in repo)
  *     ACCOUNTANT_CC       cc address(es), comma separated (NOT stored in repo)
- *     GREETING            default 'Dear Khun Sirikanya,'
+ *     GREETING            default 'Dear Khun Pat,' (new accountant, 30.09.2026)
  *     SUBJECT_PREFIX      default 'Place Coworking — timesheet'
  *     DRAFT_ENABLED       'true' to allow createTimesheetDraft(); anything else = dry
  */
@@ -762,34 +770,40 @@ function cfg_() {
     startDay: Number(g('PERIOD_START_DAY', '21')),
     endDay: Number(g('PERIOD_END_DAY', '20')),
     from: g('PERIOD_FROM', ''), to_: g('PERIOD_TO', ''),
+    mode: g('PERIOD_MODE', 'month'), cutoff: Number(g('CUTOFF_DAY', '28')),
     breakHours: Number(g('BREAK_HOURS', '0')),
     exclude: g('EXCLUDE_NAMES', '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(String),
     to: g('ACCOUNTANT_TO', ''), cc: g('ACCOUNTANT_CC', ''),
-    greeting: g('GREETING', 'Dear Khun Sirikanya,'),
+    greeting: g('GREETING', 'Dear Khun Pat,'),
     prefix: g('SUBJECT_PREFIX', 'Place Coworking — timesheet'),
     draftEnabled: g('DRAFT_ENABLED', 'false')
   };
 }
 
-/** Last fully finished period relative to today. Default: prev month 21 .. this month 20. */
+/** Payroll period. Default (PERIOD_MODE=month): calendar month; on/after the cutoff day -> current month, else previous.
+ *  Returns {from, to, cut}: the table covers from..cut; cut+1..to = after cutoff (next month adjustments). */
 function period_(c) {
-  if (c.from && c.to_) return {from: isoDate_(c.from), to: isoDate_(c.to_)};
+  if (c.from && c.to_) { var t = isoDate_(c.to_); return {from: isoDate_(c.from), to: t, cut: t}; }
   var now = new Date(Utilities.formatDate(new Date(), TZ, "yyyy-MM-dd'T'00:00:00"));
   var y = now.getFullYear(), m = now.getMonth();
-  if (c.startDay === 1) { // calendar month mode: previous month
-    return {from: new Date(y, m - 1, 1), to: new Date(y, m, 0)};
+  if (c.mode !== 'custom') {
+    if (now.getDate() < c.cutoff) m -= 1;
+    var first = new Date(y, m, 1), last = new Date(y, m + 1, 0);
+    var cut = new Date(first.getFullYear(), first.getMonth(), Math.min(c.cutoff, last.getDate()));
+    return {from: first, to: last, cut: cut};
   }
-  // period ends on endDay of month M; take the latest endDay that is < today
+  if (c.startDay === 1) { var f = new Date(y, m - 1, 1), l = new Date(y, m, 0); return {from: f, to: l, cut: l}; }
+  // old scheme: period ends on endDay of month M; take the latest endDay that is < today
   var end = new Date(y, m, c.endDay);
   if (end >= now) end = new Date(y, m - 1, c.endDay);
   var from = new Date(end.getFullYear(), end.getMonth() - 1, c.startDay);
-  return {from: from, to: end};
+  return {from: from, to: end, cut: end};
 }
 
-function buildTimesheet_(c) {
-  var per = period_(c), warnings = [], people = {}, order = [];
-  var byMonth = {};
-  for (var d = new Date(per.from); d <= per.to; d.setDate(d.getDate() + 1)) {
+/** Reads Schedule 26 for days from..to (may span months). */
+function collect_(c, from, to, warnings) {
+  var people = {}, order = [], byMonth = {};
+  for (var d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
     var key = d.getFullYear() + '-' + d.getMonth();
     (byMonth[key] = byMonth[key] || {y: d.getFullYear(), m: d.getMonth(), days: []}).days.push(d.getDate());
   }
@@ -801,6 +815,36 @@ function buildTimesheet_(c) {
     if (!sh) { warnings.push('Tab "' + c.tabs[bm.m] + '" not found in ' + id); return; }
     readMonth_(sh, bm, c, people, order, warnings);
   });
+  return {people: people, order: order};
+}
+
+/** One line per person with leave / planned shifts in a side period (after cutoff, or previous month's tail). */
+function sideLines_(res, withShifts) {
+  var out = [];
+  res.order.forEach(function (k) {
+    var p = res.people[k], parts = [];
+    if (withShifts && p.shifts) parts.push(p.shifts + ' shift(s) planned');
+    if (p.ANNUAL) parts.push('annual ' + p.ANNUAL);
+    if (p.SICK) parts.push('sick ' + p.SICK);
+    if (p.UNPAID) parts.push('unpaid ' + p.UNPAID);
+    if (p.DOCTOR) parts.push('doctor ' + p.DOCTOR);
+    if (p.unknown.length) parts.push('unrecognised: ' + p.unknown.join('; '));
+    if (parts.length) out.push(p.name + ': ' + parts.join(', '));
+  });
+  return out;
+}
+
+function buildTimesheet_(c) {
+  var per = period_(c), warnings = [];
+  var main = collect_(c, per.from, per.cut, warnings), people = main.people, order = main.order;
+  var afterFrom = new Date(per.cut.getFullYear(), per.cut.getMonth(), per.cut.getDate() + 1);
+  var after = afterFrom <= per.to ? collect_(c, afterFrom, per.to, warnings) : null;
+  var prevEnd = new Date(per.from.getFullYear(), per.from.getMonth(), 0), prevFrom = new Date(prevEnd.getFullYear(), prevEnd.getMonth(), c.cutoff + 1);
+  var prev = (c.mode !== 'custom' && !(c.from && c.to_) && prevFrom <= prevEnd) ? collect_(c, prevFrom, prevEnd, warnings) : null;
+  var D = function (x) { return fmt_(x, 'dd.MM.yyyy'); };
+  var afterLines = after ? sideLines_(after, true) : [], prevLines = prev ? sideLines_(prev, false) : [];
+  var afterTitle = after ? 'After cutoff ' + fmt_(afterFrom, 'dd.MM') + '–' + D(per.to) + ' (not yet worked → next month adjustments):' : '';
+  var prevTitle = prev ? 'Adjustments from previous month ' + fmt_(prevFrom, 'dd.MM') + '–' + D(prevEnd) + ' (leave after last cutoff):' : '';
 
   var fromIso = fmt_(per.from, 'yyyy-MM-dd'), toIso = fmt_(per.to, 'yyyy-MM-dd');
   var head = ['Position', 'Name', 'Shifts', 'Hours', 'Annual leave (days)', 'Sick (days)', 'Unpaid leave (days)', 'Doctor', 'Unrecognised cells'];
@@ -808,17 +852,26 @@ function buildTimesheet_(c) {
     var p = people[k];
     return [p.position, p.name, p.shifts, round2_(p.hours), p.ANNUAL, p.SICK, p.UNPAID, p.DOCTOR, p.unknown.join('; ')];
   });
-  var subject = c.prefix + ' ' + fmt_(per.from, 'dd.MM.yyyy') + '–' + fmt_(per.to, 'dd.MM.yyyy');
-  var text = c.greeting + '\n\nPlease find the staff timesheet for the period ' + fmt_(per.from, 'dd.MM.yyyy') + '–' + fmt_(per.to, 'dd.MM.yyyy') + ' (from Schedule 26).\n\n' +
-    [head.join(' | ')].concat(rows.map(function (r) { return r.join(' | '); })).join('\n') +
-    '\n\nUnpaid leave days are listed for the deduction (monthly salary / 30 per day; SSO 5% is calculated after the deduction, cap 875).' +
+  var range = D(per.from) + '–' + D(per.to) + (per.cut < per.to ? ' (counted to ' + D(per.cut) + ')' : '');
+  var subject = c.prefix + ' ' + D(per.from) + '–' + D(per.to);
+  var sections = (after ? '\n\n' + afterTitle + '\n' + (afterLines.length ? afterLines.map(function (l) { return '• ' + l; }).join('\n') : '• none') : '') +
+    (prev ? '\n\n' + prevTitle + '\n' + (prevLines.length ? prevLines.map(function (l) { return '• ' + l; }).join('\n') : '• none') : '');
+  var text = c.greeting + '\n\nPlease find the staff timesheet for the period ' + range + ' (from Schedule 26).\n\n' +
+    [head.join(' | ')].concat(rows.map(function (r) { return r.join(' | '); })).join('\n') + sections +
+    '\n\nUnpaid leave days are listed for the deduction (monthly salary / 30 per day; SSO 5% is calculated after the deduction, cap 875). Leave after the ' + c.cutoff + 'th is deducted in the next month.' +
     '\nThe same table is attached as CSV. Please let us know if anything needs to be corrected.\n\nBest regards,\nPlace Coworking';
-  var html = '<p>' + esc_(c.greeting) + '</p><p>Please find the staff timesheet for the period <b>' + fmt_(per.from, 'dd.MM.yyyy') + '–' + fmt_(per.to, 'dd.MM.yyyy') + '</b> (from Schedule 26).</p>' +
+  var htmlList = function (title, lines) { return '<p><b>' + esc_(title) + '</b></p><ul>' + (lines.length ? lines : ['none']).map(function (l) { return '<li>' + esc_(l) + '</li>'; }).join('') + '</ul>'; };
+  var html = '<p>' + esc_(c.greeting) + '</p><p>Please find the staff timesheet for the period <b>' + esc_(range) + '</b> (from Schedule 26).</p>' +
     '<table border="1" cellpadding="4" style="border-collapse:collapse"><tr>' + head.map(function (h) { return '<th>' + esc_(h) + '</th>'; }).join('') + '</tr>' +
     rows.map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc_(String(v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table>' +
-    '<p>Unpaid leave days are listed for the deduction (monthly salary / 30 per day; SSO 5% is calculated after the deduction, cap 875).<br>The same table is attached as CSV. Please let us know if anything needs to be corrected.</p><p>Best regards,<br>Place Coworking</p>';
-  var csv = [head].concat(rows).map(function (r) { return r.map(csvCell_).join(','); }).join('\n');
-  return {subject: subject, text: text, html: html, csv: csv, rows: rows, warnings: warnings, fromIso: fromIso, toIso: toIso};
+    (after ? htmlList(afterTitle, afterLines) : '') + (prev ? htmlList(prevTitle, prevLines) : '') +
+    '<p>Unpaid leave days are listed for the deduction (monthly salary / 30 per day; SSO 5% is calculated after the deduction, cap 875). Leave after the ' + c.cutoff + 'th is deducted in the next month.<br>The same table is attached as CSV. Please let us know if anything needs to be corrected.</p><p>Best regards,<br>Place Coworking</p>';
+  var csvRows = [head].concat(rows);
+  if (after) { csvRows.push([]); csvRows.push([afterTitle]); afterLines.forEach(function (l) { csvRows.push(['', l]); }); }
+  if (prev) { csvRows.push([]); csvRows.push([prevTitle]); prevLines.forEach(function (l) { csvRows.push(['', l]); }); }
+  var csv = csvRows.map(function (r) { return r.map(csvCell_).join(','); }).join('\n');
+  return {subject: subject, text: text, html: html, csv: csv, rows: rows, warnings: warnings, fromIso: fromIso, toIso: toIso,
+    cutIso: fmt_(per.cut, 'yyyy-MM-dd'), afterCutoff: afterLines, prevAdjustments: prevLines};
 }
 
 function readMonth_(sh, bm, c, people, order, warnings) {
@@ -1228,11 +1281,12 @@ function test_bookings() {
 /** C8: active 24/7 key holders (TEST rows 303-305 in Лист1). */
 function test_keyholders() { return T_fixture_('keyholders', 'KH.keyholders247_', function () { return KH.keyholders247_(new Date('2026-09-30T22:30:00+07:00')); }); }
 
-/** Stage 5: timesheet dry run + "draft" (stub, not created) for 21.08–20.09.2026. */
+/** Stage 5: timesheet dry run + "draft" (stub). Calendar month, counted to the 28th; 29..end = after cutoff; prev month 29..end = adjustments. */
 function test_timesheet() {
   return T_fixture_('timesheet', 'ST5.dryRun + createTimesheetDraft(stub)', function () {
     var r = ST5.dryRun();
-    return {subject: r.subject, warnings: r.warnings, people: (r.csv || '').split('\n').length - 1, draft: ST5.createTimesheetDraft()};
+    return {subject: r.subject, period: r.fromIso + '..' + r.toIso, countedTo: r.cutIso, warnings: r.warnings, people: r.rows.length,
+      afterCutoff: r.afterCutoff, prevAdjustments: r.prevAdjustments, draft: ST5.createTimesheetDraft()};
   });
 }
 
@@ -1277,7 +1331,7 @@ var T_JOBS = [
   ['job_bookings',       'daily',  10, 7, 'bookings-today (10:07 summary)'],
   ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning'],
   ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening'],
-  ['job_timesheet',      'month21', 9, 30, 'timesheet draft for the accountant (21st)'],
+  ['job_timesheet',      'month28', 9, 30, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
   ['job_cashReminder',   'every3', 20, 0, 'cash-deposit reminder for the evening admin (every 3 days)']
 ];
 
@@ -1343,7 +1397,7 @@ function installTestTriggers() {
     var b = ScriptApp.newTrigger(j[0]).timeBased().inTimezone('Asia/Bangkok');
     if (j[1] === 'daily') b = b.everyDays(1).atHour(j[2]).nearMinute(j[3]);
     else if (j[1] === 'every3') b = b.everyDays(3).atHour(j[2]).nearMinute(j[3]);
-    else if (j[1] === 'month21') b = b.onMonthDay(21).atHour(j[2]).nearMinute(j[3]);
+    else if (j[1] === 'month28') b = b.onMonthDay(28).atHour(j[2]).nearMinute(j[3]);
     b.create();
     return j[0] + ' ' + j[1] + ' ' + j[2] + ':' + ('0' + j[3]).slice(-2);
   });

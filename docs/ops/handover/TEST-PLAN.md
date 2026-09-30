@@ -89,7 +89,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
 | `job_bookings` | daily 10:07 | bookings-today (production Events and booking), relayed as «TG group PLACE Team». |
 | `job_issuesMorning` | daily 10:07 | queue → TEST Issues sync + morning issues digest, relayed |
 | `job_issuesEvening` | daily 23:10 | same, evening digest (closed today + open) |
-| `job_timesheet` | 21st of each month, 09:30 | timesheet 21–20. The accountant draft is relayed. |
+| `job_timesheet` | **28th** of each month, 09:30 | timesheet for the current calendar month, counted to the 28th; days 29..end = «after cutoff → next month adjustments»; previous month 29..end = adjustments. The accountant draft is relayed. |
 | `job_cashReminder` | every 3 days, 20:00 | cash for the Thai partner. Recipients are evening admins from Schedule 26 (shift to 23:00); the reminder is relayed as «TG DM evening admin». |
 
 **Harness check 30.09** (node, snapshots, fake token/chat):
@@ -219,15 +219,22 @@ The live Apps Script run (step 5 in §2) is still **pending: George**.
 - **Pass if:** the text matches and the Log reads `PASS`.
 - **30.09:** PASS.
 
-### 5. Stage 5 timesheet
-- **Config:** Schedule 26 TEST, `DRAFT_ENABLED=true`, `ACCOUNTANT_TO=test-accountant@example.invalid`.
-- **Inputs:** tabs Aug and Sep; period 21.08–20.09.2026.
+### 5. Stage 5 timesheet (period rules changed 30.09: Aiz Q5)
+- **Config:** Schedule 26 TEST, `DRAFT_ENABLED=true`, `ACCOUNTANT_TO=test-accountant@example.invalid`, `PERIOD_MODE=month` (default), `CUTOFF_DAY=28`.
+- **Rules:** payroll period = calendar month (1st–last day); the timesheet is sent on the 28th; leave after the 28th is deducted next month.
+- **Inputs:** run on 30.09.2026, tabs Aug and Sep.
 - **Expected:**
-  - a table for 10 people: shifts, hours, annual leave, sick days, unpaid leave, doctor, unrecognised cells;
+  - period 01.09–30.09.2026, table counted to 28.09;
+  - block «After cutoff 29.09–30.09 (not yet worked → next month adjustments)»: planned shifts and leave, e.g. «Kate: unpaid 1»;
+  - block «Adjustments from previous month 29.08–31.08»: e.g. «Tangmo: doctor 1», «First: sick 1», «Kate: doctor 1»;
   - 0 warnings;
-  - the draft is a stub (not created).
-- **Pass if:** the numbers match a hand check of 2–3 people, e.g. Aiz 26 shifts / 234 h, Kate 21 / 189 h with 5 sick days, Tangmo 2 unpaid days. The Log reads `PASS`.
-- **30.09:** PASS (10 people, 0 warnings). **George or the accountant: check the numbers by hand.**
+  - the draft is a stub;
+  - greeting «Dear Khun Pat,».
+- **Pass if:** the table covers 1–28 only, both blocks are present, and the numbers match a hand check.
+- **Harness 30.09 (after the change):** PASS. 8 people, 0 warnings, both blocks as above.
+  - A scheduled run simulated for 28.10.2026 gives period 01.10–31.10, after-cutoff 29–31.10, adjustments 29–30.09 («Kate: unpaid 1»).
+  - The trigger is `onMonthDay(28)` 09:30.
+- **Before (21–20 scheme, 30.09 morning):** PASS (for reference only).
 
 ## 5. Go-live checklist (per item, only after George's written OK)
 
@@ -264,5 +271,5 @@ Common rules for every item:
 **5. Stage 5 timesheet**
 - [ ] George or the accountant confirms the TEST table for 21.08–20.09 (hand check).
 - [ ] Config: `SCHEDULE_SHEET_ID`=production, `ACCOUNTANT_TO` = the real accountant, `DRAFT_ENABLED=true`.
-- [ ] Monthly trigger on the 21st, 09:00, **draft** only. George sends it himself.
+- [ ] Monthly trigger on the **28th**, 09:30, **draft** only (period = current month; leave after the 28th → next month). George sends it himself.
 - [ ] For 2027: `SHEET_ID_BY_YEAR`.
