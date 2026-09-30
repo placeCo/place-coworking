@@ -2,7 +2,7 @@
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  return [test_guard(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet()]
+  return [test_guard(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
     .map(function (r) { return r.status; });
 }
 
@@ -72,5 +72,22 @@ function test_timesheet() {
   return T_fixture_('timesheet', 'ST5.dryRun + createTimesheetDraft(stub)', function () {
     var r = ST5.dryRun();
     return {subject: r.subject, warnings: r.warnings, people: (r.csv || '').split('\n').length - 1, draft: ST5.createTimesheetDraft()};
+  });
+}
+
+/** G-13 leave via bot (staged): request -> card for George -> approve writes Schedule 26 TEST; reject; bad format. */
+function test_leave() {
+  return T_fixture_('leave', 'LV.leaveRequest_ + leaveDecide_', function () {
+    var now = new Date(), out = {};
+    var bad = LV.leaveRequest_({name: 'Tangmo', user: 'tangmo_test', chatId: 1}, '/leave holiday tomorrow', now);
+    var a = LV.leaveRequest_({name: 'Tangmo', user: 'tangmo_test', chatId: 1}, '/leave annual 11.10-12.10 TEST family', now);
+    var ok = LV.leaveDecide_(a.id, 'approve', 'George (TEST)', '', now);
+    var b = LV.leaveRequest_({name: 'Kate', user: 'kate_test', chatId: 2}, '/leave sick 14.10 TEST', new Date(now.getTime() + 1000));
+    var no = LV.leaveDecide_(b.id, 'reject', 'George (TEST)', 'TEST reason', now);
+    T_relay_('George', 'TG DM George (approval card)', a.card);
+    T_relay_('Tangmo', 'TG DM Tangmo', ok.employeeMsg);
+    T_relay_('Kate', 'TG DM Kate', no.employeeMsg);
+    out = {badFormat: bad.error, request: a.id, approve: ok, reject: no.status, again: LV.leaveDecide_(a.id, 'reject', 'x', '', now).status};
+    return out;
   });
 }

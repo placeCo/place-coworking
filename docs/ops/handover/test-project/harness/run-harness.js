@@ -27,7 +27,7 @@ function book(id) {
 const cache = {};
 function fmt(d, f) {
   const o = new Intl.DateTimeFormat('en-GB', {timeZone: 'Asia/Bangkok', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', weekday: 'short', hourCycle: 'h23'}).formatToParts(d).reduce((a, p) => (a[p.type] = p.value, a), {});
-  return f.replace(/'T'/g, '\u0001').replace(/yyyy/g, o.year).replace(/MM/g, o.month).replace(/dd/g, o.day).replace(/HH/g, o.hour).replace(/mm/g, o.minute).replace(/ss/g, o.second).replace(/EEE/g, o.weekday).replace(/^H$/, String(+o.hour)).replace(/^d$/, String(+o.day)).replace(/\u0001/g, 'T');
+  return f.replace(/'T'/g, '\u0001').replace(/yyyy/g, o.year).replace(/yy/g, o.year.slice(2)).replace(/MM/g, o.month).replace(/dd/g, o.day).replace(/HH/g, o.hour).replace(/mm/g, o.minute).replace(/ss/g, o.second).replace(/EEE/g, o.weekday).replace(/^H$/, String(+o.hour)).replace(/^d$/, String(+o.day)).replace(/\u0001/g, 'T');
 }
 class FDate extends RealDate { constructor(...a) { if (a.length === 0) super(NOW); else super(...a); } static now() { return +NOW; } }
 const props = {}, logs = [], fetches = [], triggers = [];
@@ -45,7 +45,7 @@ vm.createContext(ctx);
 const src = fs.readdirSync(path.join(__dirname, '..')).filter(f => /^\d\d-.*\.gs$/.test(f)).sort();
 src.forEach(f => vm.runInContext(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'), ctx, {filename: f}));
 vm.runInContext("T_RUNNER = 'node-harness';", ctx);
-const names = ['test_guard', 'test_stage6', 'test_issues', 'test_issuesBridgeHook', 'test_bookings', 'test_keyholders', 'test_timesheet'];
+const names = ['test_guard', 'test_stage6', 'test_issues', 'test_issuesBridgeHook', 'test_bookings', 'test_keyholders', 'test_timesheet', 'test_leave'];
 if (process.env.SCHED) { names.length = 0; props.TG_TOKEN = '123456:FAKE_TOKEN_FOR_HARNESS'; if (process.env.SCHED === 'chat') props.GEORGE_CHAT_ID = '111111';
   ['setupTestProperties', 'sendTestPing', 'job_stage6', 'job_coverage', 'job_bookings', 'job_issuesMorning', 'job_issuesEvening', 'job_timesheet', 'job_cashReminder'].forEach(n => names.push(n)); }
 const results = {};
