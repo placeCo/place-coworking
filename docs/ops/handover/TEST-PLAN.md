@@ -40,6 +40,64 @@ Code: [`test-project/`](test-project/). `build-test-project.sh` wraps each produ
 
 To re-run stage 6 on the same day, run `test_stage6Reset` first. It clears the sent-log, so the electricity task is created again.
 
+## 2b. Scheduled TEST mode (George OK 30.09.2026 10:02)
+
+Project: **PLACE automations TEST**, https://script.google.com/home/projects/1MoGliVK3faV1h78dS8nsN975sO7cQ0U_WbbB_2oya8XtoZGj2wcGZ8wu/edit
+Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the whole Code.gs) + `test-project/appsscript.json` (adds the `script.external_request` scope).
+
+**What the mode does**
+- Production sheets are **read-only**:
+  - Resident info, Schedule 26, Events and booking, Place Inbox `queue`;
+  - reads go through a Proxy that allows only `get…/is…/has…`; any write throws `TEST GUARD`.
+- Writes go only to **Place Inbox TEST**: Issues and Log.
+- **No message reaches its real target.** Everything is relayed to George's private chat with @PlaceLeadBot as:
+  `🧪 TEST, would be sent to: <recipient> via <channel>, at <time>` + the exact text.
+  Channels:
+  - TG group PLACE Team;
+  - TG DM Lena;
+  - TG DM evening admin;
+  - email to tenant X (Gmail draft);
+  - email draft to accountant;
+  - email draft (info@).
+- The relay sends only to Script Property `GEORGE_CHAT_ID`, and only if it is a private chat id (positive number). Without `TG_TOKEN` or `GEORGE_CHAT_ID` it is **log only**.
+- Issues: the live bridge is not changed. New «Тех вопросы» rows are copied read-only from the production `queue` into TEST Issues. They open issues only, because the queue has no reply link.
+- `job_stage6`: production «Office rent» is empty now, so the job logs «nothing to check» until the registry is filled.
+
+**Setup (once)**
+1. Paste the new bundle into Code.gs (replace everything) and the new `appsscript.json`. Save.
+2. Project Settings ▸ Script properties ▸ add **`TG_TOKEN`** = the @PlaceLeadBot token.
+   - **Done by George by hand**, e.g. copied from @BotFather or the «Place TG Bridge» project properties.
+   - The token is never in code, the repo, the Log or chat.
+   - Apps Script cannot read box env or box files, so no function can pull it from the box.
+   - Optional properties: `GEORGE_CHAT_ID`, `GEORGE_TG_USERNAME`, `CASH_ANCHOR_DATE` (yyyy-mm-dd).
+3. George presses **/start** in @PlaceLeadBot. The live bridge logs it to the production `queue` as «личка боту» with the chat_id.
+4. Run `setupTestProperties()`:
+   - authorize the scopes (Sheets, triggers, external requests);
+   - it checks the token (`getMe`, only the bot name is logged);
+   - it finds `GEORGE_CHAT_ID` in the queue (read-only) by `GEORGE_TG_USERNAME` or the name «George/Geo»;
+   - it sets `CASH_ANCHOR_DATE`.
+5. Run `sendTestPing()`. George gets «🧪 TEST ping …».
+6. Run `test_all()` (fixture tests, log only). Optionally run `runAllJobsOnce()`: every job runs once now, and George gets the relayed messages.
+7. Run `installTestTriggers()`. To stop everything, run `removeTestTriggers()`.
+
+**Triggers** (Asia/Bangkok; Apps Script fires within about ±15 min of `nearMinute`)
+
+| Handler | When | What |
+|---|---|---|
+| `job_stage6` | daily 09:05 | stage 6 offices (production Resident info read-only). Tenant drafts and the digest are relayed; electricity tasks go to TEST Issues and are relayed as «TG DM Lena». |
+| `job_coverage` | daily 09:10 | schedule-coverage (production Schedule 26, 14 days). The info@ draft is relayed. |
+| `job_bookings` | daily 10:07 | bookings-today (production Events and booking), relayed as «TG group PLACE Team». |
+| `job_issuesMorning` | daily 10:07 | queue → TEST Issues sync + morning issues digest, relayed |
+| `job_issuesEvening` | daily 23:10 | same, evening digest (closed today + open) |
+| `job_timesheet` | 21st of each month, 09:30 | timesheet 21–20. The accountant draft is relayed. |
+| `job_cashReminder` | every 3 days, 20:00 | cash for the Thai partner. Recipients are evening admins from Schedule 26 (shift to 23:00); the reminder is relayed as «TG DM evening admin». |
+
+**Harness check 30.09** (node, snapshots, fake token/chat):
+- all 9 functions OK;
+- 12 `sendMessage` calls, **all to GEORGE_CHAT_ID**;
+- 0 writes to production;
+- without a chat_id: 12 × «relay LOG ONLY».
+
 ## 3. Test run 30.09.2026 (node harness)
 
 Apps Script could not be run from the bot. So on 30.09 the **same generated code** was run in a node `vm` harness (`test-project/harness/`) against snapshots of the TEST copies, with a simulated time of 30.09.2026 10:07 ICT. The harness results were then written to the real TEST sheets: **Log** rows 2–8 (runner `node-harness`) and **Issues** rows 2–5.

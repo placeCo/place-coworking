@@ -18,11 +18,11 @@ function book(id) {
       getName: () => name,
       getDataRange: () => ({getValues: () => t.values.map(r => r.map(rev)), getDisplayValues: () => t.display.map(r => r.slice())}),
       appendRow: (row) => { t.values.push(row); t.display.push(row.map(String)); writes.push({book: key, id, tab: name, op: 'appendRow', row}); },
-      getRange: (r, c, nr, nc) => ({setValues: (vals) => { vals.forEach((vr, i) => { t.values[r - 1 + i] = vr; t.display[r - 1 + i] = vr.map(String); }); writes.push({book: key, id, tab: name, op: 'setValues', r, c, vals}); }}),
+      getRange: (r, c, nr, nc) => ({setValue: (v) => writes.push({book: key, id, tab: name, op: 'setValue', r, c, v}), setValues: (vals) => { vals.forEach((vr, i) => { t.values[r - 1 + i] = vr; t.display[r - 1 + i] = vr.map(String); }); writes.push({book: key, id, tab: name, op: 'setValues', r, c, vals}); }}),
       getLastRow: () => t.values.length
     };
   };
-  return {getSheetByName: sheet, insertSheet: (n) => { data[n] = {values: [], display: []}; writes.push({book: key, id, tab: n, op: 'insertSheet'}); return sheet(n); }};
+  return {getSheets: () => Object.keys(data).map(sheet), getSheetByName: sheet, insertSheet: (n) => { data[n] = {values: [], display: []}; writes.push({book: key, id, tab: n, op: 'insertSheet'}); return sheet(n); }};
 }
 const cache = {};
 function fmt(d, f) {
@@ -30,21 +30,30 @@ function fmt(d, f) {
   return f.replace(/'T'/g, '\u0001').replace(/yyyy/g, o.year).replace(/MM/g, o.month).replace(/dd/g, o.day).replace(/HH/g, o.hour).replace(/mm/g, o.minute).replace(/ss/g, o.second).replace(/EEE/g, o.weekday).replace(/^H$/, String(+o.hour)).replace(/^d$/, String(+o.day)).replace(/\u0001/g, 'T');
 }
 class FDate extends RealDate { constructor(...a) { if (a.length === 0) super(NOW); else super(...a); } static now() { return +NOW; } }
-const props = {}, logs = [];
+const props = {}, logs = [], fetches = [], triggers = [];
 const ctx = {Date: FDate, JSON, Math, String, Number, Object, Array, RegExp, isNaN, Error, parseInt, parseFloat, console,
   Logger: {log: x => logs.push(x)},
   Utilities: {formatDate: (d, tz, f) => fmt(d, f), newBlob: (c, t, n) => ({c, t, n})},
   PropertiesService: {getScriptProperties: () => ({getProperty: k => (k in props ? props[k] : null), setProperty: (k, v) => { props[k] = String(v); }, deleteProperty: k => { delete props[k]; }})},
   SpreadsheetApp: {openById: id => cache[id] || (cache[id] = book(id))},
-  GmailApp: {createDraft: () => { throw new Error('REAL GmailApp reached — stub failed'); }}, MailApp: {}, UrlFetchApp: {fetch: () => { throw new Error('REAL UrlFetchApp reached'); }}, ScriptApp: {}};
+  GmailApp: {createDraft: () => { throw new Error('REAL GmailApp reached — stub failed'); }}, MailApp: {},
+  UrlFetchApp: {fetch: (u, o) => { const pl = o && o.payload ? JSON.parse(o.payload) : {}; fetches.push({url: String(u).replace(/bot[^/]+/, 'bot***'), chat_id: pl.chat_id, text: pl.text});
+    return {getResponseCode: () => 200, getContentText: () => JSON.stringify({ok: true, result: {username: 'PlaceLeadBot'}})}; }},
+  ScriptApp: {getProjectTriggers: () => triggers.slice(), deleteTrigger: t => { triggers.splice(triggers.indexOf(t), 1); },
+    newTrigger: h => { const spec = {h}; const b = {timeBased: () => b, inTimezone: z => (spec.tz = z, b), everyDays: n => (spec.every = n, b), onMonthDay: d => (spec.monthDay = d, b), atHour: x => (spec.hour = x, b), nearMinute: m => (spec.min = m, b), create: () => { const t = {getHandlerFunction: () => h, spec}; triggers.push(t); return t; }}; return b; }}};
 vm.createContext(ctx);
 const src = fs.readdirSync(path.join(__dirname, '..')).filter(f => /^\d\d-.*\.gs$/.test(f)).sort();
 src.forEach(f => vm.runInContext(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'), ctx, {filename: f}));
 vm.runInContext("T_RUNNER = 'node-harness';", ctx);
 const names = ['test_guard', 'test_stage6', 'test_issues', 'test_issuesBridgeHook', 'test_bookings', 'test_keyholders', 'test_timesheet'];
+if (process.env.SCHED) { names.length = 0; props.TG_TOKEN = '123456:FAKE_TOKEN_FOR_HARNESS'; if (process.env.SCHED === 'chat') props.GEORGE_CHAT_ID = '111111';
+  ['setupTestProperties', 'sendTestPing', 'job_stage6', 'job_coverage', 'job_bookings', 'job_issuesMorning', 'job_issuesEvening', 'job_timesheet', 'job_cashReminder'].forEach(n => names.push(n)); }
 const results = {};
 if (process.env.DEBUG_FN) { try { vm.runInContext(process.env.DEBUG_FN, ctx); } catch (e) { console.log(e.stack); } process.exit(0); }
 names.forEach(n => { results[n] = vm.runInContext(n + '()', ctx); });
-fs.writeFileSync(path.join(dir, 'writes.json'), JSON.stringify({now: NOW.toISOString(), writes, props}, null, 1));
+if (process.env.SCHED) { vm.runInContext('installTestTriggers()', ctx); }
+fs.writeFileSync(path.join(dir, process.env.SCHED ? 'writes-sched.json' : 'writes.json'), JSON.stringify({now: NOW.toISOString(), writes, fetches, triggers: triggers.map(t => t.spec), props: Object.assign({}, props, {TG_TOKEN: '***'})}, null, 1));
 for (const n of names) { const r = results[n]; console.log('=== ' + n + ': ' + r.status); console.log(typeof r.result === 'string' ? r.result : JSON.stringify(r.result, null, 1)); if (r.log.length) console.log('--- log ---\n' + r.log.join('\n').slice(0, 4000)); }
 console.log('\nWRITES:', writes.map(w => w.book + '/' + w.tab + ' ' + w.op).join(', '));
+console.log('FETCHES:', fetches.map(f => f.url.replace(/https:\/\/api.telegram.org\//, '') + ' chat=' + f.chat_id).join(', '));
+console.log('TRIGGERS:', JSON.stringify(triggers.map(t => t.spec)));
