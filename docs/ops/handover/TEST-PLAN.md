@@ -50,7 +50,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
   - Resident info, Schedule 26, Events and booking, Place Inbox `queue`;
   - reads go through a Proxy that allows only `get…/is…/has…`; any write throws `TEST GUARD`.
 - Writes go only to **Place Inbox TEST**: Issues and Log.
-- **No message reaches its real target.** Everything is relayed to George's private chat with @PlaceLeadBot as:
+- **No message reaches its real target.** Everything is relayed to George's and Lena's private chats with @PlaceLeadBot as:
   `🧪 ТЕСТ` / `Куда ушло бы: <real recipient + channel>` / blank line / the exact text (George 30.09 14:22), sent to **George and Lena**.
   Channels:
   - TG group PLACE Team;
