@@ -8,4 +8,11 @@
 
 ## Update 30.09.2026 (Aiz)
 - Sun: salary 15 000 ฿ after 3 months (start 25.05.2026 → from 25.08.2026). SSO = 5% of 15 000 = 750 (not 5% of 13 000 = 650). Which payroll month it starts from: confirm with the accountant.
-- Accountant: new accountant **Pat** (contacted Aiz via LINE, no LINE ID yet). Namtan (Sirikanya) namtanlover@hotmail.com and Khun Sak somsak.khumbaan@gmail.com: role to confirm.
+- Accountant: see update 30.09 (George) below.
+
+## Update 30.09.2026 (George)
+- Sun: started 25.05.2026; after 3 months salary is 15 000 ฿, so SSO 750 ฿ (5% of 15 000) on the September sheet is **correct**.
+- Tangmo: SSO 822 ฿ = 5% of (17 000 − 567 unpaid leave) — **confirmed**.
+- Paid-leave types: to be clarified with the accountant (George asks).
+- Accountant: **Namtan (Sirikanya) no longer works with Place** (George 30.09). New accountant **Pat** (contacted Aiz via LINE); email and LINE requested from Aiz — **pending**. Khun Sak (Somsak): somsak.khumbaan@gmail.com (role to confirm).
+- Accounting questions go to the accountant **only with George's OK**.
