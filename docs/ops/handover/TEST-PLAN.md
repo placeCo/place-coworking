@@ -1,0 +1,166 @@
+# TEST-PLAN: five B automations (test mode only)
+
+George OK 30.09.2026 09:19 ICT, **only as tests/drafts**. Nothing goes live until George signs off each item in the go-live checklist below.
+Prepared 30.09.2026 by Place Lead (bot).
+
+## 1. Sandbox
+
+Folder **PLACE TEST sandbox** (info@ Drive): https://drive.google.com/drive/folders/12oWMzl_hybDIYuLnNQB7k9Zd9w_bikby
+
+| TEST copy | id | What was changed in the copy |
+|---|---|---|
+| Resident info TEST | `1THjNTF1S0Gu3aHeAD4vxK0Ylcf5BDhTqsL2GMaq8cH4` | «Office rent»: fixtures A–F in rows 2–7 (fake tenants, `@example.invalid`). «Лист1»: K1:M1 = `24/7 (Y/N)`, `Key # / card #`, `Key deposit paid (date, ฿)` + fake rows 303–305 (TEST Keyholder 1–3). |
+| Schedule 26 TEST | `13viAmqT1XMQ99twJw-u5AaTtHWSGPki0zzEX7PleYYg` | unchanged copy |
+| Events and booking TEST | `1kkVOqLqVMpwpZtYpshx3zvH5_EGJ7wYp69sKJJQw3Rk` | Meeting room 01.10: «TEST booking 10:00-11:00 (Place Ops)» |
+| Place Inbox TEST (orders bridge sheet) | `1fwjPnLM4JcBH8HnqayWMLdRznU2U7saJX3PQLa9-6GU` | new tabs **Issues** and **Log** |
+| Code bundle (text) | `1xiFe9Av_cBxy8grYjdUnudJh_WFiDgHt` | `PLACE automations TEST — code bundle (paste into Apps Script).gs.txt` |
+
+Production sheets (Resident info, Schedule 26, Events and booking, Place Inbox) and the live bridge deployment were **not touched**.
+
+Known issues in the copies:
+- Resident info TEST «Лист1» O303:Q305 holds stray values left by a misplaced append (duplicates of K:M). They are harmless: the scripts read only K:M. Delete them by hand if you want.
+- Copies of the sheets may carry their bound scripts. Simple `onEdit`/`onOpen` triggers run in the copies; time triggers are not copied. Do not deploy anything from the copies.
+
+## 2. Test project «PLACE automations TEST»
+
+Code: [`test-project/`](test-project/). `build-test-project.sh` wraps each production script (`stage6-office-reminders.gs`, `issues-log.gs`, `bookings-today.gs`, `keyholders-247.gs`, `stage5-timesheet.gs`) in a module with **test stubs**:
+- `T_SS.openById` opens only the TEST ids and throws on production ids;
+- `GmailApp.createDraft` only writes to the log (no draft is created); `sendEmail`, `MailApp`, `UrlFetchApp` (Telegram) and `ScriptApp.newTrigger` throw `TEST GUARD`;
+- config is in `00-TestConfig.gs` (`T_IDS`, `T_PROPS`). Script Properties with the `T_<MOD>_` prefix override it;
+- every test writes one row to **Place Inbox TEST › Log**. George's DM is not wired (the test project has no bot token), so output is **log only**;
+- the manifest asks only for the `spreadsheets` and `script.scriptapp` scopes. No Gmail or external-request scopes.
+
+**I could not create the project automatically.** The Drive connector rejects creating an Apps Script file with content, and the Apps Script API (and minting tokens) was not used. Setup takes about 5 minutes:
+1. Signed in as info@, go to script.google.com → New project → rename it to **PLACE automations TEST**. Optionally move it into the sandbox folder.
+2. Project Settings → Time zone **Asia/Bangkok**. Tick «Show appsscript.json», then paste `test-project/appsscript.json`.
+3. Delete `Code.gs`. Then either (a) create one file and paste the whole bundle (Drive file above, or `test-project/PLACE-automations-TEST.bundle.gs`), or (b) create files 00-TestConfig, 10-Stage6, 20-IssuesLog, 30-Bookings, 40-Keyholders, 50-Timesheet, 90-Tests in that order.
+4. Optional: clear **Place Inbox TEST › Issues** A2:M and **Log** A2:F. They hold the harness results from 30.09 (see §3).
+5. Run `test_guard` → authorize (Sheets only). Then run `test_all`. Open **Place Inbox TEST › Log**: every row must read `PASS`/`OK`.
+6. **Do not add triggers** (Triggers ▸ empty). The guard blocks `newTrigger` from code anyway.
+
+To re-run stage 6 on the same day, run `test_stage6Reset` first. It clears the sent-log, so the electricity task is created again.
+
+## 3. Test run 30.09.2026 (node harness)
+
+Apps Script could not be run from the bot. So on 30.09 the **same generated code** was run in a node `vm` harness (`test-project/harness/`) against snapshots of the TEST copies, with a simulated time of 30.09.2026 10:07 ICT. The harness results were then written to the real TEST sheets: **Log** rows 2–8 (runner `node-harness`) and **Issues** rows 2–5.
+Harness bugs fixed along the way: the `'T'` literal in formatDate, and Date objects across the vm context. There were no bugs in the scripts themselves.
+
+| # | Automation | Test | Result 30.09 |
+|---|---|---|---|
+| 0 | safety layer | `test_guard` | PASS |
+| 1 | stage 6 offices + electricity for Lena | `test_stage6` | PASS |
+| 2 | issues-log + bridge hook | `test_issues`, `test_issuesBridgeHook` | PASS / PASS |
+| 3 | bookings-today (10:07) | `test_bookings` | PASS |
+| 4 | 24/7 columns (C8) | `test_keyholders` | PASS |
+| 5 | stage 5 timesheet | `test_timesheet` | PASS |
+
+The live Apps Script run (step 5 in §2) is still **pending: George**.
+
+## 4. Scenarios (inputs → expected output → pass/fail)
+
+### 1. Stage 6: office reminders + electricity tasks for Lena
+- **Config:** `MODE=draft` (drafts are stubs), `ELEC_TASK_MODE=issues`, `ISSUES_SHEET_ID`=Place Inbox TEST, `TODAY_OVERRIDE=2026-09-30`.
+- **Inputs:** Resident info TEST › Office rent rows 2–7:
+
+| Row | Tenant | Case |
+|---|---|---|
+| 2 | A | payment 07.10 (in 7 d) |
+| 3 | B «like Igor» | Room 3, payment 03.10, deposit not paid |
+| 4 | C «like Renat» | Room 3 (overlap with B), payment today |
+| 5 | D | no email, contract ends 30.10, electricity day 30 |
+| 6 | E | ended 20.09, status not Ended |
+| 7 | F | Ended |
+
+- **Expected:**
+  - reminders for A (7 d), B (3 d), C (today), all as `[STUB createDraft — NOT created]`;
+  - the digest lists 5 items: A, B, deposit B, C, contract end D;
+  - 3 warnings: D has no email; E ended but status is not Ended; Room 3 overlap B/C;
+  - F is skipped;
+  - one Issues row `elec:5:2026-09`, «выставить счёт за электричество: 2 эт. Room 16, TEST Tenant D», assignee **Lena**;
+  - no email or TG is sent.
+- **Pass if:** all of the above, and the Log row reads `PASS`. A second run the same day does not duplicate the reminders or the task (sent-log).
+- **30.09:** PASS (items 5, warnings 3, drafts 3 stub + digest stub).
+
+### 2. Issues-log: Issues tab + bridge hook
+- **Inputs:** synthetic TG updates from chat «Тех вопросы TEST» (id −1009990001):
+  - new issue «кондиционер на 3 этаже течёт» (Som);
+  - new issue «ชั้น 1 ไฟดับ 2 ดวง» (Tangmo);
+  - reply «смотрю, нужна деталь» → in_progress;
+  - reply «готово» → closed;
+  - a message from the bot → skip.
+
+  Hook test: a message in «Тех вопросы TEST» → open; in «PLACE Team TEST» → skipped; an edited message → skipped.
+- **Expected:** rows in Issues with floor, reporter, status, last_note and closed_at/closed_by.
+  - Morning digest: «Поломки: открыто 2 …»;
+  - evening digest: «открыто 2, закрыто сегодня 1 ✅ …».
+  - Digests go to the log only. No TG.
+- **Pass if:** the statuses are open, open, in_progress, closed, skip-bot; the hook result is open / skipped / skipped; the Log reads `PASS`.
+- **30.09:** PASS. The Issues tab has 4 rows: the elec task, AC in_progress, light closed, 4th floor leak (via the hook).
+
+### 3. Bookings-today in the 10:07 summary
+- **Inputs:** Events and booking TEST, 5 tabs; dates 01.10.2026 and 20.12.2026.
+- **Expected:**
+  - 01.10: «Meeting room: 10:00 TEST booking (Place Ops)», «4 floor: 8:00 Yoga 08:30–11:00»;
+  - 20.12: «нет» plus a ⚠️ warning that the grids end 31.12.2026.
+- **Pass if:** the text matches and the Log reads `PASS`. The text is not sent anywhere.
+- **30.09:** PASS.
+
+### 4. 24/7 columns in Resident info
+- **Inputs:** Resident info TEST › Лист1 K:M, rows 303–305:
+  - Keyholder 1: to 30.10, key K-T01, deposit paid;
+  - Keyholder 2: to 14.10, key K-T02, no deposit;
+  - Keyholder 3: expired 31.08, key K-T03.
+- **Expected:**
+  - «Ключи 24/7: активных 2»;
+  - ⚠️ K-T02 has no deposit;
+  - ⚠️ row 305 is expired but the key is not returned.
+- **Pass if:** the text matches and the Log reads `PASS`.
+- **30.09:** PASS.
+
+### 5. Stage 5 timesheet
+- **Config:** Schedule 26 TEST, `DRAFT_ENABLED=true`, `ACCOUNTANT_TO=test-accountant@example.invalid`.
+- **Inputs:** tabs Aug and Sep; period 21.08–20.09.2026.
+- **Expected:**
+  - a table for 10 people: shifts, hours, annual leave, sick days, unpaid leave, doctor, unrecognised cells;
+  - 0 warnings;
+  - the draft is a stub (not created).
+- **Pass if:** the numbers match a hand check of 2–3 people, e.g. Aiz 26 shifts / 234 h, Kate 21 / 189 h with 5 sick days, Tangmo 2 unpaid days. The Log reads `PASS`.
+- **30.09:** PASS (10 people, 0 warnings). **George or the accountant: check the numbers by hand.**
+
+## 5. Go-live checklist (per item, only after George's written OK)
+
+Common rules for every item:
+- use a separate live project or config, never the TEST project with its guards removed;
+- set the ids to production;
+- remove `TODAY_OVERRIDE`;
+- test first in draft mode on production data (read-only), and only then turn on the trigger;
+- record the date and the OK in STATUS.md.
+
+**1. Stage 6 offices + electricity**
+- [ ] Place Ops fills the real registry «Office rent» (it is empty in production): Room 3 Renat/Igor, Igor's deposit.
+- [ ] Config: `RESIDENT_SHEET_ID`=production, `ISSUES_SHEET_ID`=production Place Inbox (after the Issues tab exists there), `MODE=draft`, `ELEC_TASK_MODE=issues`, no `TODAY_OVERRIDE`.
+- [ ] One `dryRun` on production. George reviews the list.
+- [ ] Daily trigger 09:00. Tenant emails stay as Gmail **drafts**; `MODE=send` only with a separate OK.
+- [ ] Tell Lena that her electricity tasks arrive in Issues / the summary.
+
+**2. Issues-log + bridge hook**
+- [ ] George OK to add the **Issues** tab to the production Place Inbox (same header as in TEST).
+- [ ] George OK to change the live bridge: a one-line hook in `doPost` (`issues-log.gs`), which fires only for chat «Тех вопросы». New deployment **version**; keep the previous version for rollback.
+- [ ] Test with one real message in «Тех вопросы», then the reply «готово».
+- [ ] Add the digests to the 10:07 / 22:30 runs.
+- [ ] Tell Som and the admins: «готово» in a reply closes the issue.
+
+**3. Bookings-today**
+- [ ] `EVENTS_SHEET_ID`=production. Add the block to the 10:07 summary (existing trigger, no new message).
+- [ ] Check for 1 week. Extend the grids past 31.12.2026 by December.
+
+**4. 24/7 columns**
+- [ ] George OK. **A human** adds K:M to the production Resident info (the bot does not edit the production sheet).
+- [ ] Fill in the actual 24/7 residents, keys and deposits.
+- [ ] Only after that: `keyholders247_` in the 22:30 run (read-only).
+
+**5. Stage 5 timesheet**
+- [ ] George or the accountant confirms the TEST table for 21.08–20.09 (hand check).
+- [ ] Config: `SCHEDULE_SHEET_ID`=production, `ACCOUNTANT_TO` = the real accountant, `DRAFT_ENABLED=true`.
+- [ ] Monthly trigger on the 21st, 09:00, **draft** only. George sends it himself.
+- [ ] For 2027: `SHEET_ID_BY_YEAR`.
