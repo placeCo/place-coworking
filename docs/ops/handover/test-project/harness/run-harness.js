@@ -46,8 +46,8 @@ vm.createContext(ctx);
 const src = fs.readdirSync(path.join(__dirname, '..')).filter(f => /^\d\d-.*\.gs$/.test(f)).sort();
 src.forEach(f => vm.runInContext(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'), ctx, {filename: f}));
 vm.runInContext("T_RUNNER = 'node-harness';", ctx);
-const names = ['test_guard', 'test_stage6', 'test_issues', 'test_issuesBridgeHook', 'test_bookings', 'test_keyholders', 'test_timesheet', 'test_leave', 'cleanupTestFixtures'];
-if (process.env.SCHED) { names.length = 0; props.TG_TOKEN = '123456:FAKE_TOKEN_FOR_HARNESS'; if (process.env.SCHED === 'chat') props.GEORGE_CHAT_ID = '111111';
+const names = ['test_guard', 'test_relay', 'test_stage6', 'test_issues', 'test_issuesBridgeHook', 'test_bookings', 'test_keyholders', 'test_timesheet', 'test_leave', 'cleanupTestFixtures'];
+if (process.env.SCHED) { names.length = 0; props.TG_TOKEN = '123456:FAKE_TOKEN_FOR_HARNESS'; if (process.env.SCHED === 'chat') { props.GEORGE_CHAT_ID = '111111'; if (process.env.LENA !== '0') props.LENA_CHAT_ID = '222222'; }
   ['setupTestProperties', 'sendTestPing', 'job_stage6', 'job_coverage', 'job_bookings', 'job_issuesMorning', 'job_issuesEvening', 'job_timesheet', 'job_cashReminder'].forEach(n => names.push(n)); }
 const results = {};
 if (process.env.DEBUG_FN) { try { vm.runInContext(process.env.DEBUG_FN, ctx); } catch (e) { console.log(e.stack); } process.exit(0); }

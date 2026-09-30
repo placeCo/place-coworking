@@ -51,7 +51,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
   - reads go through a Proxy that allows only `get…/is…/has…`; any write throws `TEST GUARD`.
 - Writes go only to **Place Inbox TEST**: Issues and Log.
 - **No message reaches its real target.** Everything is relayed to George's private chat with @PlaceLeadBot as:
-  `🧪 TEST, would be sent to: <recipient> via <channel>, at <time>` + the exact text.
+  `🧪 ТЕСТ` / `Куда ушло бы: <real recipient + channel>` / blank line / the exact text (George 30.09 14:22), sent to **George and Lena**.
   Channels:
   - TG group PLACE Team;
   - TG DM Lena;
@@ -59,7 +59,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
   - email to tenant X (Gmail draft);
   - email draft to accountant;
   - email draft (info@).
-- The relay sends only to Script Property `GEORGE_CHAT_ID`, and only if it is a private chat id (positive number). Without `TG_TOKEN` or `GEORGE_CHAT_ID` it is **log only**.
+- The relay sends to Script Properties `GEORGE_CHAT_ID` **and** `LENA_CHAT_ID` (private chat ids only, positive numbers). `LENA_CHAT_ID` empty → George only + `WARN` in Log (the job does not fail); same id twice → one send. Without `TG_TOKEN` or any id it is **log only**. Leave cards (same text to both approvers) are relayed once, so George does not get them twice. Self-test: `test_relay()` (part of `test_all`).
 - Issues: the live bridge is not changed. New «Тех вопросы» rows are copied read-only from the production `queue` into TEST Issues. They open issues only, because the queue has no reply link.
 - `job_stage6`: production «Office rent» is empty now, so the job logs «nothing to check» until the registry is filled.
 
@@ -69,6 +69,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
    - **Done by George by hand**, e.g. copied from @BotFather or the «Place TG Bridge» project properties.
    - The token is never in code, the repo, the Log or chat.
    - Apps Script cannot read box env or box files, so no function can pull it from the box.
+   - `LENA_CHAT_ID` = Lena's private chat id with @PlaceLeadBot (set by hand).
    - Optional properties: `GEORGE_CHAT_ID`, `GEORGE_TG_USERNAME`, `CASH_ANCHOR_DATE` (yyyy-mm-dd).
 3. George presses **/start** in @PlaceLeadBot. The live bridge logs it to the production `queue` as «личка боту» with the chat_id.
 4. Run `setupTestProperties()`:
@@ -94,7 +95,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
 
 **Harness check 30.09** (node, snapshots, fake token/chat):
 - all 9 functions OK;
-- 12 `sendMessage` calls, **all to GEORGE_CHAT_ID**;
+- 12 messages × 2 `sendMessage` calls, **only to GEORGE_CHAT_ID and LENA_CHAT_ID** (harness `SCHED=chat`; `LENA=0` → 12, George only + WARN);
 - 0 writes to production;
 - without a chat_id: 12 × «relay LOG ONLY».
 

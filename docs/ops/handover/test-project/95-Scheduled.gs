@@ -1,13 +1,14 @@
 /**
  * PLACE automations TEST — scheduled TEST mode (George OK 30.09.2026 10:02).
  * Production sheets READ-ONLY, writes only to Place Inbox TEST (Issues, Log), every outgoing message relayed to
- * George's DM with @PlaceLeadBot (see T_relay_). Triggers: installTestTriggers() / removeTestTriggers().
+ * George's and Lena's DMs with @PlaceLeadBot (see T_relay_). Triggers: installTestTriggers() / removeTestTriggers().
  *
  * One-time setup (see TEST-PLAN.md §2b):
  *   1. Project Settings ▸ Script properties ▸ add TG_TOKEN = <token of @PlaceLeadBot>  (never in code, never in Log).
+ *      LENA_CHAT_ID = Lena's private chat id with @PlaceLeadBot (every test message goes to George AND Lena).
  *      Optional: GEORGE_CHAT_ID (if known), GEORGE_TG_USERNAME (e.g. without @), CASH_ANCHOR_DATE (yyyy-mm-dd).
  *   2. Run setupTestProperties()  -> checks the token (getMe), finds/sets GEORGE_CHAT_ID, writes a summary to Log.
- *   3. Run sendTestPing()          -> George gets «🧪 TEST ping».
+ *   3. Run sendTestPing()          -> George and Lena get «🧪 ТЕСТ … ping».
  *   4. Run installTestTriggers()   -> 7 time triggers (Asia/Bangkok).
  */
 var T_JOBS = [
@@ -38,7 +39,9 @@ function setupTestProperties() {
       out.push('GEORGE_CHAT_ID lookup in production queue (read-only): ' + c.note);
       if (c.id) { p.setProperty('GEORGE_CHAT_ID', c.id); chat = c.id; }
     }
-    out.push('GEORGE_CHAT_ID: ' + (chat ? chat : 'NOT SET → relay LOG ONLY. George: press /start in @PlaceLeadBot, then run setupTestProperties() again, or set GEORGE_CHAT_ID by hand.'));
+    out.push('GEORGE_CHAT_ID: ' + (chat ? chat : 'NOT SET → George gets nothing. George: press /start in @PlaceLeadBot, then run setupTestProperties() again, or set GEORGE_CHAT_ID by hand.'));
+    var lena = p.getProperty('LENA_CHAT_ID');
+    out.push('LENA_CHAT_ID: ' + (lena ? lena : 'NOT SET → test messages go to George only (warning in Log). Set Script Property LENA_CHAT_ID by hand.'));
     if (!p.getProperty('CASH_ANCHOR_DATE')) { p.setProperty('CASH_ANCHOR_DATE', Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd')); }
     out.push('CASH_ANCHOR_DATE: ' + p.getProperty('CASH_ANCHOR_DATE'));
     out.push('Triggers now: ' + ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction(); }).join(', '));
@@ -62,16 +65,17 @@ function T_findGeorgeChatId_() {
   return {id: null, note: ids.length ? 'ambiguous: ' + JSON.stringify(found) + ' → set GEORGE_TG_USERNAME' : 'no private chat from George yet'};
 }
 
+/** Test ping to George + Lena through the same relay as the jobs (header «🧪 ТЕСТ» + «Куда ушло бы»). */
 function sendTestPing() {
   var prev = T_CTX; T_CTX = {relay: true, mail: null};
   try {
     return T_run_('ping', 'sendTestPing', function () {
-      var p = PropertiesService.getScriptProperties(), tok = p.getProperty('TG_TOKEN'), chat = p.getProperty('GEORGE_CHAT_ID');
-      if (!tok || !chat || !/^\d{5,15}$/.test(chat)) throw new Error('TG_TOKEN or GEORGE_CHAT_ID missing → run setupTestProperties()');
-      var r = UrlFetchApp.fetch('https://api.telegram.org/bot' + tok + '/sendMessage', {method: 'post', contentType: 'application/json',
-        payload: JSON.stringify({chat_id: chat, text: '🧪 TEST ping from «PLACE automations TEST», ' + T_now_() + ' ICT'}), muteHttpExceptions: true});
-      if (r.getResponseCode() !== 200) throw new Error('sendMessage HTTP ' + r.getResponseCode());
-      return 'ping sent to GEORGE_CHAT_ID';
+      var p = PropertiesService.getScriptProperties();
+      if (!p.getProperty('TG_TOKEN')) throw new Error('TG_TOKEN missing → run setupTestProperties()');
+      if (!T_relayTargets_().ids.length) throw new Error('GEORGE_CHAT_ID / LENA_CHAT_ID missing → run setupTestProperties()');
+      var r = T_relay_('никуда (проверка связи)', 'ping from «PLACE automations TEST», ' + T_now_() + ' ICT');
+      if (!/^relayed( (George|Lena):200(,200)*)+$/.test(r)) throw new Error('ping: ' + r);
+      return 'ping ' + r;
     });
   } finally { T_CTX = prev; }
 }
@@ -101,38 +105,38 @@ function removeTestTriggers() {
 function ST6_prop_(k) { return T_props_('ST6').getScriptProperties().getProperty(k); }
 function job_stage6() {
   return T_job_('stage6', 'job_stage6 (prod Resident info read-only)', function (to) {
-    if (to === 'info@placecoworking.com') return {recipient: 'Place Ops / George (offices digest)', channel: 'email draft (info@) to ' + to};
-    return {recipient: 'tenant ' + to, channel: 'email to tenant ' + to + ' (Gmail draft on info@)'};
+    if (to === 'info@placecoworking.com') return 'Place Ops и George, email info@ (черновик, дайджест офисов)';
+    return 'арендатор ' + to + ', email (черновик на info@)';
   }, function () {
     var reg = T_SS.openById(ST6_prop_('RESIDENT_SHEET_ID')).getSheetByName(ST6_prop_('TAB_NAME'));
     if (!reg || reg.getLastRow() < 2) return 'Office rent is empty in production Resident info: nothing to check (no relay)';
     var r = ST6.run_('draft');
     var rows = T_SS.openById(T_IDS.inbox).getSheetByName('Issues').getDataRange().getValues(), today = Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
     rows.filter(function (x) { return /^elec:/.test(x[0]) && String(x[1]).indexOf(today) === 0 && String(x[14] || '') !== 'fixture'; }).forEach(function (x) {
-      T_relay_('Lena', 'TG DM Lena', '⚡ ' + x[4] + '\n(задача в Issues: ' + x[0] + ')');
+      T_relay_('Лена в личку', '⚡ ' + x[4] + '\n(задача в Issues: ' + x[0] + ')');
     });
     return r;
   });
 }
 function job_coverage() {
   return T_job_('coverage', 'job_coverage (prod Schedule 26 read-only)', function (to) {
-    return {recipient: 'Lena + Place Ops (schedule coverage)', channel: 'email draft (info@) to ' + to};
+    return 'Лена и Place Ops, email ' + to + ' (черновик, пробелы в графике)';
   }, function () { var r = SC.coverage_('draft'); return {subject: r.subject, gaps: r.gaps}; });
 }
 function job_bookings() {
   return T_job_('bookings', 'job_bookings (prod Events and booking read-only)', null, function () {
     var t = BKG.bookingsToday_(new Date());
-    T_relay_('PLACE Team', 'TG group PLACE Team (10:07 summary)', t);
+    T_relay_('PLACE Team (TG группа, сводка 10:07)', t);
     return t;
   });
 }
-function job_issuesMorning() { return T_issuesJob_('morning', 'TG group PLACE Team (10:07 summary)'); }
-function job_issuesEvening() { return T_issuesJob_('evening', 'TG group PLACE Team (23:10 summary)'); }
+function job_issuesMorning() { return T_issuesJob_('morning', 'PLACE Team (TG группа, сводка 10:07)'); }
+function job_issuesEvening() { return T_issuesJob_('evening', 'PLACE Team (TG группа, сводка 23:10)'); }
 function T_issuesJob_(kind, channel) {
   return T_job_('issues', 'job_issues ' + kind, null, function () {
     var synced = T_syncIssuesFromQueue_();
     var t = ISS.issuesDigest_(kind);
-    T_relay_('PLACE Team', channel, t);
+    T_relay_(channel, t);
     return {synced: synced, digest: t};
   });
 }
@@ -156,7 +160,7 @@ function T_syncIssuesFromQueue_() {
 }
 function job_timesheet() {
   return T_job_('timesheet', 'job_timesheet (prod Schedule 26 read-only)', function (to) {
-    return {recipient: 'accountant (' + to + ')', channel: 'email draft to accountant'};
+    return 'email Khun Pat (черновик)' + (/@/.test(to) ? ' ' + to : '');
   }, function () { return ST5.createTimesheetDraft(); });
 }
 /** Every 3 days 20:00: remind the evening admin (shift ending 23:00) to prepare cash + count for the Thai partner. */
@@ -169,8 +173,8 @@ function job_cashReminder() {
       '3) send the total + a photo of the count sheet here with #cash.\n\n' +
       'พรุ่งนี้พาร์ทเนอร์จะมารับเงินสดไปฝากธนาคาร หลังปิดร้าน (23:00) กรุณา:\n' +
       '1) นับเงินสดในลิ้นชัก\n2) ใส่ซองพร้อมใบนับเงิน (วันที่ ยอดรวม ธนบัตร/เหรียญ ชื่อผู้นับ)\n3) ส่งยอดรวม + รูปใบนับเงินที่นี่ พร้อม #cash';
-    var who = names.length ? 'evening admin ' + names.join(', ') : 'evening admin (not found in Schedule 26 → Place Ops + George)';
-    T_relay_(who, 'TG DM evening admin', text);
+    var who = names.length ? 'вечерний админ ' + names.join(', ') + ' в личку' : 'вечерний админ (не найден в Schedule 26) → Place Ops и George в личку';
+    T_relay_(who, text);
     return {eveningAdmins: names};
   });
 }

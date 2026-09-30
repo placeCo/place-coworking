@@ -2,7 +2,7 @@
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
+  var r = [test_guard(), test_relay(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -103,16 +103,53 @@ function test_leave() {
     var now = new Date();
     var bad = LV.leaveRequest_({name: 'Tangmo', user: 'tangmo_test', chatId: 1}, '/leave holiday tomorrow', now);
     var a = LV.leaveRequest_({name: 'Tangmo', user: 'tangmo_test', chatId: 1}, '/leave vacation 11.10-12.10 TEST family', now);
-    a.cards.forEach(function (c) { T_relay_(c.to, 'TG DM ' + c.to + ' (approval card)', c.text); });
+    // the same card goes to every approver: ONE relay (it already reaches George and Lena), no double send to George
+    T_relay_(T_leaveWho_(a.cards.map(function (c) { return c.to; })) + ' (approve)', a.cards[0].text);
     var nope = LV.leaveDecide_(a.id, 'approve', 'Kate', '', now);
     var ok = LV.leaveDecide_(a.id, 'approve', 'Lena', '', now);
     var late = LV.leaveDecide_(a.id, 'reject', 'George', '', now);
-    T_relay_('Tangmo', 'TG DM Tangmo', ok.employeeMsg);
-    ok.otherMsg.forEach(function (m) { T_relay_(m.to, 'TG DM ' + m.to, m.text); });
+    T_relay_('сотрудник Tangmo в личку', ok.employeeMsg);
+    ok.otherMsg.forEach(function (m) { T_relay_(T_leaveWho_([m.to]) + ' в личку', m.text); });
     var b = LV.leaveRequest_({name: 'Kate', user: 'kate_test', chatId: 2}, '/leave выходной 14.10 TEST', new Date(now.getTime() + 1000));
     var no = LV.leaveDecide_(b.id, 'reject', 'George', 'TEST reason', now);
-    T_relay_('Kate', 'TG DM Kate', no.employeeMsg);
+    T_relay_('сотрудник Kate в личку', no.employeeMsg);
     return {badFormat: bad.error, request: a.id, cardsTo: a.cards.map(function (c) { return c.to; }), nonApprover: nope.status,
       approveByLena: {status: ok.status, written: ok.written, conflicts: ok.conflicts}, secondDecision: late.status, dayoffRejectByGeorge: no.status};
+  });
+}
+
+/** Approver names -> label: ['George','Lena'] -> «Лена и George». */
+function T_leaveWho_(names) {
+  var ru = names.map(function (n) { return /^lena$/i.test(n) ? 'Лена' : n; }).sort(function (a, b) { return a === 'Лена' ? -1 : b === 'Лена' ? 1 : 0; });
+  return ru.join(' и ');
+}
+
+/** Test-mode relay: goes to George AND Lena, header «🧪 ТЕСТ» + «Куда ушло бы», blank line, body;
+ *  LENA_CHAT_ID empty -> George only + warning, no failure; same id twice -> one send. Fake ids + fake sender, nothing is sent. */
+function test_relay() {
+  return T_fixture_('relay', 'T_relay_ (fake ids, fake sender)', function () {
+    var sent = [], prev = T_CTX, fail = [];
+    var fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
+    var body = 'Сегодня брони: Meeting room 14:00–16:00';
+    function run(ids) { sent = []; T_CTX = {relay: true, ids: ids, send: fake}; var buf0 = T_BUF.length; var r = T_relay_('PLACE Team (TG группа)', body); var w = T_BUF.slice(buf0).join('\n'); T_CTX = prev; return {r: r, sent: sent, log: w}; }
+    try {
+      var a = run({george: '111111', lena: '222222'});
+      if (a.sent.length !== 2 || a.sent[0].id !== '111111' || a.sent[1].id !== '222222') fail.push('both: ' + JSON.stringify(a.sent.map(function (x) { return x.id; })));
+      a.sent.forEach(function (x) {
+        var L = x.text.split('\n');
+        if (L[0] !== '🧪 ТЕСТ') fail.push('line1: ' + L[0]);
+        if (L[1] !== 'Куда ушло бы: PLACE Team (TG группа)') fail.push('line2: ' + L[1]);
+        if (L[2] !== '' || L.slice(3).join('\n') !== body) fail.push('body: ' + JSON.stringify(L.slice(2)));
+      });
+      var b = run({george: '111111', lena: ''});
+      if (b.sent.length !== 1 || b.sent[0].id !== '111111') fail.push('no-lena: ' + JSON.stringify(b.sent.map(function (x) { return x.id; })));
+      if (!/WARN LENA_CHAT_ID not set/.test(b.log)) fail.push('no-lena: warning missing');
+      var c = run({george: '111111', lena: '111111'});
+      if (c.sent.length !== 1) fail.push('same id twice: sent ' + c.sent.length);
+      var d = run({george: '', lena: ''});
+      if (d.sent.length !== 0 || !/^log-only/.test(d.r)) fail.push('no ids: ' + d.r);
+    } finally { T_CTX = prev; }
+    if (fail.length) throw new Error('RELAY FAIL ' + fail.join('; '));
+    return 'OK: both ids + header + «Куда ушло бы» + body; Lena empty → George only + WARN; same id → 1 send; no ids → log only';
   });
 }
