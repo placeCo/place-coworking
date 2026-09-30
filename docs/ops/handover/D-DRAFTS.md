@@ -46,7 +46,7 @@
 | Kitchen | Kate | старший админ | кухня, витрина |
 | Technician | Som | старший админ | поломки (`Issues`), закупка материалов |
 | Cleaner | Sun (до ~17:00) | старший админ | уборка по графику |
-| Accountant (внешний) | Sirikanya (cc Somsak) | George | зарплата, SSO, платежи |
+| Accountant (внешний) | **Pat** (новый, LINE ID нет); Namtan (Sirikanya) namtanlover@hotmail.com, Khun Sak somsak.khumbaan@gmail.com: роли уточнить (Aiz 30.09) | George | зарплата, SSO, платежи |
 
 ## 5. G-4 Собеседование админа: шаблон (RU; перевод на TH по OK)
 Вопросы (15–20 минут):
