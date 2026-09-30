@@ -28,9 +28,8 @@
 Офисы для команд и приватной работы, не публичный hot desk.
 
 - Этаж 5: **30 000฿/мес** или **20 000฿/год**
-- Этаж 2: **140 000฿/мес**
-- Ориентир: до ~4 человек
-- Детали по этажу 2 — через менеджера
+- Ориентир для этажа 5: до ~4 человек
+- **Весь 2 этаж в аренду: 140 000฿/мес**
 
 **CTA:** Напишите менеджеру, чтобы узнать доступность и договориться о туре.
 
@@ -72,9 +71,8 @@ The working open space is on floor 3. Floor 1 includes the library, café area a
 Private offices for teams and focused work, not public hot desks.
 
 - Floor 5: **฿30,000/month** or **฿20,000/year**
-- Floor 2: **฿140,000/month**
-- Guide: up to ~4 people
-- Floor 2 details: ask the manager
+- Floor 5 guide: up to ~4 people
+- **Entire floor 2 for lease: ฿140,000/month**
 
 **CTA:** Message the manager for availability and a tour.
 
@@ -117,7 +115,7 @@ Message us on Telegram or visit reception — welcome to Place.
 | Pass | Этажи 1 + 3; рабочий open space на 3-м; 1-й = библиотека, кафе-зона, переговорные | Floors 1 + 3; working open space on 3; library, café area and meeting rooms on 1 | One Pass line, not separate floor prices |
 | Trial | 1 бесплатный день · только 3-й этаж | 1 free day · floor 3 only | Badge/callout; no “3 days” |
 | Pass prices | 50฿/час · 400฿/день до 31.10 (с 01.11 — 500฿) · 1 800฿/неделя · 6 000฿/мес 08–23 · 15 000฿/3 мес · 9 000฿/мес 24/7 + депозит ключа | ฿50/hour · ฿400/day until 31 Oct (from 1 Nov ฿500) · ฿1,800/week · ฿6,000/month 08–23 · ฿15,000/3 mo · ฿9,000/month 24/7 + key deposit | Keep the ladder together |
-| Offices | Этажи 2 + 5; этаж 5: 30 000฿/мес или 20 000฿/год; до ~4 человек; этаж 2: 140 000฿/мес; детали — менеджер | Floors 2 + 5; floor 5: ฿30,000/month or ฿20,000/year; up to ~4 people; floor 2: ฿140,000/month; details via manager | Do not show floor 2 as hot desk |
+| Offices | Этажи 2 + 5; этаж 5: 30 000฿/мес или 20 000฿/год; до ~4 человек; весь 2 этаж в аренду: 140 000฿/мес; детали — менеджер | Floors 2 + 5; floor 5: ฿30,000/month or ฿20,000/year; up to ~4 people; entire floor 2 for lease: ฿140,000/month; details via manager | Do not show floor 2 as hot desk |
 | Studio | Студия, этаж 4; формат и доступность — через менеджера | Studio, floor 4; format and availability via manager | CTA only; no package menu |
 | Meeting | Переговорные от 250฿/час; резидентам Pass −20% | Meeting rooms from ฿250/hour; Pass residents −20% | Add “book through Place” |
 | Footer | 08:00–23:00 · Chalong, 59/2 Chao Fah Tawan Tok · Telegram / ресепшен | 08:00–23:00 · Chalong, 59/2 Chao Fah Tawan Tok · Telegram / reception | Keep contact CTA visible |

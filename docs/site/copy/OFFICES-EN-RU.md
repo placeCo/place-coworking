@@ -19,7 +19,7 @@ Rooms for small teams (about up to **4 people**).
 • **20,000฿ / month** on a yearly deal
 
 ### Floors 2 and 5 — how we present them
-We lease **floors 2 and 5** as office space (private office use). Not sold as a public hot-desk menu. Floor-2 terms, layout, and rare Pass upgrades if space is free — **ask the manager**. No separate floor-2 price column on the site.
+We lease **floors 2 and 5** as office space (private office use). Not sold as a public hot-desk menu. **Entire floor 2 for lease: ฿140,000/month.** Size, capacity, deposit, inclusions — уточнить; layout and rare Pass upgrades if space is free — **ask the manager**.
 
 ### CTA
 Book an office tour · WhatsApp / call **+66951170481** · info@placecoworking.com · Telegram @coworking_place_phuket
@@ -30,7 +30,7 @@ Book an office tour · WhatsApp / call **+66951170481** · info@placecoworking.c
 - **Studio** floor **4** via manager
 
 ### FAQ pointer
-“Can I sit on floor 2 as a desk?” → No — office space; ask manager. Full FAQ → `docs/site/FAQ-SITE-EN-RU.md`
+“Can I sit on floor 2 as a desk?” → No — Entire floor 2 for lease: ฿140,000/month; ask manager. Full FAQ → `docs/site/FAQ-SITE-EN-RU.md`
 
 ---
 
@@ -48,7 +48,7 @@ Book an office tour · WhatsApp / call **+66951170481** · info@placecoworking.c
 • **20 000฿ / месяц** при годовом контракте
 
 ### Этажи 2 и 5 — как показываем
-Сдаём **2 и 5** как офисы (закрытое использование). Не публичное меню hot desk. Условия 2 этажа, планировка и редкий апгрейд с Pass, если свободно — **у менеджера**. Отдельной колонки цен 2 этажа на сайте нет.
+Сдаём **2 и 5** как офисы (закрытое использование). Не публичное меню hot desk. **Весь 2 этаж в аренду: 140 000฿/мес.** Площадь, вместимость, депозит, что входит — уточнить; планировка и редкий апгрейд с Pass, если свободно — **у менеджера**.
 
 ### CTA
 Тур по офисам · WhatsApp / звонок **+66951170481** · info@placecoworking.com · Telegram @coworking_place_phuket
@@ -59,14 +59,14 @@ Book an office tour · WhatsApp / call **+66951170481** · info@placecoworking.c
 - **Студия** 4 этаж через менеджера
 
 ### Указатель FAQ
-«Можно на 2 этаж как стол?» → Нет — офисное пространство; спросите менеджера. Полный FAQ → `docs/site/FAQ-SITE-EN-RU.md`
+«Можно на 2 этаж как стол?» → Нет — весь 2 этаж в аренду: 140 000฿/мес; спросите менеджера. Полный FAQ → `docs/site/FAQ-SITE-EN-RU.md`
 
 ---
 
 ## 中文 (ZH stub)
 
 **TODO translate — same Offices facts as EN/RU.**  
-Do not invent ZH. Keep: offices floors **2 and 5** · floor 5 **30,000฿/mo** or **20,000฿/mo** yearly · ~up to 4 pax · no public floor-2 hot-desk menu · CTA manager / tour · Chalong.
+Do not invent ZH. Keep: offices floors **2 and 5** · floor 5 **30,000฿/mo** or **20,000฿/mo** yearly · ~up to 4 pax · entire floor 2 for lease ฿140,000/month (public) · no floor-2 hot-desk menu · CTA manager / tour · Chalong.
 
 ---
 

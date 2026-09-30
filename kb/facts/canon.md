@@ -23,7 +23,7 @@
 | Floor | Role |
 |-------|------|
 | **1 LIBRARY** | Entrance, library, glazed café zone, large meeting rooms (~20) + another meeting room. Amenity inside Pass; almost no work desks. Leaflet hours 08:00–23:00. Not a separate desk SKU |
-| **2 OFFICES** | Office floorspace. Own entrance / closed door. Lease as offices — **not** public hot desk. Rare Pass→2 upgrade if free. Not public “pick a desk on 2” |
+| **2 OFFICES** | Office floorspace. Own entrance / closed door. **Entire floor 2 for lease: ฿140,000/month** (public, George 30.09.2026). **Not** public hot desk. Rare Pass→2 upgrade if free. Not public “pick a desk on 2” |
 | **3 OPEN SPACE** | Only public work hall; trial & work here. Base hours 08:00–23:00 |
 | **4 STUDIO** | Podcast / photo studio — **via manager**, not self-book full menu on site |
 | **5 OFFICES** | Private rooms/offices on sale. Orient: up to ~4 pax, **30 000฿/mo** or **20 000฿/mo** yearly |
@@ -55,11 +55,11 @@ A) Place Pass (1+3) · B) Offices (2+5) · C) Studio (4 via manager) · Meeting 
 | Month 24/7 | **9000฿** | Nights + key deposit |
 
 ### Remove everywhere (canon)
-Separate floor-1 column; 10-day packs; all public floor-2 tariffs; “3 free days any floor”; “month from 3000”; site “Filming 500฿/hour” as current studio price.
+Separate floor-1 column; 10-day packs; old per-desk floor-2 tariffs (700/4200/5500/11000/30000/7500); “3 free days any floor”; “month from 3000”; site “Filming 500฿/hour” as current studio price.
 
 ## Offices / meeting / studio
 - Floor 5: **30 000฿/mo** · **20 000฿/mo** yearly (orient ~4 pax)
-- Floor 2 office: **140 000฿/mo** (George 30.09.2026; size / capacity / deposit / inclusions — уточнить)
+- Floor 2: **Entire floor 2 for lease: ฿140,000/month** (public, George 30.09.2026; size / capacity / deposit / inclusions — уточнить)
 - Meeting: **from 250฿/h**, Pass residents **−20%** (until George cancels). Large ~20 on floor 1 + another room
 - Studio 4 — via manager. Internal leaflet orientation (**do not publish blindly**): Podcast 3 cameras 6000; Talking head 1h 3000; Webinar from 14 000; Interview on location from 5000; Editing podcast from 4000; Photo studio 1h 2000 / 2h 3000; Photographer/operator 5000; “price includes equipment”
 

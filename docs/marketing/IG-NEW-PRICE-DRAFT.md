@@ -9,7 +9,8 @@ Place Pass — простая вилка.
 Месяц с ночами 9000฿  
 
 Рабочий зал — 3 этаж.  
-1 этаж — вход и библиотека. 2 этаж не продаём.  
+1 этаж — вход и библиотека.  
+Весь 2 этаж в аренду: 140 000฿/мес.  
 Студия и офисы — через менеджера.
 
 08:00–23:00. Не «круглосуточно для всех».
@@ -26,7 +27,8 @@ Month 6,000฿ (until 23:00) · 3 months 15,000฿
 Month with nights 9,000฿  
 
 Work hall = floor 3.  
-Floor 1 = entrance/library. Floor 2 not for sale.  
+Floor 1 = entrance/library.  
+Entire floor 2 for lease: ฿140,000/month.  
 Studio & offices = via manager.
 
 08:00–23:00. Not 24/7 for everyone.
@@ -34,4 +36,4 @@ Studio & offices = via manager.
 DM / Telegram @coworking_place_phuket · +66951170481
 
 ## Caption notes
-Не обещать wifi Mbps, Патонг, 2 этаж, крышу, 3 free days.
+Не обещать wifi Mbps, Патонг, столы на 2 этаже, крышу, 3 free days. 2 этаж — только целиком, 140 000฿/мес (публично, George 30.09.2026).

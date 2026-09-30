@@ -15,7 +15,7 @@ Rooms for small teams (about up to 4 people).
 • **20,000฿ / month** on a yearly deal  
 
 **Floor 2 — office floorspace**  
-We lease floor 2 as **office space** (private office use). Not sold as a public hot-desk menu. Ask for availability and terms.  
+**Entire floor 2 for lease: ฿140,000/month.** Private office use; not a hot-desk menu. Size, capacity, deposit and inclusions — уточнить; ask the manager for availability.  
 In rare cases, Pass residents may be upgraded to floor 2 if space is free — ask the manager.
 
 **CTA:** Book an office tour · WhatsApp / call +66951170481 · info@placecoworking.com  
@@ -36,7 +36,7 @@ In rare cases, Pass residents may be upgraded to floor 2 if space is free — as
 • **20 000฿ / месяц** при годовом контракте  
 
 **2 этаж — офисное пространство**  
-Сдаём 2 этаж как **офисы** (закрытое использование). Не публичное меню hot desk. Свободность и условия — у менеджера.  
+**Весь 2 этаж в аренду: 140 000฿/мес.** Закрытое использование, не меню hot desk. Площадь, вместимость, депозит, что входит — уточнить; свободность — у менеджера.  
 В редких случаях резидента Pass можем пересадить на 2-й, если свободно — спросите.
 
 **CTA:** Тур по офисам · WhatsApp / +66951170481 · info@placecoworking.com  
