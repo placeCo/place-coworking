@@ -15,7 +15,7 @@ wrap() { # $1 out  $2 module  $3 source  $4 exports  $5 prelude
   } > "$1"
 }
 wrap 10-Stage6.gs     ST6 stage6-office-reminders.gs 'dryRun: dryRun, run_: run_, resetSentLog: resetSentLog'
-wrap 20-IssuesLog.gs  ISS issues-log.gs 'issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_: issuesDigest_, ISSUES_CHAT_RE: ISSUES_CHAT_RE' 'var SHEET_ID = T_IDS.inbox; // TEST: Place Inbox TEST, never the live bridge sheet'
+wrap 20-IssuesLog.gs  ISS issues-log.gs 'issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_: issuesDigest_, issuesSendDigest_: issuesSendDigest_, ISSUES_CHAT_RE: ISSUES_CHAT_RE' 'var SHEET_ID = T_IDS.inbox; // TEST: Place Inbox TEST, never the live bridge sheet'
 wrap 30-Bookings.gs   BKG bookings-today.gs 'bookingsToday_: bookingsToday_, dryRunBookings: dryRunBookings'
 wrap 40-Keyholders.gs KH  keyholders-247.gs 'keyholders247_: keyholders247_'
 wrap 50-Timesheet.gs  ST5 stage5-timesheet.gs 'dryRun: dryRun, createTimesheetDraft: createTimesheetDraft'

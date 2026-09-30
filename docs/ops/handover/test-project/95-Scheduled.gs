@@ -5,6 +5,7 @@
  *
  * One-time setup (see TEST-PLAN.md §2b):
  *   1. Project Settings ▸ Script properties ▸ add TG_TOKEN = <token of @PlaceLeadBot>  (never in code, never in Log).
+ *      TECH_CHAT_ID = chat id of the TG group «Тех вопросы» (real target of the issues digests; unknown yet, may stay empty).
  *      LENA_CHAT_ID = Lena's private chat id with @PlaceLeadBot (every test message goes to George AND Lena).
  *      Optional: GEORGE_CHAT_ID (if known), GEORGE_TG_USERNAME (e.g. without @), CASH_ANCHOR_DATE (yyyy-mm-dd).
  *   2. Run setupTestProperties()  -> checks the token (getMe), finds/sets GEORGE_CHAT_ID, writes a summary to Log.
@@ -16,8 +17,8 @@ var T_JOBS = [
   ['job_stage6',         'daily',  9, 5,  'stage6 office reminders + electricity tasks'],
   ['job_coverage',       'daily',  9, 10, 'schedule-coverage'],
   ['job_bookings',       'daily',  10, 7, 'bookings-today (10:07 summary)'],
-  ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning'],
-  ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening'],
+  ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning → TG group «Тех вопросы» (TECH_CHAT_ID)'],
+  ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening → TG group «Тех вопросы» (TECH_CHAT_ID)'],
   ['job_timesheet',      'month28', 9, 30, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
   ['job_cashReminder',   'every3', 20, 0, 'cash-deposit reminder for the evening admin (every 3 days)']
 ];
@@ -41,6 +42,7 @@ function setupTestProperties() {
     }
     out.push('GEORGE_CHAT_ID: ' + (chat ? chat : 'NOT SET → George gets nothing. George: press /start in @PlaceLeadBot, then run setupTestProperties() again, or set GEORGE_CHAT_ID by hand.'));
     var lena = p.getProperty('LENA_CHAT_ID');
+    out.push('TECH_CHAT_ID («Тех вопросы», issues digests): ' + (p.getProperty('TECH_CHAT_ID') || 'NOT SET → WARN in Log; in production the digests would not be sent'));
     out.push('LENA_CHAT_ID: ' + (lena ? lena : 'NOT SET → test messages go to George only (warning in Log). Set Script Property LENA_CHAT_ID by hand.'));
     if (!p.getProperty('CASH_ANCHOR_DATE')) { p.setProperty('CASH_ANCHOR_DATE', Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd')); }
     out.push('CASH_ANCHOR_DATE: ' + p.getProperty('CASH_ANCHOR_DATE'));
@@ -130,14 +132,19 @@ function job_bookings() {
     return t;
   });
 }
-function job_issuesMorning() { return T_issuesJob_('morning', 'PLACE Team (TG группа, сводка 10:07)'); }
-function job_issuesEvening() { return T_issuesJob_('evening', 'PLACE Team (TG группа, сводка 23:10)'); }
+/** Issues digests go to the TG group «Тех вопросы» (George 30.09 14:27), not PLACE Team. Real target = Script Property
+ *  TECH_CHAT_ID (unknown yet). In TEST the digest is always relayed to George + Lena; empty TECH_CHAT_ID → WARN in Log
+ *  (in production issuesSendDigest_ would then send nothing). */
+function job_issuesMorning() { return T_issuesJob_('morning', 'Тех вопросы (TG группа, сводка 10:07)'); }
+function job_issuesEvening() { return T_issuesJob_('evening', 'Тех вопросы (TG группа, сводка 23:10)'); }
 function T_issuesJob_(kind, channel) {
   return T_job_('issues', 'job_issues ' + kind, null, function () {
     var synced = T_syncIssuesFromQueue_();
+    var tech = T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID');
+    if (!tech) T_BUF.push('WARN TECH_CHAT_ID not set → in production this digest would NOT be sent (relayed in TEST anyway)');
     var t = ISS.issuesDigest_(kind);
     T_relay_(channel, t);
-    return {synced: synced, digest: t};
+    return {synced: synced, techChatId: tech ? 'set' : 'EMPTY (warning)', digest: t};
   });
 }
 /** Read-only copy of new «Тех вопросы» rows from the production queue (bridge log) into Issues of Place Inbox TEST.

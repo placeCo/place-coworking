@@ -112,10 +112,16 @@ var T_SS = {
 };
 
 // ---------- per-module Script Properties ----------
+/** Script Properties shared by all modules, read unprefixed. TECH_CHAT_ID = «Тех вопросы» group (real target of the
+ *  issues digests, unknown yet → empty). */
+var T_SHARED_PROPS = ['TECH_CHAT_ID'];
 function T_props_(mod) {
   var real = PropertiesService.getScriptProperties(), pre = 'T_' + mod + '_';
   var api = {
     getProperty: function (k) {
+      if (T_CTX.props && k in T_CTX.props) return T_CTX.props[k];            // self-tests only
+      if (k === 'TOKEN') return 'TEST-NO-TOKEN';                              // modules never see the real bot token (fetch is intercepted)
+      if (T_SHARED_PROPS.indexOf(k) >= 0) return real.getProperty(k);         // shared, unprefixed (set by hand)
       var v = real.getProperty(pre + T_PROFILE + '_' + k); if (v !== null && v !== undefined) return v;
       var d = ((T_PROFILES[T_PROFILE] || {})[mod] || {})[k]; return d === undefined ? null : String(d);
     },
@@ -183,7 +189,8 @@ var T_FETCH = {
     var url = String(u);
     if (/api\.telegram\.org\/bot[^/]+\/sendMessage/.test(url)) {
       var pl = {}; try { pl = JSON.parse((o && o.payload) || '{}'); } catch (e) {}
-      T_relay_(T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id), String(pl.text || ''));
+      var tech = String(T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID') || '');
+      T_relay_(tech && String(pl.chat_id) === tech ? 'Тех вопросы (TG группа)' : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
       return { getResponseCode: function () { return 200; }, getContentText: function () { return '{"ok":true,"test":true}'; } };
     }
     throw new Error('TEST GUARD: UrlFetchApp blocked in modules: ' + T_mask_(url));
@@ -606,6 +613,20 @@ function issuesDigest_(kind, now, opts) {
   return out.join('\n').replace(/\s+$/, '');
 }
 
+/** Sends the digest to the Telegram group «Тех вопросы» (George 30.09 14:27: NOT PLACE Team).
+ *  Script Property TECH_CHAT_ID = chat id of «Тех вопросы» (negative, group). Empty → WARN in Logger, nothing is sent.
+ *  Bot token: Script Property TOKEN (same as the bridge). */
+function issuesSendDigest_(kind, now) {
+  var p = PropertiesService.getScriptProperties(), chat = String(p.getProperty('TECH_CHAT_ID') || '').trim();
+  var text = issuesDigest_(kind, now);
+  if (!chat) { Logger.log('WARN TECH_CHAT_ID not set → issues digest (' + kind + ') NOT sent'); return {sent: false, warning: 'TECH_CHAT_ID not set', text: text}; }
+  var tok = p.getProperty('TOKEN');
+  if (!tok) { Logger.log('WARN TOKEN not set → issues digest (' + kind + ') NOT sent'); return {sent: false, warning: 'TOKEN not set', text: text}; }
+  var r = UrlFetchApp.fetch('https://api.telegram.org/bot' + tok + '/sendMessage', {method: 'post', contentType: 'application/json',
+    payload: JSON.stringify({chat_id: chat, text: text, disable_web_page_preview: true}), muteHttpExceptions: true});
+  return {sent: r.getResponseCode() === 200, code: r.getResponseCode(), text: text};
+}
+
 /** Offline test with fake updates. In dry mode only logs. */
 function dryRunIssues() {
   var chat = {id: -100123, title: 'Тех вопросы', type: 'supergroup'}, t = 1790700000;
@@ -616,7 +637,7 @@ function dryRunIssues() {
   return log;
 }
 
-return {issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_: issuesDigest_, ISSUES_CHAT_RE: ISSUES_CHAT_RE};
+return {issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_: issuesDigest_, issuesSendDigest_: issuesSendDigest_, ISSUES_CHAT_RE: ISSUES_CHAT_RE};
 })(T_props_('ISS'), T_SS, T_GMAIL, T_MAIL, T_FETCH, T_SCRIPT, T_LOGGER);
 
 // ===== 30-Bookings.gs =====
@@ -1300,7 +1321,7 @@ return {leaveParse_: leaveParse_, leaveRequest_: leaveRequest_, leaveDecide_: le
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_relay(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
+  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -1452,6 +1473,30 @@ function test_relay() {
   });
 }
 
+/** Issues digests → «Тех вопросы» (TECH_CHAT_ID): job header, production send skips + WARN when empty, sends to TECH_CHAT_ID when set. */
+function test_techRoute() {
+  return T_fixture_('relay', 'issues digests → Тех вопросы (fake ids, fake sender)', function () {
+    var prev = T_CTX, fail = [], sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
+    try {
+      // 1) job header (T_issuesJob_ with fake relay)
+      var saved = [T_PROFILE]; T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {TECH_CHAT_ID: ''}};
+      T_relay_('Тех вопросы (TG группа, сводка 10:07)', ISS.issuesDigest_('morning'));
+      if (sent.length !== 2 || sent[0].text.split('\n')[1] !== 'Куда ушло бы: Тех вопросы (TG группа, сводка 10:07)') fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[1]; })));
+      if (sent.some(function (x) { return /PLACE Team/.test(x.text.split('\n')[1]); })) fail.push('still PLACE Team');
+      // 2) production path, TECH_CHAT_ID empty → not sent, warning
+      sent = []; var buf0 = T_BUF.length;
+      var a = ISS.issuesSendDigest_('evening');
+      if (a.sent !== false || sent.length || !/WARN TECH_CHAT_ID not set/.test(T_BUF.slice(buf0).join('\n'))) fail.push('empty TECH_CHAT_ID: ' + JSON.stringify(a) + ' sends=' + sent.length);
+      // 3) production path, TECH_CHAT_ID set → one sendMessage to it, relayed as «Тех вопросы (TG группа)»
+      sent = []; T_CTX.props = {TECH_CHAT_ID: '-1009990077'};
+      var b = ISS.issuesSendDigest_('evening');
+      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[1] !== 'Куда ушло бы: Тех вопросы (TG группа)') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[1]; })));
+    } finally { T_CTX = prev; }
+    if (fail.length) throw new Error('TECH ROUTE FAIL ' + fail.join('; '));
+    return 'OK: header «Тех вопросы (TG группа, сводка 10:07)»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID';
+  });
+}
+
 // ===== 95-Scheduled.gs =====
 /**
  * PLACE automations TEST — scheduled TEST mode (George OK 30.09.2026 10:02).
@@ -1460,6 +1505,7 @@ function test_relay() {
  *
  * One-time setup (see TEST-PLAN.md §2b):
  *   1. Project Settings ▸ Script properties ▸ add TG_TOKEN = <token of @PlaceLeadBot>  (never in code, never in Log).
+ *      TECH_CHAT_ID = chat id of the TG group «Тех вопросы» (real target of the issues digests; unknown yet, may stay empty).
  *      LENA_CHAT_ID = Lena's private chat id with @PlaceLeadBot (every test message goes to George AND Lena).
  *      Optional: GEORGE_CHAT_ID (if known), GEORGE_TG_USERNAME (e.g. without @), CASH_ANCHOR_DATE (yyyy-mm-dd).
  *   2. Run setupTestProperties()  -> checks the token (getMe), finds/sets GEORGE_CHAT_ID, writes a summary to Log.
@@ -1471,8 +1517,8 @@ var T_JOBS = [
   ['job_stage6',         'daily',  9, 5,  'stage6 office reminders + electricity tasks'],
   ['job_coverage',       'daily',  9, 10, 'schedule-coverage'],
   ['job_bookings',       'daily',  10, 7, 'bookings-today (10:07 summary)'],
-  ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning'],
-  ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening'],
+  ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning → TG group «Тех вопросы» (TECH_CHAT_ID)'],
+  ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening → TG group «Тех вопросы» (TECH_CHAT_ID)'],
   ['job_timesheet',      'month28', 9, 30, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
   ['job_cashReminder',   'every3', 20, 0, 'cash-deposit reminder for the evening admin (every 3 days)']
 ];
@@ -1496,6 +1542,7 @@ function setupTestProperties() {
     }
     out.push('GEORGE_CHAT_ID: ' + (chat ? chat : 'NOT SET → George gets nothing. George: press /start in @PlaceLeadBot, then run setupTestProperties() again, or set GEORGE_CHAT_ID by hand.'));
     var lena = p.getProperty('LENA_CHAT_ID');
+    out.push('TECH_CHAT_ID («Тех вопросы», issues digests): ' + (p.getProperty('TECH_CHAT_ID') || 'NOT SET → WARN in Log; in production the digests would not be sent'));
     out.push('LENA_CHAT_ID: ' + (lena ? lena : 'NOT SET → test messages go to George only (warning in Log). Set Script Property LENA_CHAT_ID by hand.'));
     if (!p.getProperty('CASH_ANCHOR_DATE')) { p.setProperty('CASH_ANCHOR_DATE', Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd')); }
     out.push('CASH_ANCHOR_DATE: ' + p.getProperty('CASH_ANCHOR_DATE'));
@@ -1585,14 +1632,19 @@ function job_bookings() {
     return t;
   });
 }
-function job_issuesMorning() { return T_issuesJob_('morning', 'PLACE Team (TG группа, сводка 10:07)'); }
-function job_issuesEvening() { return T_issuesJob_('evening', 'PLACE Team (TG группа, сводка 23:10)'); }
+/** Issues digests go to the TG group «Тех вопросы» (George 30.09 14:27), not PLACE Team. Real target = Script Property
+ *  TECH_CHAT_ID (unknown yet). In TEST the digest is always relayed to George + Lena; empty TECH_CHAT_ID → WARN in Log
+ *  (in production issuesSendDigest_ would then send nothing). */
+function job_issuesMorning() { return T_issuesJob_('morning', 'Тех вопросы (TG группа, сводка 10:07)'); }
+function job_issuesEvening() { return T_issuesJob_('evening', 'Тех вопросы (TG группа, сводка 23:10)'); }
 function T_issuesJob_(kind, channel) {
   return T_job_('issues', 'job_issues ' + kind, null, function () {
     var synced = T_syncIssuesFromQueue_();
+    var tech = T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID');
+    if (!tech) T_BUF.push('WARN TECH_CHAT_ID not set → in production this digest would NOT be sent (relayed in TEST anyway)');
     var t = ISS.issuesDigest_(kind);
     T_relay_(channel, t);
-    return {synced: synced, digest: t};
+    return {synced: synced, techChatId: tech ? 'set' : 'EMPTY (warning)', digest: t};
   });
 }
 /** Read-only copy of new «Тех вопросы» rows from the production queue (bridge log) into Issues of Place Inbox TEST.

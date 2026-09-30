@@ -59,7 +59,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
   - email to tenant X (Gmail draft);
   - email draft to accountant;
   - email draft (info@).
-- The relay sends to Script Properties `GEORGE_CHAT_ID` **and** `LENA_CHAT_ID` (private chat ids only, positive numbers). `LENA_CHAT_ID` empty → George only + `WARN` in Log (the job does not fail); same id twice → one send. Without `TG_TOKEN` or any id it is **log only**. Leave cards (same text to both approvers) are relayed once, so George does not get them twice. Self-test: `test_relay()` (part of `test_all`).
+- The relay sends to Script Properties `GEORGE_CHAT_ID` **and** `LENA_CHAT_ID` (private chat ids only, positive numbers). `LENA_CHAT_ID` empty → George only + `WARN` in Log (the job does not fail); same id twice → one send. Without `TG_TOKEN` or any id it is **log only**. Leave cards (same text to both approvers) are relayed once, so George does not get them twice. Self-tests: `test_relay()` and `test_techRoute()` (issues digests → «Тех вопросы»: header, empty `TECH_CHAT_ID` → not sent + WARN, set → sent there), both in `test_all`.
 - Issues: the live bridge is not changed. New «Тех вопросы» rows are copied read-only from the production `queue` into TEST Issues. They open issues only, because the queue has no reply link.
 - `job_stage6`: production «Office rent» is empty now, so the job logs «nothing to check» until the registry is filled.
 
@@ -88,8 +88,8 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
 | `job_stage6` | daily 09:05 | stage 6 offices (production Resident info read-only). Tenant drafts and the digest are relayed; electricity tasks go to TEST Issues and are relayed as «TG DM Lena». |
 | `job_coverage` | daily 09:10 | schedule-coverage (production Schedule 26, 14 days). The info@ draft is relayed. |
 | `job_bookings` | daily 10:07 | bookings-today (production Events and booking), relayed as «TG group PLACE Team». |
-| `job_issuesMorning` | daily 10:07 | queue → TEST Issues sync + morning issues digest, relayed |
-| `job_issuesEvening` | daily 23:10 | same, evening digest (closed today + open) |
+| `job_issuesMorning` | daily 10:07 | queue → TEST Issues sync + morning issues digest, relayed as «Тех вопросы (TG группа, сводка 10:07)» (George 30.09 14:27: digests go to «Тех вопросы», not PLACE Team). Real target = Script Property `TECH_CHAT_ID` (unknown yet, empty → WARN in Log; in production `issuesSendDigest_` then sends nothing). |
+| `job_issuesEvening` | daily 23:10 | same, evening digest (closed today + open), relayed as «Тех вопросы (TG группа, сводка 23:10)» |
 | `job_timesheet` | **28th** of each month, 09:30 | timesheet for the current calendar month, counted to the 28th; days 29..end = «after cutoff → next month adjustments»; previous month 29..end = adjustments. The accountant draft is relayed. |
 | `job_cashReminder` | every 3 days, 20:00 | cash for the Thai partner. Recipients are evening admins from Schedule 26 (shift to 23:00); the reminder is relayed as «TG DM evening admin». |
 
@@ -186,7 +186,7 @@ The live Apps Script run (step 5 in §2) is still **pending: George**.
 
 ### Issues rows: type and tag (30.09, after George's remark on the 14:08 summary)
 - Issues has two more columns: `type` (`issue` = breakdown, `task` = e.g. electricity bill; old rows: `elec:…` → task) and `tag` (`fixture` = written by a test_*).
-- The PLACE Team summaries (job_issuesMorning / job_issuesEvening) list only `type=issue` and skip `tag=fixture`. Tasks stay in the Issues log only (Lena gets the electricity DM from job_stage6).
+- The issues digests (job_issuesMorning / job_issuesEvening, TG group «Тех вопросы») list only `type=issue` and skip `tag=fixture`. Tasks stay in the Issues log only (Lena gets the electricity DM from job_stage6).
 - `test_all()` ends with `cleanupTestFixtures()`: deletes fixture rows (and old untagged test rows) from Issues in Place Inbox TEST. It can also be run by hand.
 - Format: `🛠 Поломки: открыто N (не взято X, в работе Y)`, then per item `🔴/🟡[⏰] <floor> — <what>` and `с dd.MM HH:mm (age) · в работе: <last note> | не взято, сообщил(а) <who>`; not taken first, oldest first; evening adds «Закрыто сегодня».
 

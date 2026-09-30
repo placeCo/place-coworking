@@ -109,10 +109,16 @@ var T_SS = {
 };
 
 // ---------- per-module Script Properties ----------
+/** Script Properties shared by all modules, read unprefixed. TECH_CHAT_ID = «Тех вопросы» group (real target of the
+ *  issues digests, unknown yet → empty). */
+var T_SHARED_PROPS = ['TECH_CHAT_ID'];
 function T_props_(mod) {
   var real = PropertiesService.getScriptProperties(), pre = 'T_' + mod + '_';
   var api = {
     getProperty: function (k) {
+      if (T_CTX.props && k in T_CTX.props) return T_CTX.props[k];            // self-tests only
+      if (k === 'TOKEN') return 'TEST-NO-TOKEN';                              // modules never see the real bot token (fetch is intercepted)
+      if (T_SHARED_PROPS.indexOf(k) >= 0) return real.getProperty(k);         // shared, unprefixed (set by hand)
       var v = real.getProperty(pre + T_PROFILE + '_' + k); if (v !== null && v !== undefined) return v;
       var d = ((T_PROFILES[T_PROFILE] || {})[mod] || {})[k]; return d === undefined ? null : String(d);
     },
@@ -180,7 +186,8 @@ var T_FETCH = {
     var url = String(u);
     if (/api\.telegram\.org\/bot[^/]+\/sendMessage/.test(url)) {
       var pl = {}; try { pl = JSON.parse((o && o.payload) || '{}'); } catch (e) {}
-      T_relay_(T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id), String(pl.text || ''));
+      var tech = String(T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID') || '');
+      T_relay_(tech && String(pl.chat_id) === tech ? 'Тех вопросы (TG группа)' : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
       return { getResponseCode: function () { return 200; }, getContentText: function () { return '{"ok":true,"test":true}'; } };
     }
     throw new Error('TEST GUARD: UrlFetchApp blocked in modules: ' + T_mask_(url));

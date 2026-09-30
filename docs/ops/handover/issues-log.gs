@@ -146,6 +146,20 @@ function issuesDigest_(kind, now, opts) {
   return out.join('\n').replace(/\s+$/, '');
 }
 
+/** Sends the digest to the Telegram group «Тех вопросы» (George 30.09 14:27: NOT PLACE Team).
+ *  Script Property TECH_CHAT_ID = chat id of «Тех вопросы» (negative, group). Empty → WARN in Logger, nothing is sent.
+ *  Bot token: Script Property TOKEN (same as the bridge). */
+function issuesSendDigest_(kind, now) {
+  var p = PropertiesService.getScriptProperties(), chat = String(p.getProperty('TECH_CHAT_ID') || '').trim();
+  var text = issuesDigest_(kind, now);
+  if (!chat) { Logger.log('WARN TECH_CHAT_ID not set → issues digest (' + kind + ') NOT sent'); return {sent: false, warning: 'TECH_CHAT_ID not set', text: text}; }
+  var tok = p.getProperty('TOKEN');
+  if (!tok) { Logger.log('WARN TOKEN not set → issues digest (' + kind + ') NOT sent'); return {sent: false, warning: 'TOKEN not set', text: text}; }
+  var r = UrlFetchApp.fetch('https://api.telegram.org/bot' + tok + '/sendMessage', {method: 'post', contentType: 'application/json',
+    payload: JSON.stringify({chat_id: chat, text: text, disable_web_page_preview: true}), muteHttpExceptions: true});
+  return {sent: r.getResponseCode() === 200, code: r.getResponseCode(), text: text};
+}
+
 /** Offline test with fake updates. In dry mode only logs. */
 function dryRunIssues() {
   var chat = {id: -100123, title: 'Тех вопросы', type: 'supergroup'}, t = 1790700000;

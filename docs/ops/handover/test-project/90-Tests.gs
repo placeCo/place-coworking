@@ -2,7 +2,7 @@
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_relay(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
+  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -151,5 +151,29 @@ function test_relay() {
     } finally { T_CTX = prev; }
     if (fail.length) throw new Error('RELAY FAIL ' + fail.join('; '));
     return 'OK: both ids + header + «Куда ушло бы» + body; Lena empty → George only + WARN; same id → 1 send; no ids → log only';
+  });
+}
+
+/** Issues digests → «Тех вопросы» (TECH_CHAT_ID): job header, production send skips + WARN when empty, sends to TECH_CHAT_ID when set. */
+function test_techRoute() {
+  return T_fixture_('relay', 'issues digests → Тех вопросы (fake ids, fake sender)', function () {
+    var prev = T_CTX, fail = [], sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
+    try {
+      // 1) job header (T_issuesJob_ with fake relay)
+      var saved = [T_PROFILE]; T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {TECH_CHAT_ID: ''}};
+      T_relay_('Тех вопросы (TG группа, сводка 10:07)', ISS.issuesDigest_('morning'));
+      if (sent.length !== 2 || sent[0].text.split('\n')[1] !== 'Куда ушло бы: Тех вопросы (TG группа, сводка 10:07)') fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[1]; })));
+      if (sent.some(function (x) { return /PLACE Team/.test(x.text.split('\n')[1]); })) fail.push('still PLACE Team');
+      // 2) production path, TECH_CHAT_ID empty → not sent, warning
+      sent = []; var buf0 = T_BUF.length;
+      var a = ISS.issuesSendDigest_('evening');
+      if (a.sent !== false || sent.length || !/WARN TECH_CHAT_ID not set/.test(T_BUF.slice(buf0).join('\n'))) fail.push('empty TECH_CHAT_ID: ' + JSON.stringify(a) + ' sends=' + sent.length);
+      // 3) production path, TECH_CHAT_ID set → one sendMessage to it, relayed as «Тех вопросы (TG группа)»
+      sent = []; T_CTX.props = {TECH_CHAT_ID: '-1009990077'};
+      var b = ISS.issuesSendDigest_('evening');
+      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[1] !== 'Куда ушло бы: Тех вопросы (TG группа)') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[1]; })));
+    } finally { T_CTX = prev; }
+    if (fail.length) throw new Error('TECH ROUTE FAIL ' + fail.join('; '));
+    return 'OK: header «Тех вопросы (TG группа, сводка 10:07)»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID';
   });
 }
