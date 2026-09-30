@@ -206,8 +206,9 @@ function electricityTasks_(active, today, log, runMode) {
       var sh = id && SpreadsheetApp.openById(id).getSheetByName('Issues');
       if (!sh) { Logger.log('ELEC: no Issues tab / ISSUES_SHEET_ID -> dry'); Logger.log('[elec dry] ' + text); return; }
       var now = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH:mm');
-      // same columns as issues-log.gs ISSUES_HEAD (last = assignee)
-      sh.appendRow(['elec:' + t.row + ':' + Utilities.formatDate(today, TZ, 'yyyy-MM'), now, t.floor, 'Place Ops (auto)', text, 'open', '', now, '', '', '', '', ELEC_ASSIGNEE]);
+      // same columns as issues-log.gs ISSUES_HEAD (…, assignee, type, tag). type 'task' = not a breakdown, not in the team summary.
+      var tag = typeof ISSUES_TAG_FN === 'function' ? String(ISSUES_TAG_FN() || '') : '';
+      sh.appendRow(['elec:' + t.row + ':' + Utilities.formatDate(today, TZ, 'yyyy-MM'), now, t.floor, 'Place Ops (auto)', text, 'open', '', now, '', '', '', '', ELEC_ASSIGNEE, 'task', tag]);
       log[key] = d_(today);
       PropertiesService.getScriptProperties().setProperty('SENT_LOG', JSON.stringify(log));
     } else Logger.log('[elec dry] ' + text + ' (assignee: ' + ELEC_ASSIGNEE + ')');

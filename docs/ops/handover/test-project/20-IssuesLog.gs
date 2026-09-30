@@ -21,7 +21,11 @@ var SHEET_ID = T_IDS.inbox; // TEST: Place Inbox TEST, never the live bridge she
 
 var ISSUES_CHAT_RE = /тех\s*вопрос/i;
 var ISSUES_TAB = 'Issues';
-var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id', 'assignee'];
+// type: 'issue' = breakdown (default, also for old rows without type) | 'task' = work item (e.g. electricity bill, id 'elec:…').
+// tag: '' = real | 'fixture' = written by a test (skipped by digests; test_all deletes them).
+var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id', 'assignee', 'type', 'tag'];
+/** Tag for new rows. The TEST project defines a global ISSUES_TAG_FN() that returns 'fixture' inside test_*; production: ''. */
+function issuesTag_() { return typeof ISSUES_TAG_FN === 'function' ? String(ISSUES_TAG_FN() || '') : ''; }
 var DONE_RE = /(готово|сделано|сделал|починил|починили|исправил|решено|закрыто|fixed|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
 var BOT_RE = /placeleadbot/i;
 
@@ -62,7 +66,7 @@ function issuesHandle_(sh, m, text, sender) {
     return 'reply-untracked';
   }
   var floor = typeof parseFloor_ === 'function' ? parseFloor_(text) : issuesFloor_(text);
-  var newRow = [m.chat.id + ':' + m.message_id, when, floor, sender, text.slice(0, 1000), 'open', '', when, '', '', String(m.chat.id), String(m.message_id), ''];
+  var newRow = [m.chat.id + ':' + m.message_id, when, floor, sender, text.slice(0, 1000), 'open', '', when, '', '', String(m.chat.id), String(m.message_id), '', 'issue', issuesTag_()];
   if (live) sh.appendRow(newRow); else Logger.log('[issues dry] new: ' + JSON.stringify(newRow));
   return 'open';
 }
@@ -72,28 +76,77 @@ function issuesFloor_(text) {
   return m ? (m[1] || m[2]) : '';
 }
 
-/** kind: 'morning' (10:07) | 'evening' (23:10). Returns text for the Lead report. */
-function issuesDigest_(kind, now) {
+/** Type of a row: explicit column, else 'task' for generated ids (elec:…), else 'issue'. */
+function issuesType_(x, col) {
+  var t = String(x[col.type] || '').trim().toLowerCase();
+  if (t) return t;
+  return /^elec:/.test(String(x[col.issue_id])) ? 'task' : 'issue';
+}
+/** One-line, trimmed, max n characters (cut on a word, emoji-safe), with «…». */
+function issuesShort_(s, n) {
+  var t = String(s == null ? '' : s).replace(/\s+/g, ' ').trim(), a = Array.from ? Array.from(t) : t.split('');
+  if (a.length <= n) return t;
+  var cut = a.slice(0, n).join(''), sp = cut.lastIndexOf(' ');
+  return (sp > n * 0.6 ? cut.slice(0, sp) : cut).replace(/[\s,.;:–—-]+$/, '') + '…';
+}
+function issuesWhen_(v) {   // 'yyyy-MM-dd HH:mm' or Date -> 'dd.MM HH:mm'
+  if (v instanceof Date) return Utilities.formatDate(v, 'Asia/Bangkok', 'dd.MM HH:mm');
+  var m = String(v || '').match(/^(\d{4})-(\d\d)-(\d\d)(?:[ T](\d\d:\d\d))?/);
+  return m ? m[3] + '.' + m[2] + (m[4] ? ' ' + m[4] : '') : String(v || '');
+}
+function issuesMs_(v) {
+  if (v instanceof Date) return v.getTime();
+  var t = new Date(String(v).replace(' ', 'T') + ':00+07:00').getTime();
+  return isNaN(t) ? null : t;
+}
+
+/** kind: 'morning' (10:07) | 'evening' (23:10). Text for the PLACE Team summary.
+ *  Only real breakdowns (type=issue, tag!=fixture). Tasks (electricity bills …) stay in the Issues log only.
+ *  opts.includeFixtures = true only for tests. */
+function issuesDigest_(kind, now, opts) {
+  opts = opts || {};
   var sh = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ISSUES_TAB);
   if (!sh) return 'Issues: вкладки нет (ещё не запущено).';
   var rows = sh.getDataRange().getValues(), col = {}; ISSUES_HEAD.forEach(function (h, i) { col[h] = i; });
-  var today = Utilities.formatDate(now || new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
-  var nowMs = (now || new Date()).getTime();
+  now = now || new Date();
+  var today = Utilities.formatDate(now, 'Asia/Bangkok', 'yyyy-MM-dd'), nowMs = now.getTime();
   var open = [], closedToday = [];
   for (var r = 1; r < rows.length; r++) {
-    var x = rows[r], st = x[col.status];
-    var line = (x[col.floor] ? x[col.floor] + ' эт. ' : '') + String(x[col.text]).slice(0, 80);
-    if (st === 'closed') { if (String(x[col.closed_at_ict]).indexOf(today) === 0) closedToday.push('✅ ' + line + ' (' + x[col.closed_by] + ')'); }
-    else {
-      var opened = new Date(String(x[col.opened_at_ict]).replace(' ', 'T') + ':00+07:00').getTime();
-      var days = Math.floor((nowMs - opened) / 86400000);
-      open.push({d: days, s: (st === 'in_progress' ? '🔧 ' : '🔴 ') + line + ' (' + (days ? days + ' дн.' : 'сегодня') + ')'});
+    var x = rows[r];
+    if (!String(x[col.issue_id] || '').trim() && !String(x[col.text] || '').trim()) continue;   // empty row
+    if (issuesType_(x, col) !== 'issue') continue;                                             // tasks: Issues log only
+    if (!opts.includeFixtures && String(x[col.tag] || '') === 'fixture') continue;             // test rows
+    var what = issuesShort_(x[col.text], 70); if (!what) continue;
+    var where = x[col.floor] ? x[col.floor] + ' эт.' : 'этаж не указан';
+    var st = String(x[col.status] || 'open');
+    if (st === 'closed') {
+      var c = x[col.closed_at_ict], cDay = c instanceof Date ? Utilities.formatDate(c, 'Asia/Bangkok', 'yyyy-MM-dd') : String(c);
+      if (cDay.indexOf(today) === 0) closedToday.push('✅ ' + where + ' — ' + what + (x[col.closed_by] ? ' (' + issuesShort_(x[col.closed_by], 30) + ')' : ''));
+      continue;
     }
+    var ms = issuesMs_(x[col.opened_at_ict]), days = ms === null ? 0 : Math.max(0, Math.floor((nowMs - ms) / 86400000));
+    var age = days === 0 ? 'сегодня' : days + ' дн.';
+    var since = 'с ' + issuesWhen_(x[col.opened_at_ict]) + ' (' + age + ')';
+    var who = x[col.reporter] ? 'не взято, сообщил(а) ' + issuesShort_(x[col.reporter], 30) : '';
+    var note = st === 'in_progress' && x[col.last_note] ? 'в работе: ' + issuesShort_(x[col.last_note], 60) : (st === 'in_progress' ? 'в работе' : 'не взято');
+    var mark = st === 'in_progress' ? '🟡' : '🔴';
+    if (days >= 3) mark += '⏰';
+    open.push({taken: st === 'in_progress' ? 1 : 0, ms: ms || 0,
+      s: mark + ' ' + where + ' — ' + what + '\n    ' + [since, st === 'in_progress' ? note : who || note].filter(String).join(' · ')});
   }
-  open.sort(function (a, b) { return b.d - a.d; });
-  var txt = 'Поломки: открыто ' + open.length + (kind === 'evening' ? ', закрыто сегодня ' + closedToday.length : '') + '\n' + open.map(function (o) { return o.s; }).join('\n');
-  if (kind === 'evening' && closedToday.length) txt += '\n' + closedToday.join('\n');
-  return txt;
+  open.sort(function (a, b) { return a.taken - b.taken || a.ms - b.ms; });   // not taken first, then oldest first
+  var nNew = open.filter(function (o) { return !o.taken; }).length, out = [];
+  if (!open.length) out.push('🛠 Поломки: открытых нет');
+  else {
+    out.push('🛠 Поломки: открыто ' + open.length + ' (не взято ' + nNew + ', в работе ' + (open.length - nNew) + ')');
+    open.forEach(function (o) { out.push(o.s); });
+  }
+  if (kind === 'evening') {
+    out.push(closedToday.length ? 'Закрыто сегодня: ' + closedToday.length : 'Закрыто сегодня: 0');
+    closedToday.forEach(function (c) { out.push(c); });
+  }
+  if (open.length) out.push('🔴 не взято · 🟡 в работе · ⏰ 3+ дня');
+  return out.join('\n').replace(/\s+$/, '');
 }
 
 /** Offline test with fake updates. In dry mode only logs. */

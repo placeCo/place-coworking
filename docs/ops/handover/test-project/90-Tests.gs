@@ -2,8 +2,27 @@
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  return [test_guard(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
-    .map(function (r) { return r.status; });
+  var r = [test_guard(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave()]
+    .map(function (x) { return x.status; });
+  r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
+  return r;
+}
+
+/** Deletes test rows from Issues in Place Inbox TEST: tag = fixture, plus old untagged rows from test_* runs
+ *  (fake «Тех вопросы TEST» chat id, «(TEST)»/«_test» reporters, «TEST Tenant» electricity tasks). Real rows stay. */
+function cleanupTestFixtures() {
+  return T_fixture_('cleanup', 'cleanupTestFixtures (Place Inbox TEST / Issues)', function () {
+    var sh = T_SS.openById(T_IDS.inbox).getSheetByName('Issues'); if (!sh) return 'no Issues tab';
+    var v = sh.getDataRange().getValues(), h = v[0], c = {}; h.forEach(function (x, i) { c[x] = i; });
+    var del = [];
+    for (var r = v.length - 1; r >= 1; r--) {
+      var x = v[r], g = function (k) { return c[k] === undefined ? '' : String(x[c[k]] || ''); };
+      var fixture = g('tag') === 'fixture' || g('tg_chat_id') === String(T_FAKE_CHAT.id) ||
+        /\(TEST\)\s*$|_test$/i.test(g('reporter')) || /TEST Tenant/.test(g('text'));
+      if (fixture) { sh.deleteRow(r + 1); del.push(g('issue_id')); }
+    }
+    return 'deleted ' + del.length + (del.length ? ': ' + del.reverse().join(', ') : '') + '; left ' + (v.length - 1 - del.length) + ' rows';
+  });
 }
 
 /** Self-test of the safety layer: every call must be BLOCKED. */
@@ -35,7 +54,8 @@ function test_issues() {
     r.push(ISS.issuesHandle_(sh, {chat: T_FAKE_CHAT, message_id: base + 2, date: t + 120, from: {username: 'som_test'}, reply_to_message: {message_id: base}}, 'смотрю, нужна деталь', 'Som (TEST)'));
     r.push(ISS.issuesHandle_(sh, {chat: T_FAKE_CHAT, message_id: base + 3, date: t + 180, from: {username: 'som_test'}, reply_to_message: {message_id: base + 1}}, 'готово', 'Som (TEST)'));
     r.push(ISS.issuesHandle_(sh, {chat: T_FAKE_CHAT, message_id: base + 4, date: t + 240, from: {username: 'placeleadbot'}}, 'bot echo', 'bot'));
-    return {handled: r, morning: ISS.issuesDigest_('morning'), evening: ISS.issuesDigest_('evening')};
+    return {handled: r, morning: ISS.issuesDigest_('morning', null, {includeFixtures: true}), evening: ISS.issuesDigest_('evening', null, {includeFixtures: true}),
+      jobView: ISS.issuesDigest_('morning')};   // jobView = what job_issues* would send: fixtures skipped
   });
 }
 

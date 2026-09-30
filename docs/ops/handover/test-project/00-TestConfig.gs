@@ -65,6 +65,10 @@ var T_CTX = {relay: false, mail: null};   // set per job: relay on/off, mail(to)
 var T_RUNNER = 'apps-script';             // the node harness sets 'node-harness'
 var T_BUF = [];                             // Logger lines of the current run
 
+/** Read by issues-log.gs / stage6 when they append Issues rows: rows written by fixture tests are tagged 'fixture'
+ *  (skipped by the team digests and job_stage6, deleted by cleanupTestFixtures / test_all). */
+function ISSUES_TAG_FN() { return T_PROFILE === 'fixture' ? 'fixture' : ''; }
+
 function T_now_() { return Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd HH:mm:ss'); }
 function T_log_(item, fn, result, details) {
   var sh = SpreadsheetApp.openById(T_IDS.inbox).getSheetByName(T_LOG_TAB);

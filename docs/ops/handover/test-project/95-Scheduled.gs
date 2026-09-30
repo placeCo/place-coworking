@@ -108,7 +108,7 @@ function job_stage6() {
     if (!reg || reg.getLastRow() < 2) return 'Office rent is empty in production Resident info: nothing to check (no relay)';
     var r = ST6.run_('draft');
     var rows = T_SS.openById(T_IDS.inbox).getSheetByName('Issues').getDataRange().getValues(), today = Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
-    rows.filter(function (x) { return /^elec:/.test(x[0]) && String(x[1]).indexOf(today) === 0; }).forEach(function (x) {
+    rows.filter(function (x) { return /^elec:/.test(x[0]) && String(x[1]).indexOf(today) === 0 && String(x[14] || '') !== 'fixture'; }).forEach(function (x) {
       T_relay_('Lena', 'TG DM Lena', '⚡ ' + x[4] + '\n(задача в Issues: ' + x[0] + ')');
     });
     return r;

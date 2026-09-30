@@ -178,10 +178,16 @@ The live Apps Script run (step 5 in §2) is still **pending: George**.
   - the digest lists 5 items: A, B, deposit B, C, contract end D;
   - 3 warnings: D has no email; E ended but status is not Ended; Room 3 overlap B/C;
   - F is skipped;
-  - one Issues row `elec:5:2026-09`, «выставить счёт за электричество: 2 эт. Room 16, TEST Tenant D», assignee **Lena**;
+  - one Issues row `elec:5:2026-09`, «выставить счёт за электричество: 2 эт. Room 16, TEST Tenant D», assignee **Lena**, type `task`, tag `fixture`;
   - no email or TG is sent.
 - **Pass if:** all of the above, and the Log row reads `PASS`. A second run the same day does not duplicate the reminders or the task (sent-log).
 - **30.09:** PASS (items 5, warnings 3, drafts 3 stub + digest stub).
+
+### Issues rows: type and tag (30.09, after George's remark on the 14:08 summary)
+- Issues has two more columns: `type` (`issue` = breakdown, `task` = e.g. electricity bill; old rows: `elec:…` → task) and `tag` (`fixture` = written by a test_*).
+- The PLACE Team summaries (job_issuesMorning / job_issuesEvening) list only `type=issue` and skip `tag=fixture`. Tasks stay in the Issues log only (Lena gets the electricity DM from job_stage6).
+- `test_all()` ends with `cleanupTestFixtures()`: deletes fixture rows (and old untagged test rows) from Issues in Place Inbox TEST. It can also be run by hand.
+- Format: `🛠 Поломки: открыто N (не взято X, в работе Y)`, then per item `🔴/🟡[⏰] <floor> — <what>` and `с dd.MM HH:mm (age) · в работе: <last note> | не взято, сообщил(а) <who>`; not taken first, oldest first; evening adds «Закрыто сегодня».
 
 ### 2. Issues-log: Issues tab + bridge hook
 - **Inputs:** synthetic TG updates from chat «Тех вопросы TEST» (id −1009990001):
