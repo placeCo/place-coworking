@@ -59,6 +59,7 @@ Separate floor-1 column; 10-day packs; all public floor-2 tariffs; “3 free day
 
 ## Offices / meeting / studio
 - Floor 5: **30 000฿/mo** · **20 000฿/mo** yearly (orient ~4 pax)
+- Floor 2 office: **140 000฿/mo** (George 30.09.2026; size / capacity / deposit / inclusions — уточнить)
 - Meeting: **from 250฿/h**, Pass residents **−20%** (until George cancels). Large ~20 on floor 1 + another room
 - Studio 4 — via manager. Internal leaflet orientation (**do not publish blindly**): Podcast 3 cameras 6000; Talking head 1h 3000; Webinar from 14 000; Interview on location from 5000; Editing podcast from 4000; Photo studio 1h 2000 / 2h 3000; Photographer/operator 5000; “price includes equipment”
 

@@ -47,7 +47,7 @@ Place в Чалонге: рабочий Pass на 1+3 (зал на 3-м), офи
 5. OFFICES — ВИТРИНА (нельзя забывать)
 ════════════════════════════════════
 Показывать всегда:
-• Floor 2 — office floorspace (lease / private office use; not hot-desk menu)
+• Floor 2 — office floorspace (lease / private office use; not hot-desk menu): 140 000฿/mo (George 30.09.2026)
 • Floor 5 — private rooms/offices: 30 000฿/mo · 20 000฿/mo yearly deal (до ~4 pax)
 CTA: Tour offices · Ask manager · WhatsApp +66951170481
 
