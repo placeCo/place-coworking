@@ -44,7 +44,7 @@ Principle (George 29.09): save energy. No separate new runs; fold the checks int
 | Who | Role | Contact | Status |
 |---|---|---|---|
 | Pat | New accountant | email / LINE requested from Aiz | pending |
-| Khun Sak (Somsak) | role to confirm | somsak.khumbaan@gmail.com | — |
+| Khun Sak (Somsak) | Director (George 30.09.2026) | somsak.khumbaan@gmail.com | — |
 | Namtan (Sirikanya) | former accountant | — | no longer works with Place (George 30.09) |
 
 Accounting questions only with George's OK. No bank numbers or salary sheets in the repo.
