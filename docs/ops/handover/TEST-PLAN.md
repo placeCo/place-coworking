@@ -100,46 +100,47 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
 
 ## 6. Staged for George's OK (30.09, open D items)
 
-### 6a. 24/7 key columns in the production Resident info (C8): George said YES
-- **Prepared on Resident info TEST, «Лист1»:**
-  - K1 `24/7 (Y/N)` with a Y/N dropdown on K2:K (warning only, not strict);
+### 6a. 24/7 key columns in the production Resident info (C8): DONE 30.09 (George OK 10:40)
+- Tested on Resident info TEST: `test_keyholders` PASS.
+- **Applied to production Resident info «Лист1» on 30.09.2026:**
+  - K1 `24/7 (Y/N)` with a Y/N dropdown on K2:K1205 (warning only, not strict);
   - L1 `Key # / card #`;
-  - M1 `Key deposit paid (date, ฿)`;
-  - fixtures in rows 303–305.
-- **Test:** `test_keyholders`: PASS on 30.09.
-- **Production check (read-only, 30.09):** Resident info «Лист1» K1:M1205 is empty, apart from a few blank-space cells. There is no conflict with existing data.
-- **Change to apply after OK (by a human, not the bot):**
-  1. Add the same 3 headers to K1:M1.
-  2. Add the Y/N dropdown on K2:K.
-  3. Fill in the current 24/7 residents, keys and deposits.
-  4. Only then: `KH.keyholders247_` in the 22:30 run (read-only).
+  - M1 `Key deposit paid (date, ฿)`.
+- K:M were re-checked right before the change: empty, apart from 3 cells that contain only spaces (K131, K1204, K1205). Those were left untouched. Nothing else was changed.
+- **Next:**
+  1. Lena or the admins fill in the current 24/7 residents, keys and deposits.
+  2. After that, `KH.keyholders247_` in the 22:30 run (read-only), after a separate OK.
 
-### 6b. Leave requests through the bot (G-13): flow approved, not live
+### 6b. Leave requests through the bot (G-13): scheme George 30.09 10:40, TEST only
+- **Scheme:**
+  1. The employee sends the bot `/leave vacation|dayoff dd.mm[-dd.mm] [reason]` (also отпуск / выходной / พักร้อน / หยุด).
+  2. The bot forwards the request to **both Lena and George** (`LEAVE_APPROVERS`, default `George,Lena`).
+  3. **Either** of them answers `/approve L…` or `/reject L… reason`. The first decision wins; anyone else is refused.
+  4. The bot notifies the employee and tells the other approver it is already decided.
+  5. On approve, the bot marks Schedule 26 (TEST only): vacation → «Annual leave», day off → «off». A cell that already has a shift is not overwritten; it is reported as a conflict.
 - **Code:** `leave-requests.gs` → TEST module `70-Leave.gs` (`LV`), test `test_leave` (part of `test_all`).
-- **Where it writes in TEST:**
-  - tab **Leave** in Place Inbox TEST (created on the first run);
-  - day cells in **Schedule 26 TEST**. Production is never written.
+- **Where it writes:** tab **Leave** in Place Inbox TEST and **Schedule 26 TEST** only.
 - **Scenario:**
 
 | Step | Input | Expected result |
 |---|---|---|
 | 1 | `/leave holiday tomorrow` | format error; nothing is written |
-| 2 | Tangmo sends `/leave annual 11.10-12.10 TEST family` | `pending` row + approval card «/approve L… or /reject L… reason». The card is relayed to George (fixture: log only). |
-| 3 | `/approve` | 11.10 was `off`, so it becomes «Annual leave» in Schedule 26 TEST (1 day). 12.10 has a shift `8:00-17:00`, so it is not overwritten and is reported as a conflict for Lena / Place Ops. The employee gets «✅ одобрен…». |
-| 4 | Kate `/leave sick 14.10`, then `/reject` with a reason | status `rejected`; the employee gets «❌ отклонён: reason» |
-| 5 | a second decision on the same id | `already approved` |
+| 2 | Tangmo sends `/leave vacation 11.10-12.10 TEST family` | `pending` row; 2 cards, **to George and to Lena** |
+| 3 | Kate tries `/approve` | `not allowed` |
+| 4 | **Lena** approves | 11.10 (`off`) becomes «Annual leave» in Schedule 26 TEST. 12.10 (`8:00-17:00`) is a conflict and is not overwritten. Tangmo gets «✅ … (Lena)»; George gets «already decided by Lena». |
+| 5 | George tries `/reject` afterwards | `already approved by Lena`; nothing changes |
+| 6 | Kate sends `/leave выходной 14.10`, **George** rejects with a reason | `rejected`; Kate gets «❌ … (George): reason» |
 
-- **Harness 30.09:** PASS, including exactly one write to Schedule 26 TEST (Oct!M2 = «Annual leave», Tangmo 11.10).
+- **Harness 30.09:** PASS. Exactly one write to Schedule 26 TEST (Oct!M2 = «Annual leave», Tangmo 11.10); nothing written to production.
 - **Go-live checklist:**
   - [ ] George OK on live.
-  - [ ] Connect the whole team to @PlaceLeadBot.
-  - [ ] Hook `/leave` and `/approve`/`/reject` into the bridge: a new bridge version, only after OK. Only George (or `LEAVE_APPROVER`) may approve.
+  - [ ] The whole team, Lena and George all in @PlaceLeadBot.
+  - [ ] Hook `/leave`, `/approve`, `/reject` into the bridge: a new bridge version, only after OK. Check the approver by Telegram chat_id, not only by name.
   - [ ] `LEAVE_SHEET_ID` = production Place Inbox (new tab Leave), `SCHEDULE_SHEET_ID` = production Schedule 26, after it moves to info@.
   - [ ] Test with 1 real request.
 
-### 6c. Fuel receipts (G-12)
-- **Template:** [`FUEL-RECEIPT-TEMPLATE.md`](FUEL-RECEIPT-TEMPLATE.md): date, amount, km/purpose, receipt photo; `#fuel`.
-- **Next:** George OK the template. Until the bot is built, the technician sends messages in this format by hand.
+### 6c. Fuel receipts (G-12): closed 30.09 10:40
+Accountant format, no template of our own. `FUEL-RECEIPT-TEMPLATE.md` was removed.
 
 ## 3. Test run 30.09.2026 (node harness)
 

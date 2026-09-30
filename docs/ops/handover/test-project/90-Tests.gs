@@ -75,19 +75,23 @@ function test_timesheet() {
   });
 }
 
-/** G-13 leave via bot (staged): request -> card for George -> approve writes Schedule 26 TEST; reject; bad format. */
+/** G-13 leave via bot (staged, scheme 30.09 10:40): request -> cards to BOTH George and Lena -> either decides ->
+ *  employee notified + Schedule 26 TEST marked; second decision refused; non-approver refused; bad format. */
 function test_leave() {
-  return T_fixture_('leave', 'LV.leaveRequest_ + leaveDecide_', function () {
-    var now = new Date(), out = {};
+  return T_fixture_('leave', 'LV.leaveRequest_ + leaveDecide_ (George + Lena)', function () {
+    var now = new Date();
     var bad = LV.leaveRequest_({name: 'Tangmo', user: 'tangmo_test', chatId: 1}, '/leave holiday tomorrow', now);
-    var a = LV.leaveRequest_({name: 'Tangmo', user: 'tangmo_test', chatId: 1}, '/leave annual 11.10-12.10 TEST family', now);
-    var ok = LV.leaveDecide_(a.id, 'approve', 'George (TEST)', '', now);
-    var b = LV.leaveRequest_({name: 'Kate', user: 'kate_test', chatId: 2}, '/leave sick 14.10 TEST', new Date(now.getTime() + 1000));
-    var no = LV.leaveDecide_(b.id, 'reject', 'George (TEST)', 'TEST reason', now);
-    T_relay_('George', 'TG DM George (approval card)', a.card);
+    var a = LV.leaveRequest_({name: 'Tangmo', user: 'tangmo_test', chatId: 1}, '/leave vacation 11.10-12.10 TEST family', now);
+    a.cards.forEach(function (c) { T_relay_(c.to, 'TG DM ' + c.to + ' (approval card)', c.text); });
+    var nope = LV.leaveDecide_(a.id, 'approve', 'Kate', '', now);
+    var ok = LV.leaveDecide_(a.id, 'approve', 'Lena', '', now);
+    var late = LV.leaveDecide_(a.id, 'reject', 'George', '', now);
     T_relay_('Tangmo', 'TG DM Tangmo', ok.employeeMsg);
+    ok.otherMsg.forEach(function (m) { T_relay_(m.to, 'TG DM ' + m.to, m.text); });
+    var b = LV.leaveRequest_({name: 'Kate', user: 'kate_test', chatId: 2}, '/leave выходной 14.10 TEST', new Date(now.getTime() + 1000));
+    var no = LV.leaveDecide_(b.id, 'reject', 'George', 'TEST reason', now);
     T_relay_('Kate', 'TG DM Kate', no.employeeMsg);
-    out = {badFormat: bad.error, request: a.id, approve: ok, reject: no.status, again: LV.leaveDecide_(a.id, 'reject', 'x', '', now).status};
-    return out;
+    return {badFormat: bad.error, request: a.id, cardsTo: a.cards.map(function (c) { return c.to; }), nonApprover: nope.status,
+      approveByLena: {status: ok.status, written: ok.written, conflicts: ok.conflicts}, secondDecision: late.status, dayoffRejectByGeorge: no.status};
   });
 }
