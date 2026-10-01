@@ -2,7 +2,7 @@
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments(), test_cash()]
+  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_issuesThread(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments(), test_cash()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -59,7 +59,7 @@ function test_issues() {
   });
 }
 
-/** Bridge hook as it would sit in poll(): only «Тех вопросы» and not edited messages go to Issues. */
+/** Bridge hook as it would sit in poll(): only «Тех вопросы» go to Issues; an edit updates the same row. */
 function test_issuesBridgeHook() {
   return T_fixture_('issues', 'bridge hook simulation', function () {
     var t = Math.floor(Date.now() / 1000), base = 990000 + (t % 9000), out = [];
@@ -70,10 +70,71 @@ function test_issuesBridgeHook() {
     ];
     updates.forEach(function (u) {
       var m = u.message || u.edited_message, chat = (m.chat && m.chat.title) || '', text = m.text, name = (m.from && m.from.username) || '?';
-      if (ISS.ISSUES_CHAT_RE.test(chat) && !(u.edited_message)) out.push(chat + ' -> ' + ISS.issuesHandle_(ISS.issuesSheet_(), m, text, name));
+      if (ISS.ISSUES_CHAT_RE.test(chat)) out.push(chat + ' -> ' + ISS.issuesHandle_(ISS.issuesSheet_(), m, text, name, !!u.edited_message));
       else out.push(chat + ' -> skipped');
     });
     return out;
+  });
+}
+
+/** Row for Issues (opts.rows tests): id, opened 'yyyy-MM-dd HH:mm', text, reporter, [status, closed_at]. */
+function T_issueRow_(id, at, text, who, status, closedAt) {
+  var r = ISS.ISSUES_HEAD.map(function () { return ''; }), c = {}; ISS.ISSUES_HEAD.forEach(function (h, i) { c[h] = i; });
+  r[c.issue_id] = '-1009990001:' + id; r[c.opened_at_ict] = at; r[c.reporter] = who; r[c.text] = text; r[c.status] = status || 'open';
+  r[c.last_update_ict] = at; r[c.closed_at_ict] = closedAt || ''; r[c.tg_chat_id] = '-1009990001'; r[c.tg_message_id] = id; r[c.type] = 'issue';
+  return r;
+}
+/** In-memory Issues sheet (nothing touches Place Inbox TEST). */
+function T_memSheet_() {
+  var v = [ISS.ISSUES_HEAD.slice()];
+  return {values: v, getDataRange: function () { return {getValues: function () { return v.map(function (r) { return r.slice(); }); }}; },
+    appendRow: function (r) { v.push(r.slice()); },
+    getRange: function (r, c, nr, nc) { return {setValues: function (vals) { vals.forEach(function (x, i) { v[r - 1 + i] = x.slice(); }); }}; }};
+}
+/** George 01.10 23:10 «очень плохо»: ONE breakdown (outlet, floor-2 cabin 1) showed as «Поломки: 4».
+ *  original + edit + reply + re-delivery + «починили» → 1 row, 0 open, «✅ закрыто сегодня: 1»; the real TEST rows
+ *  (q256/q257 twice, from the queue sync) → 1 item «2 эт. кабинка 1 — розетка»; filler stripped, no «…». */
+function test_issuesThread() {
+  return T_fixture_('issues', 'one breakdown = one thread (in-memory sheet)', function () {
+    var fail = [], chat = T_FAKE_CHAT, D = function (s) { return Math.floor(new Date(s + ':00+07:00').getTime() / 1000); };
+    var night = new Date('2026-10-01T23:10:00+07:00'), morning = new Date('2026-10-01T10:07:00+07:00'), sh = T_memSheet_(), h = [];
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 701, date: D('2026-10-01T18:00'), from: {username: 'hey_len'}}, 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1', 'Hey_len'));
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 701, date: D('2026-10-01T18:00'), from: {username: 'hey_len'}}, 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1, срочно', 'Hey_len', true));
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 702, date: D('2026-10-01T18:01'), from: {username: 'hey_len'}, reply_to_message: {message_id: 701}}, 'Сломалась , сейчас пока от удлинителя', 'Hey_len'));
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 702, date: D('2026-10-01T18:01'), from: {username: 'hey_len'}, reply_to_message: {message_id: 701}}, 'Сломалась , сейчас пока от удлинителя', 'Hey_len'));
+    var open1 = ISS.issuesDigest_('evening', night, {rows: sh.values, includeFixtures: true});
+    if (open1 !== '🛠 Поломки: 1\n🔴 2 эт. кабинка 1 — розетка · открыто, сегодня') fail.push('before fix: ' + open1);
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 703, date: D('2026-10-01T20:00'), from: {username: 'som'}, reply_to_message: {message_id: 702}}, 'починили', 'Som'));
+    if (sh.values.length !== 2) fail.push('rows: ' + (sh.values.length - 1) + ' (want 1)');
+    if (h.join(',') !== 'open,edit,open,dup,closed') fail.push('handled: ' + h.join(','));
+    var ev = ISS.issuesDigest_('evening', night, {rows: sh.values, includeFixtures: true}), mo = ISS.issuesDigest_('morning', morning, {rows: sh.values, includeFixtures: true});
+    if (ev !== '🛠 Открытых поломок нет · ✅ закрыто сегодня: 1') fail.push('evening: ' + ev);
+    if (mo !== '') fail.push('morning must be empty: ' + mo);
+    // the real TEST rows of 30.09/01.10 (queue sync, no reply links, each row twice) + «починили» without reply
+    var real = [ISS.ISSUES_HEAD, T_issueRow_('q256', '2026-09-30 23:53', 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1', 'Hey_len'),
+      T_issueRow_('q257', '2026-09-30 23:54', 'Сломалась , сейчас пока от удлинителя', 'Hey_len'),
+      T_issueRow_('q256', '2026-09-30 23:53', 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1', 'Hey_len'),
+      T_issueRow_('q257', '2026-09-30 23:54', 'Сломалась , сейчас пока от удлинителя', 'Hey_len')];
+    var r1 = ISS.issuesDigest_('morning', morning, {rows: real});
+    if (r1 !== '🛠 Поломки: 1\n🔴 2 эт. кабинка 1 — розетка · открыто, с 30.09') fail.push('real rows: ' + r1);
+    var r2 = ISS.issuesDigest_('evening', night, {rows: real.concat([T_issueRow_('q300', '2026-10-01 15:20', 'Розетку в кабинке 1 починили', 'Som')])});
+    if (r2 !== '🛠 Открытых поломок нет · ✅ закрыто сегодня: 1') fail.push('real rows + починили: ' + r2);
+    // 2 open: different authors/places stay separate; same author 45 min later about another place → new item; Lena «ок» closes
+    var two = [ISS.ISSUES_HEAD, T_issueRow_('a1', '2026-09-30 23:53', 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1', 'Hey_len'),
+      T_issueRow_('a2', '2026-10-01 09:40', 'Привет! На 3 этаже не работает кондиционер, please check', 'Som', 'in_progress'),
+      T_issueRow_('a3', '2026-10-01 10:30', 'Добрый день, на 1 этаже скрипит лестница у входа', 'Som')];
+    var d2 = ISS.issuesDigest_('evening', night, {rows: two});
+    if (d2.split('\n').length !== 4 || d2.indexOf('🔴 1 эт. — скрипит лестница у входа · открыто, сегодня') < 0 || d2.indexOf('🟡 3 эт. — кондиционер · в работе, сегодня') < 0) fail.push('3 items: ' + d2);
+    if (/…|Здравствуйте|Привет|please|Надо/i.test(d2)) fail.push('filler or ellipsis left: ' + d2);
+    var sh2 = T_memSheet_();
+    ISS.issuesHandle_(sh2, {chat: chat, message_id: 801, date: D('2026-10-01T09:00'), from: {username: 's'}}, 'ชั้น 3 แอร์เสีย', 'Som');
+    ISS.issuesHandle_(sh2, {chat: chat, message_id: 802, date: D('2026-10-01T09:50'), from: {username: 's'}}, 'ชั้น 1 ไฟดับ', 'Som');
+    var st = ISS.issuesHandle_(sh2, {chat: chat, message_id: 803, date: D('2026-10-01T12:00'), from: {username: 'lena'}, reply_to_message: {message_id: 801}}, 'ок 👍', 'Lena');
+    if (sh2.values.length !== 3 || st !== 'closed') fail.push('lena confirm / 45-min split: rows ' + (sh2.values.length - 1) + ', ' + st);
+    if (ISS.issuesHandle_(sh2, {chat: chat, message_id: 804, date: D('2026-10-01T12:05'), from: {username: 's'}, reply_to_message: {message_id: 802}}, 'не починили, ждём электрика', 'Som') === 'closed') fail.push('«не починили» closed it');
+    if (fail.length) throw new Error('THREAD FAIL ' + fail.join(' | '));
+    return {ok: 'original + edit + reply + dup + «починили» → 1 row, 0 open, closed today 1; real TEST rows → 1 item; 3 items; Lena «ок» closes; «не починили» stays open',
+      sampleOpen: d2, sampleEveningClosedOnly: ev, realRows: r1};
   });
 }
 
@@ -160,20 +221,23 @@ function test_techRoute() {
     try {
       // 1) job header (T_issuesJob_ with fake relay)
       var saved = [T_PROFILE]; T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {TECH_CHAT_ID: ''}};
-      T_relay_('Тех вопросы, 10:07', ISS.issuesDigest_('morning'));
-      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Тех вопросы, 10:07') fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
-      if (sent.some(function (x) { return /PLACE Team/.test(x.text.split('\n')[0]); })) fail.push('still PLACE Team');
+      var H = ISS.ISSUES_HEAD, rows = [H, T_issueRow_('tr1', '2026-10-01 09:00', 'Кондиционер на 3 этаже не работает', 'Som')], opts = {rows: rows};
+      T_relay_(null, ISS.issuesDigest_('morning', new Date('2026-10-01T10:07:00+07:00'), opts));
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · 🛠 Поломки: 1' || /Куда ушло бы/.test(sent[0].text)) fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
       // 2) production path, TECH_CHAT_ID empty → not sent, warning
       sent = []; var buf0 = T_BUF.length;
-      var a = ISS.issuesSendDigest_('evening');
+      var a = ISS.issuesSendDigest_('evening', null, opts);
       if (a.sent !== false || sent.length || !/WARN TECH_CHAT_ID not set/.test(T_BUF.slice(buf0).join('\n'))) fail.push('empty TECH_CHAT_ID: ' + JSON.stringify(a) + ' sends=' + sent.length);
       // 3) production path, TECH_CHAT_ID set → one sendMessage to it, relayed as «Тех вопросы (TG группа)»
       sent = []; T_CTX.props = {TECH_CHAT_ID: '-1009990077'};
-      var b = ISS.issuesSendDigest_('evening');
-      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Тех вопросы') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
+      var b = ISS.issuesSendDigest_('evening', null, opts);
+      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · 🛠 Поломки: 1') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
     } finally { T_CTX = prev; }
     if (fail.length) throw new Error('TECH ROUTE FAIL ' + fail.join('; '));
-    return 'OK: header «Тех вопросы (TG группа, сводка 10:07)»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID';
+      // 4) nothing open → nothing sent
+      sent = []; var c = ISS.issuesSendDigest_('morning', null, {rows: [H]});
+      if (c.sent !== false || sent.length) fail.push('empty digest sent: ' + JSON.stringify(c));
+    return 'OK: short «🧪 ТЕСТ · » marker, no «Куда ушло бы»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID; nothing → nothing sent';
   });
 }
 

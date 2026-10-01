@@ -153,7 +153,7 @@ Harness bugs fixed along the way: the `'T'` literal in formatDate, and Date obje
 |---|---|---|---|
 | 0 | safety layer | `test_guard` | PASS |
 | 1 | stage 6 offices + electricity for Lena | `test_stage6` | PASS |
-| 2 | issues-log + bridge hook | `test_issues`, `test_issuesBridgeHook` | PASS / PASS |
+| 2 | issues-log + bridge hook + threads | `test_issues`, `test_issuesBridgeHook`, `test_issuesThread` | PASS / PASS / PASS |
 | 3 | bookings-today (10:07) | `test_bookings` | PASS |
 | 4 | 24/7 columns (C8) | `test_keyholders` | PASS |
 | 5 | stage 5 timesheet | `test_timesheet` | PASS |
@@ -189,7 +189,7 @@ The live Apps Script run (step 5 in §2) is still **pending: George**.
 - Issues has two more columns: `type` (`issue` = breakdown, `task` = e.g. electricity bill; old rows: `elec:…` → task) and `tag` (`fixture` = written by a test_*).
 - The issues digests (job_issuesMorning / job_issuesEvening, TG group «Тех вопросы») list only `type=issue` and skip `tag=fixture`. Tasks stay in the Issues log only (Lena gets the electricity DM from job_stage6).
 - `test_all()` ends with `cleanupTestFixtures()`: deletes fixture rows (and old untagged test rows) from Issues in Place Inbox TEST. It can also be run by hand.
-- Format: `🛠 Поломки: открыто N (не взято X, в работе Y)`, then per item `🔴/🟡[⏰] <floor> — <what>` and `с dd.MM HH:mm (age) · в работе: <last note> | не взято, сообщил(а) <who>`; not taken first, oldest first; evening adds «Закрыто сегодня».
+- Format (George 01.10 23:10 «очень плохо» → rewritten): **one breakdown = one thread = one line**. Replies (reply_to), edits (same message_id), re-deliveries (dedupe by message_id) and same-author messages about the same place within 30 min merge into the item. Line: `🔴/🟡 <floor> эт. <room> — <object> · открыто|в работе, сегодня|с dd.MM` (greetings/filler stripped, no «…»). Closed when the thread has починили / fixed / done / готово / ซ่อมแล้ว (not «не починили») or George/Lena reply «ок/👍/принято» (`ISSUES_CONFIRMERS`). Evening adds one line `✅ закрыто сегодня: N`. 0 open (and in the evening 0 closed today) → nothing is sent. TEST marker is only `🧪 ТЕСТ · ` (no «Куда ушло бы»).
 
 ### 2. Issues-log: Issues tab + bridge hook
 - **Inputs:** synthetic TG updates from chat «Тех вопросы TEST» (id −1009990001):

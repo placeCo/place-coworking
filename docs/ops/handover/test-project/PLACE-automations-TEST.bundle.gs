@@ -133,7 +133,11 @@ function T_props_(mod) {
 // ---------- relay: the ONLY outgoing channel (private chats of George + Lena) ----------
 /** Test message text: header, «Куда ушло бы», blank line, original body. */
 /** One short header line (George 01.10: «кратко»): «🧪 ТЕСТ · Куда ушло бы: <where>», blank line, original text. */
-function T_relayText_(where, text) { return '🧪 ТЕСТ · Куда ушло бы: ' + where + '\n\n' + String(text == null ? '' : text); }
+/** where = null → only the short «🧪 ТЕСТ · » marker (issues digests, George 01.10 23:10). */
+function T_relayText_(where, text) {
+  var body = String(text == null ? '' : text);
+  return where ? '🧪 ТЕСТ · Куда ушло бы: ' + where + '\n\n' + body : '🧪 ТЕСТ · ' + body;
+}
 /** Relay targets from Script Properties (or T_CTX.ids in the self-test). Returns {ids: [{who, id}], warnings: []}. */
 function T_relayTargets_() {
   var ids = T_CTX.ids, warn = [], out = [];
@@ -189,7 +193,7 @@ var T_FETCH = {
     if (/api\.telegram\.org\/bot[^/]+\/sendMessage/.test(url)) {
       var pl = {}; try { pl = JSON.parse((o && o.payload) || '{}'); } catch (e) {}
       var tech = String(T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID') || '');
-      T_relay_(tech && String(pl.chat_id) === tech ? 'Тех вопросы' : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
+      T_relay_(tech && String(pl.chat_id) === tech ? null : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
       return { getResponseCode: function () { return 200; }, getContentText: function () { return '{"ok":true,"test":true}'; } };
     }
     throw new Error('TEST GUARD: UrlFetchApp blocked in modules: ' + T_mask_(url));
@@ -467,30 +471,37 @@ var SHEET_ID = T_IDS.inbox; // TEST: Place Inbox TEST, never the live bridge she
 /**
  * Place Coworking — 2.1.5 / 10.1 Breakdown & issue log. DRAFT TEMPLATE, NOT DEPLOYED.
  *
- * Plugs into the TG bridge (docs/ops/tg-bridge/Code.template.gs). Every new
- * top-level message in the «Тех вопросы» chat becomes a row in tab «Issues»
- * (same Place Inbox spreadsheet as «Заказы»). A reply to that message with a
- * "done" word (готово / починил / fixed / เสร็จ / แก้แล้ว / ซ่อมแล้ว …) closes it;
- * any other reply marks it in_progress and is kept as the last note.
- * issuesDigest_() builds the text for the existing 10:07 (open list) and
- * 23:10 (closed today + still open) runs. No new Lead runs, no TG sends here.
+ * Plugs into the TG bridge (docs/ops/tg-bridge/Code.template.gs). «Тех вопросы» messages go to tab «Issues»
+ * (Place Inbox). ONE BREAKDOWN = ONE THREAD = ONE ROW (George 01.10 23:10 «очень плохо»):
+ *   - same message_id (re-delivery, re-sync) → ignored; edited_message → updates the same row;
+ *   - reply (reply_to_message_id → the item or any message already in its thread) → same row;
+ *   - no reply, same author, same place (or no place), within 30 min of the item's last message → same row;
+ *   - «починили / fixed / done / готово / ซ่อมแล้ว …» in the thread, or George/Lena confirming («ок», «👍», «принято»
+ *     as a reply) → closed. A «починили …» without reply closes the latest open item of the chat with the same
+ *     place/object. The digest applies the same grouping to the rows again, so old duplicate rows are merged too.
+ * issuesDigest_() → the 10:07 (open list) and 23:10 (open + «✅ закрыто сегодня: N») texts; '' = nothing to send.
  *
- * Hook (one line in poll(), after the orders hook):
- *   if (ISSUES_CHAT_RE.test(chat) && !(u.edited_message)) try { issuesHandle_(issuesSheet_(), m, text, name); } catch (e) { Logger.log('ISSUES_ERR ' + e); }
+ * Hook (one line in poll(), after the orders hook) — edits go in too:
+ *   if (ISSUES_CHAT_RE.test(chat)) try { issuesHandle_(issuesSheet_(), m, text, name, !!u.edited_message); } catch (e) { Logger.log('ISSUES_ERR ' + e); }
  *
- * SAFETY: ISSUES_MODE (Script Property) defaults to 'dry' = log only, no sheet
- * writes. 'live' writes to the «Issues» tab — only after George OK.
+ * SAFETY: ISSUES_MODE (Script Property) defaults to 'dry' = log only, no sheet writes. 'live' writes to «Issues»
+ * — only after George OK. ISSUES_CONFIRMERS (optional) = comma list of names/usernames whose «ок» closes an item
+ * (default: george, джордж, lena, лена).
  */
 
 var ISSUES_CHAT_RE = /тех\s*вопрос/i;
 var ISSUES_TAB = 'Issues';
 // type: 'issue' = breakdown (default, also for old rows without type) | 'task' = work item (e.g. electricity bill, id 'elec:…').
 // tag: '' = real | 'fixture' = written by a test (skipped by digests; test_all deletes them).
-var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id', 'assignee', 'type', 'tag'];
+// thread_ids: message ids merged into this item (replies, follow-ups), space-separated.
+var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id', 'assignee', 'type', 'tag', 'thread_ids'];
 /** Tag for new rows. The TEST project defines a global ISSUES_TAG_FN() that returns 'fixture' inside test_*; production: ''. */
 function issuesTag_() { return typeof ISSUES_TAG_FN === 'function' ? String(ISSUES_TAG_FN() || '') : ''; }
-var DONE_RE = /(готово|сделано|сделал|починил|починили|исправил|решено|закрыто|fixed|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
+var DONE_RE = /(готово|сделано|сделал|починил|починен|отремонтир|исправил|исправлен|решено|закрыто|заменил|fixed|repaired|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
+var NOT_DONE_RE = /(не\s+(готово|сделал|сделано|починил|починен|исправил|решено)|not\s+(fixed|done|repaired)|ยังไม่)/i;
+var CONFIRM_RE = /^\s*(ок|окей|ok|okay|принято|подтверждаю|подтверждено|confirmed|спасибо|thanks|👍|✅|\+)[\s.!👍✅]*$/i;
 var BOT_RE = /placeleadbot/i;
+var ISSUES_WINDOW_MS = 30 * 60000;
 
 function issuesSheet_() {
   var ss = SpreadsheetApp.openById(SHEET_ID);
@@ -504,39 +515,193 @@ function issuesSheet_() {
 }
 
 function issuesMode_() { return PropertiesService.getScriptProperties().getProperty('ISSUES_MODE') || 'dry'; }
+function issuesCol_() { var col = {}; ISSUES_HEAD.forEach(function (h, i) { col[h] = i; }); return col; }
+function issuesPad_(row) { var r = row.slice(); while (r.length < ISSUES_HEAD.length) r.push(''); return r; }
 
-function issuesHandle_(sh, m, text, sender) {
-  var f = m.from || {};
-  if (BOT_RE.test(f.username || '')) return 'skip-bot';
-  var when = Utilities.formatDate(new Date(m.date * 1000), 'Asia/Bangkok', 'yyyy-MM-dd HH:mm');
-  var live = issuesMode_() === 'live' && sh;
-  var rows = sh ? sh.getDataRange().getValues() : [ISSUES_HEAD];
-  var col = {}; ISSUES_HEAD.forEach(function (h, i) { col[h] = i; });
-  var replyTo = m.reply_to_message ? String(m.reply_to_message.message_id) : null;
-  if (replyTo) {
-    for (var r = 1; r < rows.length; r++) {
-      if (String(rows[r][col.tg_message_id]) === replyTo && String(rows[r][col.tg_chat_id]) === String(m.chat.id)) {
-        var row = rows[r].slice();
-        row[col.last_note] = (sender + ': ' + text).slice(0, 500);
-        row[col.last_update_ict] = when;
-        if (DONE_RE.test(text)) { row[col.status] = 'closed'; row[col.closed_at_ict] = when; row[col.closed_by] = sender; }
-        else if (row[col.status] === 'open') row[col.status] = 'in_progress';
-        if (live) sh.getRange(r + 1, 1, 1, ISSUES_HEAD.length).setValues([row]);
-        else Logger.log('[issues dry] update row ' + (r + 1) + ': ' + JSON.stringify(row));
-        return row[col.status];
-      }
-    }
-    return 'reply-untracked';
-  }
-  var floor = typeof parseFloor_ === 'function' ? parseFloor_(text) : issuesFloor_(text);
-  var newRow = [m.chat.id + ':' + m.message_id, when, floor, sender, text.slice(0, 1000), 'open', '', when, '', '', String(m.chat.id), String(m.message_id), '', 'issue', issuesTag_()];
-  if (live) sh.appendRow(newRow); else Logger.log('[issues dry] new: ' + JSON.stringify(newRow));
-  return 'open';
+// ---------- text → place + object ----------
+function issuesFloor_(text) {
+  var m = String(text).match(/(\d)\s*(?:-?м|-?й)?\s*(?:этаж|эт\.?|floor|fl\.?|ชั้น)|(?:этаж|floor|ชั้น)\s*(\d)/i);
+  return m ? (m[1] || m[2]) : '';
+}
+var ISSUES_ROOM_RE = /(кабинк\S*|кабинет\S*|комнат\S*|офис\S*|room|cabin|office|ห้อง)\s*(?:номер|№|no\.?|#)?\s*(\d{1,3})(?!\s*(?:этаж|эт|floor))/i;
+function issuesRoom_(text) {
+  var m = String(text).match(ISSUES_ROOM_RE); if (!m) return '';
+  var w = m[1].toLowerCase(), k = /^кабинк/.test(w) ? 'кабинка' : /^кабинет/.test(w) ? 'кабинет' : /^комнат/.test(w) ? 'комната' :
+    /^офис/.test(w) ? 'офис' : /^ห้อง/.test(w) ? 'ห้อง' : w;
+  return k + ' ' + m[2];
+}
+function issuesPlace_(text) {
+  return {floor: String(typeof parseFloor_ === 'function' ? parseFloor_(text) || '' : issuesFloor_(text)), room: issuesRoom_(text)};
+}
+var B_ = '(?:^|[^а-яёa-z])';   // left word edge for Cyrillic/Latin (JS \b is ASCII-only)
+var ISSUES_OBJECTS = [
+  [B_ + '(розетк|удлинител)|outlet|socket|ปลั๊ก', 'розетка'],
+  ['кондиционер|кондей|' + B_ + 'ac(?![a-z])|air\\s*con|แอร์', 'кондиционер'],
+  ['ไฟดับ|' + B_ + 'электричеств|power\\s*(cut|out)|blackout|нет\\s+света', 'электричество'],
+  ['протечк|протека|теч[её]т|потоп|leak|น้ำรั่ว|รั่ว', 'протечка'],
+  ['унитаз|туалет|toilet|ชักโครก|ห้องน้ำ', 'туалет'],
+  ['экран|телевизор|' + B_ + 'tv(?![a-z])|ทีวี', 'ТВ'],
+  [B_ + 'кран|смесител|faucet|' + B_ + 'tap(?![a-z])|ก๊อก', 'кран'],
+  [B_ + 'душ' + '(?![а-я])|shower', 'душ'],
+  ['лампа|лампочк|светильник|' + B_ + 'свет(?![а-я]*ск)|' + B_ + 'light|bulb|ไฟ', 'свет'],
+  ['wi-?fi|вай-?фай|интернет|internet|ไวไฟ', 'Wi‑Fi'],
+  ['принтер|printer|เครื่องพิมพ์', 'принтер'],
+  [B_ + 'замок|' + B_ + 'lock(?![a-z])|กุญแจ', 'замок'],
+  [B_ + 'двер|' + B_ + 'door|ประตู', 'дверь'],
+  [B_ + 'окн|' + B_ + 'окон|window|หน้าต่าง', 'окно'],
+  ['холодильник|fridge|ตู้เย็น', 'холодильник'],
+  ['кофемашин|coffee\\s*machine', 'кофемашина'],
+  ['проектор|projector|โปรเจคเตอร์', 'проектор'],
+  ['вентилятор|' + B_ + 'fan(?![a-z])|พัดลม', 'вентилятор'],
+  ['кулер|water\\s*dispenser|ตู้น้ำ', 'кулер'],
+  ['пожарн|fire\\s*alarm|สัญญาณไฟไหม้', 'пожарная сигнализация'],
+  [B_ + 'лифт|elevator|' + B_ + 'lift(?![a-z])|ลิฟต์', 'лифт'],
+  [B_ + 'камер|cctv|กล้อง', 'камера'],
+  [B_ + 'стул|кресл|chair|เก้าอี้', 'стул']
+].map(function (x) { return [new RegExp(x[0], 'i'), x[1]]; });
+function issuesObject_(text) {
+  var t = String(text || '');
+  for (var i = 0; i < ISSUES_OBJECTS.length; i++) if (ISSUES_OBJECTS[i][0].test(t)) return ISSUES_OBJECTS[i][1];
+  return '';
+}
+var ISSUES_FILLER_RE = new RegExp('(^|[\\s,.!?:;()«»"-])(здравствуйте|здравствуй|добрый\\s+(день|вечер)|доброе\\s+утро|привет|всем|ребята|коллеги|' +
+  'надо|нужно|срочно|снова|опять|пожалуйста|плиз|просьба|подскажите|hi|hello|hey|please|pls|guys|urgent|' +
+  'สวัสดี(ครับ|ค่ะ)?|ครับ|ค่ะ|คะ|นะ|ช่วย|หน่อย)(?=$|[\\s,.!?:;()«»"-])', 'gi');
+/** Fallback essence when no known object: greetings/filler/place removed, first clause, ≤ 6 whole words, no «…». */
+function issuesEssence_(text) {
+  var t = String(text || '').replace(/\s+/g, ' ');
+  t = t.replace(/(?:на|в|on|at)?\s*\d\s*(?:-?м|-?й)?\s*(?:этаже|этаж|эт\.?|floor|fl\.?)/gi, ' ').replace(/(?:этаж|floor|ชั้น)\s*\d/gi, ' ')
+    .replace(new RegExp('(?:в|на|in|at)?\\s*' + ISSUES_ROOM_RE.source, 'gi'), ' ');
+  for (var k = 0; k < 3; k++) t = t.replace(ISSUES_FILLER_RE, '$1');
+  t = t.split(/[.!?\n]/).map(function (x) { return x.replace(/^[\s,;:–—-]+|[\s,;:–—-]+$/g, ''); }).filter(Boolean)[0] || '';
+  var w = t.split(/\s+/).filter(Boolean).slice(0, 6);
+  while (w.length && /^(в|на|и|а|с|у|по|к|in|on|at|the|and|to)$/i.test(w[w.length - 1])) w.pop();
+  t = w.join(' ');
+  return t ? t.charAt(0).toLowerCase() + t.slice(1) : '';
+}
+/** «2 эт. кабинка 1 — розетка» from the thread texts (first text wins for the object). */
+function issuesLine_(th) {
+  var where = [th.floor ? th.floor + ' эт.' : '', th.room].filter(Boolean).join(' ');
+  var what = '';
+  for (var i = 0; i < th.texts.length && !what; i++) what = issuesObject_(th.texts[i]);
+  if (!what) for (var j = 0; j < th.texts.length && !what; j++) what = issuesEssence_(th.texts[j]);
+  return (where ? where + ' — ' : '') + (what || 'поломка');
 }
 
-function issuesFloor_(text) {
-  var m = String(text).match(/(\d)\s*(?:этаж|эт\.?|floor|fl\.?|ชั้น)|(?:этаж|floor|ชั้น)\s*(\d)/i);
-  return m ? (m[1] || m[2]) : '';
+// ---------- threads ----------
+function issuesConfirmer_(name) {
+  var v = PropertiesService.getScriptProperties().getProperty('ISSUES_CONFIRMERS') || 'george,джордж,lena,лена';
+  var n = String(name || '').toLowerCase();
+  return v.split(',').map(function (x) { return x.trim().toLowerCase(); }).filter(Boolean).some(function (x) { return n.indexOf(x) >= 0; });
+}
+function issuesIsDone_(text) { var t = String(text || ''); return DONE_RE.test(t) && !NOT_DONE_RE.test(t); }
+function issuesCompatible_(a, b) {
+  return (!a.floor || !b.floor || a.floor === b.floor) && (!a.room || !b.room || a.room === b.room);
+}
+/** Thread the message belongs to, or null. msg: {chat, id, ms, author, text, replyTo, floor, room}. */
+function issuesAttach_(threads, msg) {
+  var i, t;
+  for (i = 0; i < threads.length; i++) { t = threads[i]; if (t.chat === msg.chat && t.ids.indexOf(msg.id) >= 0) return t; }          // same message
+  if (msg.replyTo) for (i = 0; i < threads.length; i++) { t = threads[i]; if (t.chat === msg.chat && t.ids.indexOf(msg.replyTo) >= 0) return t; }
+  for (i = threads.length - 1; i >= 0; i--) {                                                                                    // same author ≤ 30 min
+    t = threads[i];
+    if (t.chat === msg.chat && !t.closed && t.authors.indexOf(msg.author) >= 0 && msg.ms - t.lastMs <= ISSUES_WINDOW_MS && msg.ms >= t.firstMs - ISSUES_WINDOW_MS &&
+        issuesCompatible_(t, msg) && (!msg.obj || !t.obj || msg.obj === t.obj)) return t;
+  }
+  if (issuesIsDone_(msg.text)) for (i = threads.length - 1; i >= 0; i--) {                                                       // «починили» without reply
+    t = threads[i];
+    if (t.chat === msg.chat && !t.closed && issuesCompatible_(t, msg) && (!msg.obj || !t.obj || msg.obj === t.obj) && msg.ms - t.lastMs <= 7 * 86400000) return t;
+  }
+  return null;
+}
+function issuesNewThread_(msg) {
+  return {chat: msg.chat, ids: [msg.id], texts: [msg.text], authors: [msg.author], reporter: msg.author, floor: msg.floor, room: msg.room,
+    obj: msg.obj, firstMs: msg.ms, lastMs: msg.ms, closed: false, closedMs: null, closedBy: '', inProgress: false, rows: []};
+}
+/** Merges msg into t (texts, place, status). Returns the thread status. */
+function issuesApply_(t, msg, isNew) {
+  if (!isNew) {
+    if (t.ids.indexOf(msg.id) < 0) t.ids.push(msg.id);
+    if (t.texts.indexOf(msg.text) < 0) t.texts.push(msg.text);
+    if (t.authors.indexOf(msg.author) < 0) t.authors.push(msg.author);
+    if (!t.floor) t.floor = msg.floor; if (!t.room) t.room = msg.room; if (!t.obj) t.obj = msg.obj;
+    t.lastMs = Math.max(t.lastMs, msg.ms);
+  }
+  var done = issuesIsDone_(msg.text) || (!isNew && issuesConfirmer_(msg.author) && CONFIRM_RE.test(msg.text)) || msg.status === 'closed';
+  if (done && !t.closed) { t.closed = true; t.closedMs = msg.closedMs || msg.ms; t.closedBy = msg.closedBy || msg.author; }
+  if (msg.status === 'in_progress' || (!isNew && msg.author !== t.reporter && !done)) t.inProgress = true;
+  return t.closed ? 'closed' : t.inProgress ? 'in_progress' : 'open';
+}
+/** Sheet rows → threads (same grouping as at write time; also merges old duplicate rows). */
+function issuesThreads_(rows, opts) {
+  opts = opts || {};
+  var col = issuesCol_(), msgs = [], threads = [];
+  for (var r = 1; r < rows.length; r++) {
+    var x = issuesPad_(rows[r]);
+    if (!String(x[col.issue_id] || '').trim() && !String(x[col.text] || '').trim()) continue;                 // empty row
+    if (issuesType_(x, col) !== 'issue') continue;                                                          // tasks: Issues log only
+    if (!opts.includeFixtures && String(x[col.tag] || '') === 'fixture') continue;                          // test rows
+    var text = String(x[col.text] || ''), pl = issuesPlace_(text);
+    var st = String(x[col.status] || 'open'), note = String(x[col.last_note] || '').replace(/^[^:]{1,40}:\s*/, '');
+    if (st !== 'closed' && note && issuesIsDone_(note)) st = 'closed';
+    msgs.push({row: r, chat: String(x[col.tg_chat_id] || ''), id: String(x[col.tg_message_id] || x[col.issue_id]), ms: issuesMs_(x[col.opened_at_ict]) || 0,
+      author: String(x[col.reporter] || ''), text: text, floor: String(x[col.floor] || pl.floor || ''), room: pl.room, obj: issuesObject_(text),
+      status: st, closedMs: issuesMs_(x[col.closed_at_ict]) || issuesMs_(x[col.last_update_ict]), closedBy: String(x[col.closed_by] || ''),
+      extra: String(x[col.thread_ids] || '').split(/\s+/).filter(Boolean)});
+  }
+  msgs.sort(function (a, b) { return a.ms - b.ms || a.row - b.row; });
+  msgs.forEach(function (m) {
+    var t = issuesAttach_(threads, m), isNew = !t;
+    if (isNew) { t = issuesNewThread_(m); threads.push(t); }
+    t.rows.push(m.row);
+    m.extra.forEach(function (id) { if (t.ids.indexOf(id) < 0) t.ids.push(id); });
+    issuesApply_(t, m, isNew);
+  });
+  return threads;
+}
+
+/** Handles one «Тех вопросы» message (isEdit = edited_message). Returns 'open' | 'in_progress' | 'closed' | 'edit' | 'dup' | 'skip-bot'. */
+function issuesHandle_(sh, m, text, sender, isEdit) {
+  var f = m.from || {};
+  if (BOT_RE.test(f.username || '')) return 'skip-bot';
+  text = String(text || '');
+  var when = Utilities.formatDate(new Date(m.date * 1000), 'Asia/Bangkok', 'yyyy-MM-dd HH:mm');
+  var live = issuesMode_() === 'live' && sh;
+  var rows = sh ? sh.getDataRange().getValues() : [ISSUES_HEAD], col = issuesCol_();
+  var write = function (r, row) {
+    if (live) sh.getRange(r + 1, 1, 1, ISSUES_HEAD.length).setValues([row]);
+    else Logger.log('[issues dry] update row ' + (r + 1) + ': ' + JSON.stringify(row));
+  };
+  if (live && rows.length && rows[0].length < ISSUES_HEAD.length) sh.getRange(1, 1, 1, ISSUES_HEAD.length).setValues([ISSUES_HEAD]);
+  var pl = issuesPlace_(text);
+  var msg = {chat: String(m.chat.id), id: String(m.message_id), ms: m.date * 1000, author: sender, text: text, floor: pl.floor, room: pl.room,
+    obj: issuesObject_(text), replyTo: m.reply_to_message ? String(m.reply_to_message.message_id) : null};
+  var threads = issuesThreads_(rows, {includeFixtures: true});
+  var dup = threads.filter(function (t) { return t.chat === msg.chat && t.ids.indexOf(msg.id) >= 0; })[0];
+  if (dup && !isEdit) return 'dup';
+  var t = dup || issuesAttach_(threads, msg);
+  if (!t) {
+    var newRow = [msg.chat + ':' + msg.id, when, pl.floor, sender, text.slice(0, 1000), 'open', '', when, '', '', msg.chat, msg.id, '', 'issue', issuesTag_(), ''];
+    if (issuesIsDone_(text)) return 'done-untracked';   // «починили» with nothing open: not a breakdown
+    if (live) sh.appendRow(newRow); else Logger.log('[issues dry] new: ' + JSON.stringify(newRow));
+    return 'open';
+  }
+  var r = t.rows[0], row = issuesPad_(rows[r]);
+  if (dup && String(row[col.tg_message_id]) === msg.id) row[col.text] = text.slice(0, 1000);                      // edit of the original
+  else if (dup) row[col.last_note] = (sender + ': ' + text).slice(0, 500);                                         // edit of a follow-up
+  else if (!msg.replyTo && sender === String(row[col.reporter]) && !issuesIsDone_(text))
+    row[col.text] = (String(row[col.text]) + ' / ' + text).slice(0, 1000);                                        // same-author follow-up
+  else row[col.last_note] = (sender + ': ' + text).slice(0, 500);
+  if (!row[col.floor] && pl.floor) row[col.floor] = pl.floor;
+  var ids = String(row[col.thread_ids] || '').split(/\s+/).filter(Boolean);
+  if (msg.id !== String(row[col.tg_message_id]) && ids.indexOf(msg.id) < 0) ids.push(msg.id);
+  row[col.thread_ids] = ids.join(' ');
+  row[col.last_update_ict] = when;
+  var st = issuesApply_(t, msg, false);
+  if (st === 'closed' && String(row[col.status]) !== 'closed') { row[col.status] = 'closed'; row[col.closed_at_ict] = when; row[col.closed_by] = sender; }
+  else if (st === 'in_progress' && String(row[col.status]) === 'open') row[col.status] = 'in_progress';
+  write(r, row);
+  return dup ? 'edit' : String(row[col.status]);
 }
 
 /** Type of a row: explicit column, else 'task' for generated ids (elec:…), else 'issue'. */
@@ -545,13 +710,6 @@ function issuesType_(x, col) {
   if (t) return t;
   return /^elec:/.test(String(x[col.issue_id])) ? 'task' : 'issue';
 }
-/** One-line, trimmed, max n characters (cut on a word, emoji-safe), with «…». */
-function issuesShort_(s, n) {
-  var t = String(s == null ? '' : s).replace(/\s+/g, ' ').trim(), a = Array.from ? Array.from(t) : t.split('');
-  if (a.length <= n) return t;
-  var cut = a.slice(0, n).join(''), sp = cut.lastIndexOf(' ');
-  return (sp > n * 0.6 ? cut.slice(0, sp) : cut).replace(/[\s,.;:–—-]+$/, '') + '…';
-}
 function issuesWhen_(v) {   // 'yyyy-MM-dd HH:mm' or Date -> 'dd.MM HH:mm'
   if (v instanceof Date) return Utilities.formatDate(v, 'Asia/Bangkok', 'dd.MM HH:mm');
   var m = String(v || '').match(/^(\d{4})-(\d\d)-(\d\d)(?:[ T](\d\d:\d\d))?/);
@@ -559,53 +717,41 @@ function issuesWhen_(v) {   // 'yyyy-MM-dd HH:mm' or Date -> 'dd.MM HH:mm'
 }
 function issuesMs_(v) {
   if (v instanceof Date) return v.getTime();
+  if (!v) return null;
   var t = new Date(String(v).replace(' ', 'T') + ':00+07:00').getTime();
   return isNaN(t) ? null : t;
 }
 
-/** kind: 'morning' (10:07) | 'evening' (23:10). Text for the PLACE Team summary.
- *  Only real breakdowns (type=issue, tag!=fixture). Tasks (electricity bills …) stay in the Issues log only.
- *  opts.includeFixtures = true only for tests. */
+/** kind: 'morning' (10:07) | 'evening' (23:10). Only real breakdowns (type=issue, tag!=fixture), one line per thread.
+ *  Returns '' when there is nothing to send (0 open; in the evening also 0 closed today).
+ *  opts.includeFixtures / opts.rows (sheet values incl. header) — tests only. */
 function issuesDigest_(kind, now, opts) {
   opts = opts || {};
-  var sh = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ISSUES_TAB);
-  if (!sh) return 'Issues: вкладки нет (ещё не запущено).';
-  var rows = sh.getDataRange().getValues(), col = {}; ISSUES_HEAD.forEach(function (h, i) { col[h] = i; });
+  var rows = opts.rows;
+  if (!rows) { var sh = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ISSUES_TAB); if (!sh) return ''; rows = sh.getDataRange().getValues(); }
   now = now || new Date();
-  var today = Utilities.formatDate(now, 'Asia/Bangkok', 'yyyy-MM-dd'), nowMs = now.getTime();
-  var open = [], closedToday = [];
-  for (var r = 1; r < rows.length; r++) {
-    var x = rows[r];
-    if (!String(x[col.issue_id] || '').trim() && !String(x[col.text] || '').trim()) continue;   // empty row
-    if (issuesType_(x, col) !== 'issue') continue;                                             // tasks: Issues log only
-    if (!opts.includeFixtures && String(x[col.tag] || '') === 'fixture') continue;             // test rows
-    var what = issuesShort_(x[col.text], 50); if (!what) continue;
-    var where = x[col.floor] ? x[col.floor] + ' эт. ' : '';
-    var st = String(x[col.status] || 'open');
-    if (st === 'closed') {
-      var c = x[col.closed_at_ict], cDay = c instanceof Date ? Utilities.formatDate(c, 'Asia/Bangkok', 'yyyy-MM-dd') : String(c);
-      if (cDay.indexOf(today) === 0) closedToday.push('✅ ' + where + what);
-      continue;
-    }
-    var ms = issuesMs_(x[col.opened_at_ict]), days = ms === null ? 0 : Math.max(0, Math.floor((nowMs - ms) / 86400000));
-    var taken = st === 'in_progress';
-    open.push({taken: taken ? 1 : 0, ms: ms || 0,
-      s: (taken ? '🟡 ' : '🔴 ') + where + what + ' — ' + (days ? days + ' дн.' : 'сегодня') + (taken ? ', в работе' : '')});
-  }
-  // short (George 01.10: «кратко»): count, one line per issue (where, what, age), closed today only in the evening
-  open.sort(function (a, b) { return a.taken - b.taken || a.ms - b.ms; });
-  var out = [open.length ? '🛠 Поломки: ' + open.length : '🛠 Поломок нет'];
-  open.forEach(function (o) { out.push(o.s); });
-  if (kind === 'evening' && closedToday.length) closedToday.forEach(function (c) { out.push(c); });
-  return out.join('\n').replace(/\s+$/, '');
+  var today = Utilities.formatDate(now, 'Asia/Bangkok', 'yyyy-MM-dd'), open = [], closed = 0;
+  issuesThreads_(rows, opts).forEach(function (t) {
+    if (t.closed) { if (t.closedMs && Utilities.formatDate(new Date(t.closedMs), 'Asia/Bangkok', 'yyyy-MM-dd') === today) closed++; return; }
+    var since = Utilities.formatDate(new Date(t.firstMs), 'Asia/Bangkok', 'yyyy-MM-dd') === today ? 'сегодня' : 'с ' + Utilities.formatDate(new Date(t.firstMs), 'Asia/Bangkok', 'dd.MM');
+    open.push({p: t.inProgress ? 1 : 0, ms: t.firstMs, s: (t.inProgress ? '🟡 ' : '🔴 ') + issuesLine_(t) + ' · ' + (t.inProgress ? 'в работе, ' : 'открыто, ') + since});
+  });
+  var ev = kind === 'evening' && closed > 0;
+  if (!open.length && !ev) return '';
+  if (!open.length) return '🛠 Открытых поломок нет · ✅ закрыто сегодня: ' + closed;
+  open.sort(function (a, b) { return a.p - b.p || a.ms - b.ms; });
+  var out = ['🛠 Поломки: ' + open.length].concat(open.map(function (o) { return o.s; }));
+  if (ev) out.push('✅ закрыто сегодня: ' + closed);
+  return out.join('\n');
 }
 
 /** Sends the digest to the Telegram group «Тех вопросы» (George 30.09 14:27: NOT PLACE Team).
  *  Script Property TECH_CHAT_ID = chat id of «Тех вопросы» (negative, group). Empty → WARN in Logger, nothing is sent.
  *  Bot token: Script Property TOKEN (same as the bridge). */
-function issuesSendDigest_(kind, now) {
+function issuesSendDigest_(kind, now, opts) {
   var p = PropertiesService.getScriptProperties(), chat = String(p.getProperty('TECH_CHAT_ID') || '').trim();
-  var text = issuesDigest_(kind, now);
+  var text = issuesDigest_(kind, now, opts);
+  if (!text) { Logger.log('issues digest (' + kind + '): nothing open / closed today → nothing sent'); return {sent: false, skipped: 'nothing to report', text: ''}; }
   if (!chat) { Logger.log('WARN TECH_CHAT_ID not set → issues digest (' + kind + ') NOT sent'); return {sent: false, warning: 'TECH_CHAT_ID not set', text: text}; }
   var tok = p.getProperty('TOKEN');
   if (!tok) { Logger.log('WARN TOKEN not set → issues digest (' + kind + ') NOT sent'); return {sent: false, warning: 'TOKEN not set', text: text}; }
@@ -624,7 +770,7 @@ function dryRunIssues() {
   return log;
 }
 
-return {issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_: issuesDigest_, issuesSendDigest_: issuesSendDigest_, ISSUES_CHAT_RE: ISSUES_CHAT_RE};
+return {issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_: issuesDigest_, issuesSendDigest_: issuesSendDigest_, issuesThreads_: issuesThreads_, issuesEssence_: issuesEssence_, ISSUES_HEAD: ISSUES_HEAD, ISSUES_CHAT_RE: ISSUES_CHAT_RE};
 })(T_props_('ISS'), T_SS, T_GMAIL, T_MAIL, T_FETCH, T_SCRIPT, T_LOGGER);
 
 // ===== 30-Bookings.gs =====
@@ -1494,7 +1640,7 @@ return {cashReminderText_: cashReminderText_, cashParse_: cashParse_, cashReply_
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments(), test_cash()]
+  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_issuesThread(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments(), test_cash()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -1551,7 +1697,7 @@ function test_issues() {
   });
 }
 
-/** Bridge hook as it would sit in poll(): only «Тех вопросы» and not edited messages go to Issues. */
+/** Bridge hook as it would sit in poll(): only «Тех вопросы» go to Issues; an edit updates the same row. */
 function test_issuesBridgeHook() {
   return T_fixture_('issues', 'bridge hook simulation', function () {
     var t = Math.floor(Date.now() / 1000), base = 990000 + (t % 9000), out = [];
@@ -1562,10 +1708,71 @@ function test_issuesBridgeHook() {
     ];
     updates.forEach(function (u) {
       var m = u.message || u.edited_message, chat = (m.chat && m.chat.title) || '', text = m.text, name = (m.from && m.from.username) || '?';
-      if (ISS.ISSUES_CHAT_RE.test(chat) && !(u.edited_message)) out.push(chat + ' -> ' + ISS.issuesHandle_(ISS.issuesSheet_(), m, text, name));
+      if (ISS.ISSUES_CHAT_RE.test(chat)) out.push(chat + ' -> ' + ISS.issuesHandle_(ISS.issuesSheet_(), m, text, name, !!u.edited_message));
       else out.push(chat + ' -> skipped');
     });
     return out;
+  });
+}
+
+/** Row for Issues (opts.rows tests): id, opened 'yyyy-MM-dd HH:mm', text, reporter, [status, closed_at]. */
+function T_issueRow_(id, at, text, who, status, closedAt) {
+  var r = ISS.ISSUES_HEAD.map(function () { return ''; }), c = {}; ISS.ISSUES_HEAD.forEach(function (h, i) { c[h] = i; });
+  r[c.issue_id] = '-1009990001:' + id; r[c.opened_at_ict] = at; r[c.reporter] = who; r[c.text] = text; r[c.status] = status || 'open';
+  r[c.last_update_ict] = at; r[c.closed_at_ict] = closedAt || ''; r[c.tg_chat_id] = '-1009990001'; r[c.tg_message_id] = id; r[c.type] = 'issue';
+  return r;
+}
+/** In-memory Issues sheet (nothing touches Place Inbox TEST). */
+function T_memSheet_() {
+  var v = [ISS.ISSUES_HEAD.slice()];
+  return {values: v, getDataRange: function () { return {getValues: function () { return v.map(function (r) { return r.slice(); }); }}; },
+    appendRow: function (r) { v.push(r.slice()); },
+    getRange: function (r, c, nr, nc) { return {setValues: function (vals) { vals.forEach(function (x, i) { v[r - 1 + i] = x.slice(); }); }}; }};
+}
+/** George 01.10 23:10 «очень плохо»: ONE breakdown (outlet, floor-2 cabin 1) showed as «Поломки: 4».
+ *  original + edit + reply + re-delivery + «починили» → 1 row, 0 open, «✅ закрыто сегодня: 1»; the real TEST rows
+ *  (q256/q257 twice, from the queue sync) → 1 item «2 эт. кабинка 1 — розетка»; filler stripped, no «…». */
+function test_issuesThread() {
+  return T_fixture_('issues', 'one breakdown = one thread (in-memory sheet)', function () {
+    var fail = [], chat = T_FAKE_CHAT, D = function (s) { return Math.floor(new Date(s + ':00+07:00').getTime() / 1000); };
+    var night = new Date('2026-10-01T23:10:00+07:00'), morning = new Date('2026-10-01T10:07:00+07:00'), sh = T_memSheet_(), h = [];
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 701, date: D('2026-10-01T18:00'), from: {username: 'hey_len'}}, 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1', 'Hey_len'));
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 701, date: D('2026-10-01T18:00'), from: {username: 'hey_len'}}, 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1, срочно', 'Hey_len', true));
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 702, date: D('2026-10-01T18:01'), from: {username: 'hey_len'}, reply_to_message: {message_id: 701}}, 'Сломалась , сейчас пока от удлинителя', 'Hey_len'));
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 702, date: D('2026-10-01T18:01'), from: {username: 'hey_len'}, reply_to_message: {message_id: 701}}, 'Сломалась , сейчас пока от удлинителя', 'Hey_len'));
+    var open1 = ISS.issuesDigest_('evening', night, {rows: sh.values, includeFixtures: true});
+    if (open1 !== '🛠 Поломки: 1\n🔴 2 эт. кабинка 1 — розетка · открыто, сегодня') fail.push('before fix: ' + open1);
+    h.push(ISS.issuesHandle_(sh, {chat: chat, message_id: 703, date: D('2026-10-01T20:00'), from: {username: 'som'}, reply_to_message: {message_id: 702}}, 'починили', 'Som'));
+    if (sh.values.length !== 2) fail.push('rows: ' + (sh.values.length - 1) + ' (want 1)');
+    if (h.join(',') !== 'open,edit,open,dup,closed') fail.push('handled: ' + h.join(','));
+    var ev = ISS.issuesDigest_('evening', night, {rows: sh.values, includeFixtures: true}), mo = ISS.issuesDigest_('morning', morning, {rows: sh.values, includeFixtures: true});
+    if (ev !== '🛠 Открытых поломок нет · ✅ закрыто сегодня: 1') fail.push('evening: ' + ev);
+    if (mo !== '') fail.push('morning must be empty: ' + mo);
+    // the real TEST rows of 30.09/01.10 (queue sync, no reply links, each row twice) + «починили» without reply
+    var real = [ISS.ISSUES_HEAD, T_issueRow_('q256', '2026-09-30 23:53', 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1', 'Hey_len'),
+      T_issueRow_('q257', '2026-09-30 23:54', 'Сломалась , сейчас пока от удлинителя', 'Hey_len'),
+      T_issueRow_('q256', '2026-09-30 23:53', 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1', 'Hey_len'),
+      T_issueRow_('q257', '2026-09-30 23:54', 'Сломалась , сейчас пока от удлинителя', 'Hey_len')];
+    var r1 = ISS.issuesDigest_('morning', morning, {rows: real});
+    if (r1 !== '🛠 Поломки: 1\n🔴 2 эт. кабинка 1 — розетка · открыто, с 30.09') fail.push('real rows: ' + r1);
+    var r2 = ISS.issuesDigest_('evening', night, {rows: real.concat([T_issueRow_('q300', '2026-10-01 15:20', 'Розетку в кабинке 1 починили', 'Som')])});
+    if (r2 !== '🛠 Открытых поломок нет · ✅ закрыто сегодня: 1') fail.push('real rows + починили: ' + r2);
+    // 2 open: different authors/places stay separate; same author 45 min later about another place → new item; Lena «ок» closes
+    var two = [ISS.ISSUES_HEAD, T_issueRow_('a1', '2026-09-30 23:53', 'Здравствуйте \nНадо починить розетку на 2 этаже в кабинке номер 1', 'Hey_len'),
+      T_issueRow_('a2', '2026-10-01 09:40', 'Привет! На 3 этаже не работает кондиционер, please check', 'Som', 'in_progress'),
+      T_issueRow_('a3', '2026-10-01 10:30', 'Добрый день, на 1 этаже скрипит лестница у входа', 'Som')];
+    var d2 = ISS.issuesDigest_('evening', night, {rows: two});
+    if (d2.split('\n').length !== 4 || d2.indexOf('🔴 1 эт. — скрипит лестница у входа · открыто, сегодня') < 0 || d2.indexOf('🟡 3 эт. — кондиционер · в работе, сегодня') < 0) fail.push('3 items: ' + d2);
+    if (/…|Здравствуйте|Привет|please|Надо/i.test(d2)) fail.push('filler or ellipsis left: ' + d2);
+    var sh2 = T_memSheet_();
+    ISS.issuesHandle_(sh2, {chat: chat, message_id: 801, date: D('2026-10-01T09:00'), from: {username: 's'}}, 'ชั้น 3 แอร์เสีย', 'Som');
+    ISS.issuesHandle_(sh2, {chat: chat, message_id: 802, date: D('2026-10-01T09:50'), from: {username: 's'}}, 'ชั้น 1 ไฟดับ', 'Som');
+    var st = ISS.issuesHandle_(sh2, {chat: chat, message_id: 803, date: D('2026-10-01T12:00'), from: {username: 'lena'}, reply_to_message: {message_id: 801}}, 'ок 👍', 'Lena');
+    if (sh2.values.length !== 3 || st !== 'closed') fail.push('lena confirm / 45-min split: rows ' + (sh2.values.length - 1) + ', ' + st);
+    if (ISS.issuesHandle_(sh2, {chat: chat, message_id: 804, date: D('2026-10-01T12:05'), from: {username: 's'}, reply_to_message: {message_id: 802}}, 'не починили, ждём электрика', 'Som') === 'closed') fail.push('«не починили» closed it');
+    if (fail.length) throw new Error('THREAD FAIL ' + fail.join(' | '));
+    return {ok: 'original + edit + reply + dup + «починили» → 1 row, 0 open, closed today 1; real TEST rows → 1 item; 3 items; Lena «ок» closes; «не починили» stays open',
+      sampleOpen: d2, sampleEveningClosedOnly: ev, realRows: r1};
   });
 }
 
@@ -1652,20 +1859,23 @@ function test_techRoute() {
     try {
       // 1) job header (T_issuesJob_ with fake relay)
       var saved = [T_PROFILE]; T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {TECH_CHAT_ID: ''}};
-      T_relay_('Тех вопросы, 10:07', ISS.issuesDigest_('morning'));
-      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Тех вопросы, 10:07') fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
-      if (sent.some(function (x) { return /PLACE Team/.test(x.text.split('\n')[0]); })) fail.push('still PLACE Team');
+      var H = ISS.ISSUES_HEAD, rows = [H, T_issueRow_('tr1', '2026-10-01 09:00', 'Кондиционер на 3 этаже не работает', 'Som')], opts = {rows: rows};
+      T_relay_(null, ISS.issuesDigest_('morning', new Date('2026-10-01T10:07:00+07:00'), opts));
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · 🛠 Поломки: 1' || /Куда ушло бы/.test(sent[0].text)) fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
       // 2) production path, TECH_CHAT_ID empty → not sent, warning
       sent = []; var buf0 = T_BUF.length;
-      var a = ISS.issuesSendDigest_('evening');
+      var a = ISS.issuesSendDigest_('evening', null, opts);
       if (a.sent !== false || sent.length || !/WARN TECH_CHAT_ID not set/.test(T_BUF.slice(buf0).join('\n'))) fail.push('empty TECH_CHAT_ID: ' + JSON.stringify(a) + ' sends=' + sent.length);
       // 3) production path, TECH_CHAT_ID set → one sendMessage to it, relayed as «Тех вопросы (TG группа)»
       sent = []; T_CTX.props = {TECH_CHAT_ID: '-1009990077'};
-      var b = ISS.issuesSendDigest_('evening');
-      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Тех вопросы') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
+      var b = ISS.issuesSendDigest_('evening', null, opts);
+      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · 🛠 Поломки: 1') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
     } finally { T_CTX = prev; }
     if (fail.length) throw new Error('TECH ROUTE FAIL ' + fail.join('; '));
-    return 'OK: header «Тех вопросы (TG группа, сводка 10:07)»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID';
+      // 4) nothing open → nothing sent
+      sent = []; var c = ISS.issuesSendDigest_('morning', null, {rows: [H]});
+      if (c.sent !== false || sent.length) fail.push('empty digest sent: ' + JSON.stringify(c));
+    return 'OK: short «🧪 ТЕСТ · » marker, no «Куда ушло бы»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID; nothing → nothing sent';
   });
 }
 
@@ -1902,7 +2112,7 @@ function T_issuesJob_(kind, channel) {
     var tech = T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID');
     if (!tech) T_BUF.push('WARN TECH_CHAT_ID not set → in production this digest would NOT be sent (relayed in TEST anyway)');
     var t = ISS.issuesDigest_(kind);
-    T_relay_(channel, t);
+    if (t) T_relay_(null, t); else T_BUF.push('issues ' + kind + ': 0 open' + (kind === 'evening' ? ', 0 closed today' : '') + ' → nothing sent');
     return {synced: synced, techChatId: tech ? 'set' : 'EMPTY (warning)', digest: t};
   });
 }

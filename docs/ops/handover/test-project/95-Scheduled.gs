@@ -145,7 +145,7 @@ function T_issuesJob_(kind, channel) {
     var tech = T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID');
     if (!tech) T_BUF.push('WARN TECH_CHAT_ID not set → in production this digest would NOT be sent (relayed in TEST anyway)');
     var t = ISS.issuesDigest_(kind);
-    T_relay_(channel, t);
+    if (t) T_relay_(null, t); else T_BUF.push('issues ' + kind + ': 0 open' + (kind === 'evening' ? ', 0 closed today' : '') + ' → nothing sent');
     return {synced: synced, techChatId: tech ? 'set' : 'EMPTY (warning)', digest: t};
   });
 }

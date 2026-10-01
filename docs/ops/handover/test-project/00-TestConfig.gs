@@ -130,7 +130,11 @@ function T_props_(mod) {
 // ---------- relay: the ONLY outgoing channel (private chats of George + Lena) ----------
 /** Test message text: header, «Куда ушло бы», blank line, original body. */
 /** One short header line (George 01.10: «кратко»): «🧪 ТЕСТ · Куда ушло бы: <where>», blank line, original text. */
-function T_relayText_(where, text) { return '🧪 ТЕСТ · Куда ушло бы: ' + where + '\n\n' + String(text == null ? '' : text); }
+/** where = null → only the short «🧪 ТЕСТ · » marker (issues digests, George 01.10 23:10). */
+function T_relayText_(where, text) {
+  var body = String(text == null ? '' : text);
+  return where ? '🧪 ТЕСТ · Куда ушло бы: ' + where + '\n\n' + body : '🧪 ТЕСТ · ' + body;
+}
 /** Relay targets from Script Properties (or T_CTX.ids in the self-test). Returns {ids: [{who, id}], warnings: []}. */
 function T_relayTargets_() {
   var ids = T_CTX.ids, warn = [], out = [];
@@ -186,7 +190,7 @@ var T_FETCH = {
     if (/api\.telegram\.org\/bot[^/]+\/sendMessage/.test(url)) {
       var pl = {}; try { pl = JSON.parse((o && o.payload) || '{}'); } catch (e) {}
       var tech = String(T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID') || '');
-      T_relay_(tech && String(pl.chat_id) === tech ? 'Тех вопросы' : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
+      T_relay_(tech && String(pl.chat_id) === tech ? null : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
       return { getResponseCode: function () { return 200; }, getContentText: function () { return '{"ok":true,"test":true}'; } };
     }
     throw new Error('TEST GUARD: UrlFetchApp blocked in modules: ' + T_mask_(url));
