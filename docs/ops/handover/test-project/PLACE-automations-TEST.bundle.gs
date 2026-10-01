@@ -1404,55 +1404,79 @@ return {PAY_SCHEDULE: PAY_SCHEDULE, payDue_: payDue_, payText_: payText_, payRem
 var CASH = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlFetchApp, ScriptApp, Logger) {
 
 /**
- * Place Coworking — cash collection every 3 days (George 01.10.2026). DRAFT, NOT DEPLOYED (TEST only).
+ * Place Coworking — cash collection every 3 days (George 01.10.2026 12:05 + correction 12:06). DRAFT, NOT DEPLOYED (TEST only).
  *
- * Process:
- *   - every 3 days at 20:00 the evening admin gets a short reminder (any amount; no cash → no collection);
- *   - after closing the admin counts and writes to the bot, no photo: «в кассе X / в сейф Y»
- *     (also «in till X / safe Y», «ลิ้นชัก X / เซฟ Y»); the surplus Y goes into the safe; the same figures go into the act;
- *   - then Khun Sak gets a DM: money is in the safe, please come by.
+ * Process (the safe has a DROP SLOT: the admin reports only what they put in; the script keeps the running total):
+ *   - every 3 days at 22:30 the evening admin gets a short reminder (EN + TH); any amount; no cash → no collection;
+ *   - after closing the admin writes to the bot, no photo: «в кассе X / положил в сейф Y» (also «till X / deposited Y»,
+ *     «ลิ้นชัก X / ใส่เซฟ Y»); the same figures go into the act;
+ *   - the script adds Y to the safe counter (Script Property CASH_SAFE, since the last pickup);
+ *   - if Y > 0, Khun Sak gets a DM «💰 In the safe: TOTAL ฿ (+Y today, admin). Please come by.» (+ TH); Y = 0 → no DM;
+ *   - Sak replies «забрал» / «taken» / «รับแล้ว» → the counter is reset to 0.
  *
- * Receiving the admin's reply needs the bridge hook (live bridge is NOT changed now). Hook, when approved:
+ * Receiving replies needs the bridge hook (live bridge is NOT changed now). Hooks, when approved:
  *   if (m.chat.type === 'private' && CASH_RE.test(text)) try { cashHandleReply_(text, name, new Date()); } catch (e) { Logger.log('CASH_ERR ' + e); }
- * Script Properties (production): TOKEN (bridge bot), SAK_CHAT_ID (Khun Sak's private chat). Empty → WARN, nothing sent.
+ *   if (String(m.chat.id) === SAK_CHAT_ID && CASH_PICKUP_RE.test(text)) try { cashPickup_(text, name, new Date()); } catch (e) { Logger.log('CASH_ERR ' + e); }
+ * Script Properties (production): TOKEN (bridge bot), SAK_CHAT_ID (Khun Sak's private chat), CASH_SAFE (counter, written by the script).
  */
 var CASH_TZ = 'Asia/Bangkok';
 var CASH_RE = /(в\s*кассе|касса|in\s*till|till|ลิ้นชัก)\s*[:=-]?\s*\d/i;
+var CASH_TILL_RE = /(?:в\s*кассе|касса|in\s*till|till|ลิ้นชัก)\s*[:=-]?\s*(\d[\d\s,]*)/i;
+var CASH_PICKUP_RE = /(забрал|забрали|taken|picked\s*up|รับแล้ว)/i;
+var CASH_DEP_RE = /(?:положил[аи]?\s*в\s*сейф|в\s*сейф|сейф|deposited(?:\s*to\s*safe)?|to\s*safe|safe|ใส่เซฟ|ใส่ตู้เซฟ|ตู้เซฟ|เซฟ)\s*[:=-]?\s*(\d[\d\s,]*)/i;
 
-/** 20:00 reminder for the evening admin (EN + TH, short). */
+/** 22:30 reminder for the evening admin (EN + TH, short). */
 function cashReminderText_() {
-  return '💰 Cash collection today\n' +
-    'After closing, reply here (no photo): «в кассе X / в сейф Y». Same figures in the act. No cash → no collection.\n' +
-    'วันนี้เก็บเงินสด: หลังปิดร้านพิมพ์ «ลิ้นชัก X / เซฟ Y» ตัวเลขเดียวกันลงใบส่งมอบ ไม่มีเงินสด = ไม่ต้องเก็บ';
+  return '💰 Cash collection today. After closing reply here (no photo): «в кассе X / положил в сейф Y». Same figures in the act. No cash → no collection.\n' +
+    '💰 วันนี้เก็บเงินสด หลังปิดร้านตอบที่นี่ (ไม่ต้องมีรูป): «ลิ้นชัก X / ใส่เซฟ Y» ตัวเลขเดียวกันลงใบส่งมอบ ไม่มีเงินสด = ไม่ต้องเก็บ';
 }
 
 function cashNum_(s) { return Number(String(s).replace(/[\s,]/g, '')); }
 function cashFmt_(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ฿'; }
 
-/** «в кассе 2 000 / в сейф 12 500» → {till: 2000, safe: 12500} or null. */
+/** «в кассе 2 000 / положил в сейф 12 500» → {till: 2000, deposited: 12500} or null. */
 function cashParse_(text) {
-  var t = String(text || '');
-  var a = t.match(/(?:в\s*кассе|касса|in\s*till|till|ลิ้นชัก)\s*[:=-]?\s*([\d][\d\s,]*)/i);
-  var b = t.match(/(?:в\s*сейф|сейф|to\s*safe|safe|เซฟ|ตู้เซฟ)\s*[:=-]?\s*([\d][\d\s,]*)/i);
+  var t = String(text || ''), a = t.match(CASH_TILL_RE), b = t.match(CASH_DEP_RE);
   if (!a || !b) return null;
-  var till = cashNum_(a[1]), safe = cashNum_(b[1]);
-  if (isNaN(till) || isNaN(safe)) return null;
-  return {till: till, safe: safe};
+  var till = cashNum_(a[1]), dep = cashNum_(b[1]);
+  if (isNaN(till) || isNaN(dep)) return null;
+  return {till: till, deposited: dep};
 }
 
-/** Builds the texts for a reply. Returns {ok, till, safe, ack, sak} (sak = '' when nothing went to the safe). */
+/** Safe counter since the last pickup: {total, since, n}. */
+function cashSafe_() {
+  var v = PropertiesService.getScriptProperties().getProperty('CASH_SAFE');
+  try { return v ? JSON.parse(v) : {total: 0, since: '', n: 0}; } catch (e) { return {total: 0, since: '', n: 0}; }
+}
+function cashSafeSave_(o) { PropertiesService.getScriptProperties().setProperty('CASH_SAFE', JSON.stringify(o)); }
+
+/** Admin's reply → adds Y to the counter. Returns {ok, till, deposited, total, ack, sak}; sak = '' when Y = 0 (no DM). */
 function cashReply_(text, admin, now) {
   var v = cashParse_(text);
-  if (!v) return {ok: false, ack: 'Format: «в кассе X / в сейф Y» · รูปแบบ: «ลิ้นชัก X / เซฟ Y»'};
-  var when = Utilities.formatDate(now || new Date(), CASH_TZ, 'dd.MM HH:mm');
-  var sak = v.safe > 0 ? '💰 In the safe: ' + cashFmt_(v.safe) + ' (' + admin + ', ' + when + '). Please come by.\nเงินในเซฟ ' + cashFmt_(v.safe) + ' กรุณามารับ' : '';
-  return {ok: true, till: v.till, safe: v.safe, sak: sak,
-    ack: '✅ Till ' + cashFmt_(v.till) + ' / safe ' + cashFmt_(v.safe) + (sak ? ' · Khun Sak notified' : ' · no collection')};
+  if (!v) return {ok: false, ack: 'Format: «в кассе X / положил в сейф Y» · รูปแบบ: «ลิ้นชัก X / ใส่เซฟ Y»'};
+  var safe = cashSafe_();
+  if (v.deposited > 0) {
+    safe.total = (Number(safe.total) || 0) + v.deposited; safe.n = (safe.n || 0) + 1;
+    if (!safe.since) safe.since = Utilities.formatDate(now || new Date(), CASH_TZ, 'yyyy-MM-dd HH:mm');
+    cashSafeSave_(safe);
+  }
+  var sak = v.deposited > 0 ? '💰 In the safe: ' + cashFmt_(safe.total) + ' (+' + cashFmt_(v.deposited) + ' today, ' + admin + '). Please come by.\n' +
+    '💰 ในเซฟ: ' + cashFmt_(safe.total) + ' (+' + cashFmt_(v.deposited) + ' วันนี้, ' + admin + ') กรุณามารับ' : '';
+  return {ok: true, till: v.till, deposited: v.deposited, total: Number(safe.total) || 0, sak: sak,
+    ack: '✅ Till ' + cashFmt_(v.till) + ' · deposited ' + cashFmt_(v.deposited) + (sak ? ' · Khun Sak notified' : ' · no collection')};
+}
+
+/** Sak's reply «забрал» / «taken» / «รับแล้ว» → counter reset. Returns {ok, taken, ack}. */
+function cashPickup_(text, who, now) {
+  if (!CASH_PICKUP_RE.test(String(text || ''))) return {ok: false, ack: ''};
+  var safe = cashSafe_(), taken = Number(safe.total) || 0;
+  cashSafeSave_({total: 0, since: '', n: 0, lastPickup: Utilities.formatDate(now || new Date(), CASH_TZ, 'yyyy-MM-dd HH:mm') + ' ' + (who || '') + ' ' + taken});
+  return {ok: true, taken: taken, ack: '✅ Taken: ' + cashFmt_(taken) + '. Counter reset · รับแล้ว ' + cashFmt_(taken)};
 }
 
 /** Production: handle the admin's reply (needs the bridge hook) → DM to Khun Sak. */
 function cashHandleReply_(text, admin, now) {
-  var r = cashReply_(text, admin, now);
+  var r = cashReply_(text, admin, now);   // updates the counter
   if (!r.ok || !r.sak) return r;
   var p = PropertiesService.getScriptProperties(), chat = String(p.getProperty('SAK_CHAT_ID') || '').trim(), tok = p.getProperty('TOKEN');
   if (!chat || !tok) { Logger.log('WARN ' + (!chat ? 'SAK_CHAT_ID' : 'TOKEN') + ' not set → Sak NOT notified'); r.sent = false; return r; }
@@ -1462,7 +1486,7 @@ function cashHandleReply_(text, admin, now) {
   return r;
 }
 
-return {cashReminderText_: cashReminderText_, cashParse_: cashParse_, cashReply_: cashReply_, cashHandleReply_: cashHandleReply_};
+return {cashReminderText_: cashReminderText_, cashParse_: cashParse_, cashReply_: cashReply_, cashHandleReply_: cashHandleReply_, cashPickup_: cashPickup_, cashSafe_: cashSafe_, cashSafeSave_: cashSafeSave_};
 })(T_props_('CASH'), T_SS, T_GMAIL, T_MAIL, T_FETCH, T_SCRIPT, T_LOGGER);
 
 // ===== 90-Tests.gs =====
@@ -1691,28 +1715,42 @@ function test_payments() {
   });
 }
 
-/** Cash collection (George 01.10): short reminder asks «в кассе X / в сейф Y»; reply parsed; Sak DM relayed to George + Lena
- *  as «Сак (ЛС)»; safe 0 → no collection, no DM; bad format → hint. Fake ids + fake sender, nothing is sent. */
+/** Cash collection (George 01.10 12:05/12:06, safe with a drop slot): reminder asks «в кассе X / положил в сейф Y»;
+ *  reply parsed; the script sums deposits since the last pickup; Sak DM «In the safe: TOTAL ฿ (+Y today, admin)» relayed to
+ *  George + Lena as «Сак (ЛС)»; Y = 0 → no DM; Sak «забрал/taken/รับแล้ว» → counter reset. Fake ids + fake sender. */
 function test_cash() {
-  return T_fixture_('cash', 'CASH.cashReminderText_ / cashReply_ (fake ids, fake sender)', function () {
+  return T_fixture_('cash', 'CASH reminder / reply / running total / pickup (fake ids, fake sender)', function () {
     var fail = [], now = new Date('2026-10-04T23:05:00+07:00');
+    var saved = CASH.cashSafe_();
     var rem = CASH.cashReminderText_();
-    if (rem.split('\n').length > 4 || rem.indexOf('«в кассе X / в сейф Y»') < 0 || /photo|фото/i.test(rem.replace('no photo', ''))) fail.push('reminder: ' + rem);
-    [['в кассе 2 000 / в сейф 12 500', 2000, 12500], ['касса 1500, сейф 0', 1500, 0], ['in till 3,000 / safe 9,800', 3000, 9800], ['ลิ้นชัก 2000 / เซฟ 7000', 2000, 7000]]
-      .forEach(function (c) { var v = CASH.cashParse_(c[0]); if (!v || v.till !== c[1] || v.safe !== c[2]) fail.push('parse ' + c[0] + ' → ' + JSON.stringify(v)); });
+    if (rem.split('\n').length > 3 || rem.indexOf('«в кассе X / положил в сейф Y»') < 0 || rem.indexOf('Cash collection today') < 0) fail.push('reminder: ' + rem);
+    [['в кассе 2 000 / положил в сейф 12 500', 2000, 12500], ['в кассе 1500 / положила в сейф 0', 1500, 0], ['касса 800, в сейф 3000', 800, 3000],
+     ['till 3,000 / deposited 9,800', 3000, 9800], ['ลิ้นชัก 2000 / ใส่เซฟ 7000', 2000, 7000]]
+      .forEach(function (c) { var v = CASH.cashParse_(c[0]); if (!v || v.till !== c[1] || v.deposited !== c[2]) fail.push('parse ' + c[0] + ' → ' + JSON.stringify(v)); });
     if (CASH.cashParse_('12500')) fail.push('parse without labels must fail');
-    var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
+    var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; }, r1, r2;
     try {
+      CASH.cashSafeSave_({total: 0, since: '', n: 0});
       T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake};
-      var r = CASH.cashReply_('в кассе 2000 / в сейф 12500', 'Tangmo', now);
-      if (r.ok && r.sak) T_relay_('Сак (ЛС)', r.sak);
-      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Сак (ЛС)' || !/12 500 ฿/.test(sent[0].text)) fail.push('sak dm: ' + JSON.stringify(sent));
-      var z = CASH.cashReply_('в кассе 800 / в сейф 0', 'Tangmo', now);
-      if (z.sak || !/no collection/.test(z.ack)) fail.push('zero safe: ' + JSON.stringify(z));
+      r1 = CASH.cashReply_('в кассе 2000 / положил в сейф 12500', 'Tangmo', now);
+      if (r1.ok && r1.sak) T_relay_('Сак (ЛС)', r1.sak);
+      if (r1.sak.split('\n')[0] !== '💰 In the safe: 12 500 ฿ (+12 500 ฿ today, Tangmo). Please come by.') fail.push('sak 1: ' + r1.sak.split('\n')[0]);
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Сак (ЛС)') fail.push('sak relay: ' + JSON.stringify(sent));
+      r2 = CASH.cashReply_('в кассе 1500 / положил в сейф 3000', 'Nathaly', now);
+      if (r2.total !== 15500 || r2.sak.split('\n')[0] !== '💰 In the safe: 15 500 ฿ (+3 000 ฿ today, Nathaly). Please come by.') fail.push('sak 2 (running total): ' + r2.sak);
+      sent = [];
+      var z = CASH.cashReply_('в кассе 800 / положил в сейф 0', 'Tangmo', now);
+      if (z.sak || z.total !== 15500 || !/no collection/.test(z.ack)) fail.push('zero deposit: ' + JSON.stringify(z));
       if (CASH.cashReply_('12500', 'Tangmo', now).ok) fail.push('bad format accepted');
-    } finally { T_CTX = prev; }
+      if (CASH.cashPickup_('ok thanks', 'Sak', now).ok || CASH.cashSafe_().total !== 15500) fail.push('non-pickup text reset the counter');
+      var p = CASH.cashPickup_('забрал', 'Sak', now);
+      if (!p.ok || p.taken !== 15500 || CASH.cashSafe_().total !== 0) fail.push('pickup забрал: ' + JSON.stringify(p));
+      CASH.cashReply_('в кассе 0 / положил в сейф 1000', 'Tangmo', now);
+      if (CASH.cashSafe_().total !== 1000) fail.push('after reset: ' + CASH.cashSafe_().total);
+      ['taken', 'รับแล้ว'].forEach(function (w) { CASH.cashSafeSave_({total: 500, since: 'x', n: 1}); var q = CASH.cashPickup_(w, 'Sak', now); if (!q.ok || CASH.cashSafe_().total !== 0) fail.push('pickup ' + w); });
+    } finally { T_CTX = prev; CASH.cashSafeSave_(saved); }
     if (fail.length) throw new Error('CASH FAIL ' + fail.join('; '));
-    return {ok: 'reminder short + format; parse ru/en/th; Sak DM → George + Lena as «Сак (ЛС)»; safe 0 → no DM', reminder: rem, sak: r.sak, ack: r.ack};
+    return {ok: 'reminder; parse ru/en/th; running total 12 500 → 15 500; Y=0 → no DM; pickup забрал/taken/รับแล้ว → reset', reminder: rem, sak1: r1.sak, sak2: r2.sak};
   });
 }
 
@@ -1740,7 +1778,7 @@ var T_JOBS = [
   ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning → TG group «Тех вопросы» (TECH_CHAT_ID)'],
   ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening → TG group «Тех вопросы» (TECH_CHAT_ID)'],
   ['job_timesheet',      'month28', 9, 30, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
-  ['job_cashReminder',   'every3', 20, 0, 'cash-deposit reminder for the evening admin (every 3 days)'],
+  ['job_cashReminder',   'every3', 22, 30, 'cash collection reminder for the evening admin (every 3 days, 22:30)'],
   ['job_paymentReminders', 'daily', 9, 15, 'recurring payments: 3 days before + on the day (contracts: 30/3/0) → PAY_CHAT_ID']
 ];
 
@@ -1891,7 +1929,7 @@ function job_timesheet() {
     return 'Khun Pat (email-черновик)';
   }, function () { return ST5.createTimesheetDraft(); });
 }
-/** Every 3 days 20:00: remind the evening admin (shift ending 23:00) to prepare cash + count for the Thai partner. */
+/** Every 3 days 22:30: cash collection reminder for the evening admin (shift ending 23:00), George 01.10 12:05. */
 function job_cashReminder() {
   return T_job_('cash', 'job_cashReminder (prod Schedule 26 read-only)', null, function () {
     var names = T_eveningAdmins_(new Date());
@@ -1901,13 +1939,18 @@ function job_cashReminder() {
   });
 }
 /** Simulates the admin's reply (the TEST project cannot receive Telegram messages). Run from the editor, e.g.
- *  simulateCashReply('в кассе 2000 / в сейф 12500', 'Tangmo'). The DM to Khun Sak is relayed to George + Lena as «Сак (ЛС)». */
+ *  simulateCashReply('в кассе 2000 / положил в сейф 12500', 'Tangmo'). Adds Y to the TEST safe counter; the DM to Khun Sak
+ *  («In the safe: TOTAL ฿ (+Y today, admin)») is relayed to George + Lena as «Сак (ЛС)». */
 function simulateCashReply(text, admin) {
   return T_job_('cash', 'simulateCashReply', null, function () {
-    var r = CASH.cashReply_(text || 'в кассе 2000 / в сейф 12500', admin || 'admin', new Date());
+    var r = CASH.cashReply_(text || 'в кассе 2000 / положил в сейф 12500', admin || 'admin', new Date());
     if (r.ok && r.sak) T_relay_('Сак (ЛС)', r.sak);
     return r;
   });
+}
+/** Simulates Sak's reply «забрал» / «taken» / «รับแล้ว»: resets the TEST safe counter. */
+function simulateSakPickup(text) {
+  return T_job_('cash', 'simulateSakPickup', null, function () { return CASH.cashPickup_(text || 'забрал', 'Sak', new Date()); });
 }
 /** Daily ~09:15: recurring payment reminders (Aiz's supplier sheet, config PAY_SCHEDULE in payment-reminders.gs).
  *  Real target: TG group PAY_CHAT_ID (unknown yet). TEST: relayed to George + Lena; empty PAY_CHAT_ID → WARN. */

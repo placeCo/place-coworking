@@ -21,7 +21,7 @@ var T_JOBS = [
   ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning → TG group «Тех вопросы» (TECH_CHAT_ID)'],
   ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening → TG group «Тех вопросы» (TECH_CHAT_ID)'],
   ['job_timesheet',      'month28', 9, 30, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
-  ['job_cashReminder',   'every3', 20, 0, 'cash-deposit reminder for the evening admin (every 3 days)'],
+  ['job_cashReminder',   'every3', 22, 30, 'cash collection reminder for the evening admin (every 3 days, 22:30)'],
   ['job_paymentReminders', 'daily', 9, 15, 'recurring payments: 3 days before + on the day (contracts: 30/3/0) → PAY_CHAT_ID']
 ];
 
@@ -172,7 +172,7 @@ function job_timesheet() {
     return 'Khun Pat (email-черновик)';
   }, function () { return ST5.createTimesheetDraft(); });
 }
-/** Every 3 days 20:00: remind the evening admin (shift ending 23:00) to prepare cash + count for the Thai partner. */
+/** Every 3 days 22:30: cash collection reminder for the evening admin (shift ending 23:00), George 01.10 12:05. */
 function job_cashReminder() {
   return T_job_('cash', 'job_cashReminder (prod Schedule 26 read-only)', null, function () {
     var names = T_eveningAdmins_(new Date());
@@ -182,13 +182,18 @@ function job_cashReminder() {
   });
 }
 /** Simulates the admin's reply (the TEST project cannot receive Telegram messages). Run from the editor, e.g.
- *  simulateCashReply('в кассе 2000 / в сейф 12500', 'Tangmo'). The DM to Khun Sak is relayed to George + Lena as «Сак (ЛС)». */
+ *  simulateCashReply('в кассе 2000 / положил в сейф 12500', 'Tangmo'). Adds Y to the TEST safe counter; the DM to Khun Sak
+ *  («In the safe: TOTAL ฿ (+Y today, admin)») is relayed to George + Lena as «Сак (ЛС)». */
 function simulateCashReply(text, admin) {
   return T_job_('cash', 'simulateCashReply', null, function () {
-    var r = CASH.cashReply_(text || 'в кассе 2000 / в сейф 12500', admin || 'admin', new Date());
+    var r = CASH.cashReply_(text || 'в кассе 2000 / положил в сейф 12500', admin || 'admin', new Date());
     if (r.ok && r.sak) T_relay_('Сак (ЛС)', r.sak);
     return r;
   });
+}
+/** Simulates Sak's reply «забрал» / «taken» / «รับแล้ว»: resets the TEST safe counter. */
+function simulateSakPickup(text) {
+  return T_job_('cash', 'simulateSakPickup', null, function () { return CASH.cashPickup_(text || 'забрал', 'Sak', new Date()); });
 }
 /** Daily ~09:15: recurring payment reminders (Aiz's supplier sheet, config PAY_SCHEDULE in payment-reminders.gs).
  *  Real target: TG group PAY_CHAT_ID (unknown yet). TEST: relayed to George + Lena; empty PAY_CHAT_ID → WARN. */

@@ -21,7 +21,7 @@ wrap 40-Keyholders.gs KH  keyholders-247.gs 'keyholders247_: keyholders247_'
 wrap 50-Timesheet.gs  ST5 stage5-timesheet.gs 'dryRun: dryRun, createTimesheetDraft: createTimesheetDraft'
 wrap 70-Leave.gs     LV  leave-requests.gs 'leaveParse_: leaveParse_, leaveRequest_: leaveRequest_, leaveDecide_: leaveDecide_'
 wrap 80-Payments.gs  PAY payment-reminders.gs 'PAY_SCHEDULE: PAY_SCHEDULE, payDue_: payDue_, payText_: payText_, payRemindersRun_: payRemindersRun_'
-wrap 85-Cash.gs      CASH cash-collection.gs 'cashReminderText_: cashReminderText_, cashParse_: cashParse_, cashReply_: cashReply_, cashHandleReply_: cashHandleReply_'
+wrap 85-Cash.gs      CASH cash-collection.gs 'cashReminderText_: cashReminderText_, cashParse_: cashParse_, cashReply_: cashReply_, cashHandleReply_: cashHandleReply_, cashPickup_: cashPickup_, cashSafe_: cashSafe_, cashSafeSave_: cashSafeSave_'
 wrap 60-Coverage.gs   SC  schedule-coverage.gs 'coverage_: coverage_, scCfg_: scCfg_, scReadTab_: scReadTab_, scShift_: scShift_'
 # appsscript.json manifest
 cat > appsscript.json <<'J'

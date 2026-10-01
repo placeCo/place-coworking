@@ -223,27 +223,41 @@ function test_payments() {
   });
 }
 
-/** Cash collection (George 01.10): short reminder asks «в кассе X / в сейф Y»; reply parsed; Sak DM relayed to George + Lena
- *  as «Сак (ЛС)»; safe 0 → no collection, no DM; bad format → hint. Fake ids + fake sender, nothing is sent. */
+/** Cash collection (George 01.10 12:05/12:06, safe with a drop slot): reminder asks «в кассе X / положил в сейф Y»;
+ *  reply parsed; the script sums deposits since the last pickup; Sak DM «In the safe: TOTAL ฿ (+Y today, admin)» relayed to
+ *  George + Lena as «Сак (ЛС)»; Y = 0 → no DM; Sak «забрал/taken/รับแล้ว» → counter reset. Fake ids + fake sender. */
 function test_cash() {
-  return T_fixture_('cash', 'CASH.cashReminderText_ / cashReply_ (fake ids, fake sender)', function () {
+  return T_fixture_('cash', 'CASH reminder / reply / running total / pickup (fake ids, fake sender)', function () {
     var fail = [], now = new Date('2026-10-04T23:05:00+07:00');
+    var saved = CASH.cashSafe_();
     var rem = CASH.cashReminderText_();
-    if (rem.split('\n').length > 4 || rem.indexOf('«в кассе X / в сейф Y»') < 0 || /photo|фото/i.test(rem.replace('no photo', ''))) fail.push('reminder: ' + rem);
-    [['в кассе 2 000 / в сейф 12 500', 2000, 12500], ['касса 1500, сейф 0', 1500, 0], ['in till 3,000 / safe 9,800', 3000, 9800], ['ลิ้นชัก 2000 / เซฟ 7000', 2000, 7000]]
-      .forEach(function (c) { var v = CASH.cashParse_(c[0]); if (!v || v.till !== c[1] || v.safe !== c[2]) fail.push('parse ' + c[0] + ' → ' + JSON.stringify(v)); });
+    if (rem.split('\n').length > 3 || rem.indexOf('«в кассе X / положил в сейф Y»') < 0 || rem.indexOf('Cash collection today') < 0) fail.push('reminder: ' + rem);
+    [['в кассе 2 000 / положил в сейф 12 500', 2000, 12500], ['в кассе 1500 / положила в сейф 0', 1500, 0], ['касса 800, в сейф 3000', 800, 3000],
+     ['till 3,000 / deposited 9,800', 3000, 9800], ['ลิ้นชัก 2000 / ใส่เซฟ 7000', 2000, 7000]]
+      .forEach(function (c) { var v = CASH.cashParse_(c[0]); if (!v || v.till !== c[1] || v.deposited !== c[2]) fail.push('parse ' + c[0] + ' → ' + JSON.stringify(v)); });
     if (CASH.cashParse_('12500')) fail.push('parse without labels must fail');
-    var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
+    var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; }, r1, r2;
     try {
+      CASH.cashSafeSave_({total: 0, since: '', n: 0});
       T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake};
-      var r = CASH.cashReply_('в кассе 2000 / в сейф 12500', 'Tangmo', now);
-      if (r.ok && r.sak) T_relay_('Сак (ЛС)', r.sak);
-      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Сак (ЛС)' || !/12 500 ฿/.test(sent[0].text)) fail.push('sak dm: ' + JSON.stringify(sent));
-      var z = CASH.cashReply_('в кассе 800 / в сейф 0', 'Tangmo', now);
-      if (z.sak || !/no collection/.test(z.ack)) fail.push('zero safe: ' + JSON.stringify(z));
+      r1 = CASH.cashReply_('в кассе 2000 / положил в сейф 12500', 'Tangmo', now);
+      if (r1.ok && r1.sak) T_relay_('Сак (ЛС)', r1.sak);
+      if (r1.sak.split('\n')[0] !== '💰 In the safe: 12 500 ฿ (+12 500 ฿ today, Tangmo). Please come by.') fail.push('sak 1: ' + r1.sak.split('\n')[0]);
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Сак (ЛС)') fail.push('sak relay: ' + JSON.stringify(sent));
+      r2 = CASH.cashReply_('в кассе 1500 / положил в сейф 3000', 'Nathaly', now);
+      if (r2.total !== 15500 || r2.sak.split('\n')[0] !== '💰 In the safe: 15 500 ฿ (+3 000 ฿ today, Nathaly). Please come by.') fail.push('sak 2 (running total): ' + r2.sak);
+      sent = [];
+      var z = CASH.cashReply_('в кассе 800 / положил в сейф 0', 'Tangmo', now);
+      if (z.sak || z.total !== 15500 || !/no collection/.test(z.ack)) fail.push('zero deposit: ' + JSON.stringify(z));
       if (CASH.cashReply_('12500', 'Tangmo', now).ok) fail.push('bad format accepted');
-    } finally { T_CTX = prev; }
+      if (CASH.cashPickup_('ok thanks', 'Sak', now).ok || CASH.cashSafe_().total !== 15500) fail.push('non-pickup text reset the counter');
+      var p = CASH.cashPickup_('забрал', 'Sak', now);
+      if (!p.ok || p.taken !== 15500 || CASH.cashSafe_().total !== 0) fail.push('pickup забрал: ' + JSON.stringify(p));
+      CASH.cashReply_('в кассе 0 / положил в сейф 1000', 'Tangmo', now);
+      if (CASH.cashSafe_().total !== 1000) fail.push('after reset: ' + CASH.cashSafe_().total);
+      ['taken', 'รับแล้ว'].forEach(function (w) { CASH.cashSafeSave_({total: 500, since: 'x', n: 1}); var q = CASH.cashPickup_(w, 'Sak', now); if (!q.ok || CASH.cashSafe_().total !== 0) fail.push('pickup ' + w); });
+    } finally { T_CTX = prev; CASH.cashSafeSave_(saved); }
     if (fail.length) throw new Error('CASH FAIL ' + fail.join('; '));
-    return {ok: 'reminder short + format; parse ru/en/th; Sak DM → George + Lena as «Сак (ЛС)»; safe 0 → no DM', reminder: rem, sak: r.sak, ack: r.ack};
+    return {ok: 'reminder; parse ru/en/th; running total 12 500 → 15 500; Y=0 → no DM; pickup забрал/taken/รับแล้ว → reset', reminder: rem, sak1: r1.sak, sak2: r2.sak};
   });
 }
