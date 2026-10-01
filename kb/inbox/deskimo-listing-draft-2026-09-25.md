@@ -58,7 +58,7 @@ Quiet work floors, on-site amenities, and three clear product lines in one build
 | Meeting | from 250/h (−20% Pass residents) |
 | Floor 5 office | 30,000/mo · 20,000/mo yearly |
 
-**Do not list:** 5h@150, day 300, month from 3000, 10-day packs, floor-1 desk column, filming 500/h as current studio price, “24/7 for everyone”, Wi‑Fi Mbps (no George measurement).
+**Do not list:** 5h@150, day 300, month from 3000, 10-day packs (reception only, George 01.10 — never list), floor-1 desk column, filming 500/h as current studio price, “24/7 for everyone”, Wi‑Fi Mbps (no George measurement).
 
 ## Amenities (safe claims — no invented Mbps)
 - Open work hall (floor 3)  

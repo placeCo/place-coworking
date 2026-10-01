@@ -53,9 +53,10 @@ A) Place Pass (1+3) · B) Offices (2+5) · C) Studio (4 via manager) · Meeting 
 | 1 month 08–23 | **6000฿** | Year-round round price |
 | 3 months | **15 000฿** | 5000/mo; only long “deal” on showcase |
 | Month 24/7 | **9000฿** | Nights + key deposit |
+| 10 days (reception only) | **2500฿** until 31 Oct 2026 · **3500฿** from 1 Nov 2026 | George 01.10.2026. Any 10 days within 60 days, floor 3 (Pass 1+3, 08–23). Reception + direct messages ONLY — not on site, ads, Google, Deskimo or other directories |
 
 ### Remove everywhere (canon)
-Separate floor-1 column; 10-day packs; old per-desk floor-2 tariffs (700/4200/5500/11000/30000/7500); “3 free days any floor”; “month from 3000”; site “Filming 500฿/hour” as current studio price.
+Separate floor-1 column; old 10-day pack at 1300 (10 days 2500/3500 is reception-only, never public); old per-desk floor-2 tariffs (700/4200/5500/11000/30000/7500); “3 free days any floor”; “month from 3000”; site “Filming 500฿/hour” as current studio price.
 
 ## Offices / meeting / studio
 - Floor 5: **30 000฿/mo** · **20 000฿/mo** yearly (orient ~4 pax)
