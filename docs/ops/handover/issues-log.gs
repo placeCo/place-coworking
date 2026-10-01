@@ -113,36 +113,24 @@ function issuesDigest_(kind, now, opts) {
     if (!String(x[col.issue_id] || '').trim() && !String(x[col.text] || '').trim()) continue;   // empty row
     if (issuesType_(x, col) !== 'issue') continue;                                             // tasks: Issues log only
     if (!opts.includeFixtures && String(x[col.tag] || '') === 'fixture') continue;             // test rows
-    var what = issuesShort_(x[col.text], 70); if (!what) continue;
-    var where = x[col.floor] ? x[col.floor] + ' эт.' : 'этаж не указан';
+    var what = issuesShort_(x[col.text], 50); if (!what) continue;
+    var where = x[col.floor] ? x[col.floor] + ' эт. ' : '';
     var st = String(x[col.status] || 'open');
     if (st === 'closed') {
       var c = x[col.closed_at_ict], cDay = c instanceof Date ? Utilities.formatDate(c, 'Asia/Bangkok', 'yyyy-MM-dd') : String(c);
-      if (cDay.indexOf(today) === 0) closedToday.push('✅ ' + where + ' — ' + what + (x[col.closed_by] ? ' (' + issuesShort_(x[col.closed_by], 30) + ')' : ''));
+      if (cDay.indexOf(today) === 0) closedToday.push('✅ ' + where + what);
       continue;
     }
     var ms = issuesMs_(x[col.opened_at_ict]), days = ms === null ? 0 : Math.max(0, Math.floor((nowMs - ms) / 86400000));
-    var age = days === 0 ? 'сегодня' : days + ' дн.';
-    var since = 'с ' + issuesWhen_(x[col.opened_at_ict]) + ' (' + age + ')';
-    var who = x[col.reporter] ? 'не взято, сообщил(а) ' + issuesShort_(x[col.reporter], 30) : '';
-    var note = st === 'in_progress' && x[col.last_note] ? 'в работе: ' + issuesShort_(x[col.last_note], 60) : (st === 'in_progress' ? 'в работе' : 'не взято');
-    var mark = st === 'in_progress' ? '🟡' : '🔴';
-    if (days >= 3) mark += '⏰';
-    open.push({taken: st === 'in_progress' ? 1 : 0, ms: ms || 0,
-      s: mark + ' ' + where + ' — ' + what + '\n    ' + [since, st === 'in_progress' ? note : who || note].filter(String).join(' · ')});
+    var taken = st === 'in_progress';
+    open.push({taken: taken ? 1 : 0, ms: ms || 0,
+      s: (taken ? '🟡 ' : '🔴 ') + where + what + ' — ' + (days ? days + ' дн.' : 'сегодня') + (taken ? ', в работе' : '')});
   }
-  open.sort(function (a, b) { return a.taken - b.taken || a.ms - b.ms; });   // not taken first, then oldest first
-  var nNew = open.filter(function (o) { return !o.taken; }).length, out = [];
-  if (!open.length) out.push('🛠 Поломки: открытых нет');
-  else {
-    out.push('🛠 Поломки: открыто ' + open.length + ' (не взято ' + nNew + ', в работе ' + (open.length - nNew) + ')');
-    open.forEach(function (o) { out.push(o.s); });
-  }
-  if (kind === 'evening') {
-    out.push(closedToday.length ? 'Закрыто сегодня: ' + closedToday.length : 'Закрыто сегодня: 0');
-    closedToday.forEach(function (c) { out.push(c); });
-  }
-  if (open.length) out.push('🔴 не взято · 🟡 в работе · ⏰ 3+ дня');
+  // short (George 01.10: «кратко»): count, one line per issue (where, what, age), closed today only in the evening
+  open.sort(function (a, b) { return a.taken - b.taken || a.ms - b.ms; });
+  var out = [open.length ? '🛠 Поломки: ' + open.length : '🛠 Поломок нет'];
+  open.forEach(function (o) { out.push(o.s); });
+  if (kind === 'evening' && closedToday.length) closedToday.forEach(function (c) { out.push(c); });
   return out.join('\n').replace(/\s+$/, '');
 }
 

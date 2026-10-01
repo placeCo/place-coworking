@@ -177,9 +177,9 @@ function buildTimesheet_(c) {
   var prevEnd = new Date(per.from.getFullYear(), per.from.getMonth(), 0), prevFrom = new Date(prevEnd.getFullYear(), prevEnd.getMonth(), c.cutoff + 1);
   var prev = (c.mode !== 'custom' && !(c.from && c.to_) && prevFrom <= prevEnd) ? collect_(c, prevFrom, prevEnd, warnings) : null;
   var D = function (x) { return fmt_(x, 'dd.MM.yyyy'); };
-  var afterLines = after ? sideLines_(after, true) : [], prevLines = prev ? sideLines_(prev, false) : [];
-  var afterTitle = after ? 'After cutoff ' + fmt_(afterFrom, 'dd.MM') + '–' + D(per.to) + ' (not yet worked → next month adjustments):' : '';
-  var prevTitle = prev ? 'Adjustments from previous month ' + fmt_(prevFrom, 'dd.MM') + '–' + D(prevEnd) + ' (leave after last cutoff):' : '';
+  var afterLines = after ? sideLines_(after, false) : [], prevLines = prev ? sideLines_(prev, false) : [];
+  var afterTitle = after ? 'After cutoff ' + fmt_(afterFrom, 'dd.MM') + '–' + D(per.to) + ' (next month):' : '';
+  var prevTitle = prev ? 'From last month ' + fmt_(prevFrom, 'dd.MM') + '–' + D(prevEnd) + ':' : '';
 
   var fromIso = fmt_(per.from, 'yyyy-MM-dd'), toIso = fmt_(per.to, 'yyyy-MM-dd');
   var head = ['Position', 'Name', 'Shifts', 'Hours', 'Annual leave (days)', 'Sick (days)', 'Unpaid leave (days)', 'Doctor', 'Unrecognised cells'];
@@ -187,20 +187,23 @@ function buildTimesheet_(c) {
     var p = people[k];
     return [p.position, p.name, p.shifts, round2_(p.hours), p.ANNUAL, p.SICK, p.UNPAID, p.DOCTOR, p.unknown.join('; ')];
   });
-  var range = D(per.from) + '–' + D(per.to) + (per.cut < per.to ? ' (counted to ' + D(per.cut) + ')' : '');
+  var range = D(per.from) + '–' + D(per.to) + (per.cut < per.to ? ' (to ' + fmt_(per.cut, 'dd.MM') + ')' : '');
   var subject = c.prefix + ' ' + D(per.from) + '–' + D(per.to);
-  var sections = (after ? '\n\n' + afterTitle + '\n' + (afterLines.length ? afterLines.map(function (l) { return '• ' + l; }).join('\n') : '• none') : '') +
-    (prev ? '\n\n' + prevTitle + '\n' + (prevLines.length ? prevLines.map(function (l) { return '• ' + l; }).join('\n') : '• none') : '');
-  var text = c.greeting + '\n\nPlease find the staff timesheet for the period ' + range + ' (from Schedule 26).\n\n' +
-    [head.join(' | ')].concat(rows.map(function (r) { return r.join(' | '); })).join('\n') + sections +
-    '\n\nUnpaid leave days are listed for the deduction (monthly salary / 30 per day; SSO 5% is calculated after the deduction, cap 875). Leave after the ' + c.cutoff + 'th is deducted in the next month.' +
-    '\nThe same table is attached as CSV. Please let us know if anything needs to be corrected.\n\nBest regards,\nPlace Coworking';
-  var htmlList = function (title, lines) { return '<p><b>' + esc_(title) + '</b></p><ul>' + (lines.length ? lines : ['none']).map(function (l) { return '<li>' + esc_(l) + '</li>'; }).join('') + '</ul>'; };
-  var html = '<p>' + esc_(c.greeting) + '</p><p>Please find the staff timesheet for the period <b>' + esc_(range) + '</b> (from Schedule 26).</p>' +
-    '<table border="1" cellpadding="4" style="border-collapse:collapse"><tr>' + head.map(function (h) { return '<th>' + esc_(h) + '</th>'; }).join('') + '</tr>' +
-    rows.map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc_(String(v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table>' +
+  // short (George 01.10): table without the empty «Unrecognised» column, side notes on one line each, no explanations
+  var showUnk = rows.some(function (r) { return r[8]; });
+  var shortHead = ['Name', 'Shifts', 'Hours', 'Annual', 'Sick', 'Unpaid', 'Doctor'].concat(showUnk ? ['Unrecognised'] : []);
+  var shortRows = rows.map(function (r) { return [r[1], r[2], r[3], r[4], r[5], r[6], r[7]].concat(showUnk ? [r[8]] : []); });
+  var sections = (after ? '\n' + afterTitle + ' ' + (afterLines.length ? afterLines.join('; ') : 'none') : '') +
+    (prev ? '\n' + prevTitle + ' ' + (prevLines.length ? prevLines.join('; ') : 'none') : '');
+  var text = c.greeting + '\n\nTimesheet ' + range + ', CSV attached.\n\n' +
+    [shortHead.join(' | ')].concat(shortRows.map(function (r) { return r.join(' | '); })).join('\n') + '\n' + sections +
+    '\nUnpaid leave: salary / 30 per day.\n\nBest regards,\nPlace Coworking';
+  var htmlList = function (title, lines) { return '<p><b>' + esc_(title) + '</b> ' + esc_((lines.length ? lines : ['none']).join('; ')) + '</p>'; };
+  var html = '<p>' + esc_(c.greeting) + '</p><p>Timesheet <b>' + esc_(range) + '</b>, CSV attached.</p>' +
+    '<table border="1" cellpadding="4" style="border-collapse:collapse"><tr>' + shortHead.map(function (h) { return '<th>' + esc_(h) + '</th>'; }).join('') + '</tr>' +
+    shortRows.map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc_(String(v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table>' +
     (after ? htmlList(afterTitle, afterLines) : '') + (prev ? htmlList(prevTitle, prevLines) : '') +
-    '<p>Unpaid leave days are listed for the deduction (monthly salary / 30 per day; SSO 5% is calculated after the deduction, cap 875). Leave after the ' + c.cutoff + 'th is deducted in the next month.<br>The same table is attached as CSV. Please let us know if anything needs to be corrected.</p><p>Best regards,<br>Place Coworking</p>';
+    '<p>Unpaid leave: salary / 30 per day.</p><p>Best regards,<br>Place Coworking</p>';
   var csvRows = [head].concat(rows);
   if (after) { csvRows.push([]); csvRows.push([afterTitle]); afterLines.forEach(function (l) { csvRows.push(['', l]); }); }
   if (prev) { csvRows.push([]); csvRows.push([prevTitle]); prevLines.forEach(function (l) { csvRows.push(['', l]); }); }

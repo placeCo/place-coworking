@@ -51,7 +51,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
   - reads go through a Proxy that allows only `get…/is…/has…`; any write throws `TEST GUARD`.
 - Writes go only to **Place Inbox TEST**: Issues and Log.
 - **No message reaches its real target.** Everything is relayed to George's and Lena's private chats with @PlaceLeadBot as:
-  `🧪 ТЕСТ` / `Куда ушло бы: <real recipient + channel>` / blank line / the exact text (George 30.09 14:22), sent to **George and Lena**.
+  `🧪 ТЕСТ · Куда ушло бы: <recipient>` (one line, George 01.10) / blank line / the exact text, sent to **George and Lena**. All Telegram/email templates shortened 01.10 («кратко»): what, where, deadline/amount only.
   Channels:
   - TG group PLACE Team;
   - TG DM Lena;
@@ -91,7 +91,7 @@ Code: `test-project/PLACE-automations-TEST.bundle.gs` (one file, replaces the wh
 | `job_issuesMorning` | daily 10:07 | queue → TEST Issues sync + morning issues digest, relayed as «Тех вопросы (TG группа, сводка 10:07)» (George 30.09 14:27: digests go to «Тех вопросы», not PLACE Team). Real target = Script Property `TECH_CHAT_ID` (unknown yet, empty → WARN in Log; in production `issuesSendDigest_` then sends nothing). |
 | `job_issuesEvening` | daily 23:10 | same, evening digest (closed today + open), relayed as «Тех вопросы (TG группа, сводка 23:10)» |
 | `job_timesheet` | **28th** of each month, 09:30 | timesheet for the current calendar month, counted to the 28th; days 29..end = «after cutoff → next month adjustments»; previous month 29..end = adjustments. The accountant draft is relayed. |
-| `job_cashReminder` | every 3 days, 20:00 | cash for the Thai partner. Recipients are evening admins from Schedule 26 (shift to 23:00); the reminder is relayed as «TG DM evening admin». |
+| `job_cashReminder` | every 3 days, 20:00 | cash collection (George 01.10): short reminder to the evening admin (Schedule 26, shift to 23:00): reply «в кассе X / в сейф Y» without photo, same figures in the act; no cash → no collection. Reply handling + DM to Khun Sak in `cash-collection.gs` (needs the bridge hook, not live). In TEST: `simulateCashReply('в кассе 2000 / в сейф 12500', 'Tangmo')` → DM relayed as «Сак (ЛС)». Test: `test_cash`. |
 | `job_paymentReminders` | daily 09:15 | recurring payments from Aiz's supplier sheet (config `PAY_SCHEDULE` in `payment-reminders.gs`, no bank account numbers): 3 days before + on the day; contract ends 30/3/0 days. Relayed as «PAY_CHAT_ID (группа, уточняется)». Real target: Script Property `PAY_CHAT_ID` (empty → WARN; in production nothing is sent). Test: `test_payments` in `test_all`. |
 
 **Harness check 30.09** (node, snapshots, fake token/chat):

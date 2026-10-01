@@ -12,20 +12,20 @@
 var PAY_TZ = 'Asia/Bangkok';
 /** kind: monthly {day} | yearly {month, day} | months {months:[..], day} | once {date:'yyyy-MM-dd'} (contract end).
  *  offsets: days before the due date to remind (0 = on the day). */
-var PAY_SCHEDULE = [
-  {name: 'Electricity (PEA)',              kind: 'monthly', day: 8,  amount: '43,000–57,000 ฿', who: 'Sak (controls)',        how: 'QR or at the PEA office'},
-  {name: 'Water',                          kind: 'monthly', day: 20, amount: '900–1,500 ฿',     who: 'bill to Lena',          how: 'QR or at the office'},
-  {name: 'Internet 3BB line …7174',        kind: 'monthly', day: 12, amount: '1,924.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
-  {name: 'Internet 3BB line …4746',        kind: 'monthly', day: 8,  amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
-  {name: 'Internet 3BB line …4751',        kind: 'monthly', day: 8,  amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
-  {name: 'Internet 3BB line …7790',        kind: 'monthly', day: 28, amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
-  {name: 'Printer rental',                 kind: 'monthly', day: 10, amount: '2,675 ฿',         who: 'Lena',                  how: 'bank transfer (details in the supplier file)', note: 'after the 10th'},
-  {name: 'Billboard (advertising)',        kind: 'monthly', day: 5,  amount: '5,000 ฿',         who: 'Lena',                  how: 'bank transfer (details in the supplier file)'},
-  {name: 'Office mobile (Dtac)',           kind: 'monthly', day: 1,  amount: '300–400 ฿',       who: 'inform Lena',           how: 'top-up by phone number', note: 'no fixed date in the file: check balance on the 1st'},
-  {name: 'Secom (emergency button)',       kind: 'months',  months: [2, 7], day: 1, amount: '24,396 ฿', who: 'Lena',          how: 'QR code', note: 'twice a year, February and July'},
-  {name: 'Garbage (Chalong municipality)', kind: 'yearly',  month: 11, day: 1, amount: '7,200 ฿/year', who: 'inform Sak and Lena', how: 'cash or QR at the municipality', note: '«after October»'},
-  {name: 'Printer contract ends',          kind: 'once',    date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George + Lena', how: 'renew or cancel', note: 'file says «February, 27»: taken as 27.02.2027'},
-  {name: 'Billboard contract ends',        kind: 'once',    date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George + Lena', how: 'renew or cancel', note: 'file says «February, 27»: taken as 27.02.2027'}
+var PAY_SCHEDULE = [   // short texts (George 01.10: «кратко»)
+  {name: 'Электричество (PEA)',  kind: 'monthly', day: 8,  amount: '43–57 тыс. ฿', who: 'Sak',  how: 'QR / в офисе PEA'},
+  {name: 'Вода',                 kind: 'monthly', day: 20, amount: '0.9–1.5 тыс. ฿', who: 'счёт Лене', how: 'QR / в офисе'},
+  {name: 'Интернет 3BB …7174',   kind: 'monthly', day: 12, amount: '1 925 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB …4746',   kind: 'monthly', day: 8,  amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB …4751',   kind: 'monthly', day: 8,  amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB …7790',   kind: 'monthly', day: 28, amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Аренда принтера',      kind: 'monthly', day: 10, amount: '2 675 ฿', who: 'Лена', how: 'перевод'},
+  {name: 'Билборд',              kind: 'monthly', day: 5,  amount: '5 000 ฿', who: 'Лена', how: 'перевод'},
+  {name: 'Обновить телефонный счёт Dtac', kind: 'monthly', day: 1, amount: '300–400 ฿', who: 'админ', how: 'по номеру телефона'},
+  {name: 'Secom (тревожная кнопка)', kind: 'months', months: [2, 7], day: 1, amount: '24 396 ฿ за платёж', who: 'Лена', how: 'QR', note: '2 раза в год: 1.02 и 1.07'},
+  {name: 'Вывоз мусора (Чалонг)', kind: 'yearly', month: 11, day: 1, amount: '7 200 ฿ за год', who: 'Sak, Лена', how: 'наличные / QR в муниципалитете'},
+  {name: 'Конец договора: принтер', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: '', note: 'после этой даты принтер наш'},
+  {name: 'Конец договора: билборд', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: 'продлить или закрыть'}
 ];
 var PAY_OFFSETS = [3, 0];
 
@@ -62,13 +62,11 @@ function payDue_(today) {
 /** Message text for the day, or '' if nothing is due. */
 function payText_(today) {
   var r = payDue_(today); if (!r.length) return '';
-  var lines = ['💳 Payment reminders ' + Utilities.formatDate(today, PAY_TZ, 'dd.MM.yyyy')];
+  var lines = ['💳 Платежи'];
   r.forEach(function (x) {
-    var e = x.entry, when = x.daysLeft === 0 ? '🔴 TODAY' : '⏰ in ' + x.daysLeft + ' days';
-    lines.push(when + ' (' + Utilities.formatDate(x.due, PAY_TZ, 'dd.MM') + ') — ' + e.name + (e.amount ? ', ~' + e.amount : ''));
-    lines.push('    ' + [e.who, e.how, e.note].filter(Boolean).join(' · '));
+    var e = x.entry, when = x.daysLeft === 0 ? '🔴 сегодня' : '⏰ ' + Utilities.formatDate(x.due, PAY_TZ, 'dd.MM');
+    lines.push(when + ' — ' + e.name + (e.amount ? ', ' + e.amount : '') + ' (' + [e.who, e.how, e.note].filter(Boolean).join(', ') + ')');
   });
-  lines.push('Paid? Reply here with a photo of the receipt.');
   return lines.join('\n');
 }
 

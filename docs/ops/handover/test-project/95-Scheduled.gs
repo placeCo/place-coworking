@@ -109,36 +109,36 @@ function removeTestTriggers() {
 function ST6_prop_(k) { return T_props_('ST6').getScriptProperties().getProperty(k); }
 function job_stage6() {
   return T_job_('stage6', 'job_stage6 (prod Resident info read-only)', function (to) {
-    if (to === 'info@placecoworking.com') return 'Place Ops и George, email info@ (черновик, дайджест офисов)';
-    return 'арендатор ' + to + ', email (черновик на info@)';
+    if (to === 'info@placecoworking.com') return 'Place Ops и George (email-черновик)';
+    return 'арендатор ' + to + ' (email-черновик)';
   }, function () {
     var reg = T_SS.openById(ST6_prop_('RESIDENT_SHEET_ID')).getSheetByName(ST6_prop_('TAB_NAME'));
     if (!reg || reg.getLastRow() < 2) return 'Office rent is empty in production Resident info: nothing to check (no relay)';
     var r = ST6.run_('draft');
     var rows = T_SS.openById(T_IDS.inbox).getSheetByName('Issues').getDataRange().getValues(), today = Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
     rows.filter(function (x) { return /^elec:/.test(x[0]) && String(x[1]).indexOf(today) === 0 && String(x[14] || '') !== 'fixture'; }).forEach(function (x) {
-      T_relay_('Лена в личку', '⚡ ' + x[4] + '\n(задача в Issues: ' + x[0] + ')');
+      T_relay_('Лена (ЛС)', '⚡ ' + x[4].replace(/^выставить счёт за электричество: /, 'Счёт за электричество: '));
     });
     return r;
   });
 }
 function job_coverage() {
   return T_job_('coverage', 'job_coverage (prod Schedule 26 read-only)', function (to) {
-    return 'Лена и Place Ops, email ' + to + ' (черновик, пробелы в графике)';
+    return 'Лена и Place Ops (email-черновик)';
   }, function () { var r = SC.coverage_('draft'); return {subject: r.subject, gaps: r.gaps}; });
 }
 function job_bookings() {
   return T_job_('bookings', 'job_bookings (prod Events and booking read-only)', null, function () {
     var t = BKG.bookingsToday_(new Date());
-    T_relay_('PLACE Team (TG группа, сводка 10:07)', t);
+    T_relay_('PLACE Team, 10:07', t);
     return t;
   });
 }
 /** Issues digests go to the TG group «Тех вопросы» (George 30.09 14:27), not PLACE Team. Real target = Script Property
  *  TECH_CHAT_ID (unknown yet). In TEST the digest is always relayed to George + Lena; empty TECH_CHAT_ID → WARN in Log
  *  (in production issuesSendDigest_ would then send nothing). */
-function job_issuesMorning() { return T_issuesJob_('morning', 'Тех вопросы (TG группа, сводка 10:07)'); }
-function job_issuesEvening() { return T_issuesJob_('evening', 'Тех вопросы (TG группа, сводка 23:10)'); }
+function job_issuesMorning() { return T_issuesJob_('morning', 'Тех вопросы, 10:07'); }
+function job_issuesEvening() { return T_issuesJob_('evening', 'Тех вопросы, 23:10'); }
 function T_issuesJob_(kind, channel) {
   return T_job_('issues', 'job_issues ' + kind, null, function () {
     var synced = T_syncIssuesFromQueue_();
@@ -169,22 +169,25 @@ function T_syncIssuesFromQueue_() {
 }
 function job_timesheet() {
   return T_job_('timesheet', 'job_timesheet (prod Schedule 26 read-only)', function (to) {
-    return 'email Khun Pat (черновик)' + (/@/.test(to) ? ' ' + to : '');
+    return 'Khun Pat (email-черновик)';
   }, function () { return ST5.createTimesheetDraft(); });
 }
 /** Every 3 days 20:00: remind the evening admin (shift ending 23:00) to prepare cash + count for the Thai partner. */
 function job_cashReminder() {
   return T_job_('cash', 'job_cashReminder (prod Schedule 26 read-only)', null, function () {
-    var now = new Date(), names = T_eveningAdmins_(now);
-    var text = 'Cash for the bank / เงินสดฝากธนาคาร\n' +
-      'Tomorrow the Thai partner collects the cash for the bank. After closing (23:00) please:\n' +
-      '1) count the cash in the till;\n2) put it in the envelope with the count sheet (date, total, notes/coins, your name);\n' +
-      '3) send the total + a photo of the count sheet here with #cash.\n\n' +
-      'พรุ่งนี้พาร์ทเนอร์จะมารับเงินสดไปฝากธนาคาร หลังปิดร้าน (23:00) กรุณา:\n' +
-      '1) นับเงินสดในลิ้นชัก\n2) ใส่ซองพร้อมใบนับเงิน (วันที่ ยอดรวม ธนบัตร/เหรียญ ชื่อผู้นับ)\n3) ส่งยอดรวม + รูปใบนับเงินที่นี่ พร้อม #cash';
-    var who = names.length ? 'вечерний админ ' + names.join(', ') + ' в личку' : 'вечерний админ (не найден в Schedule 26) → Place Ops и George в личку';
-    T_relay_(who, text);
+    var names = T_eveningAdmins_(new Date());
+    var who = names.length ? 'вечерний админ ' + names.join(', ') + ' (ЛС)' : 'вечерний админ (нет в графике) → Place Ops и George (ЛС)';
+    T_relay_(who, CASH.cashReminderText_());
     return {eveningAdmins: names};
+  });
+}
+/** Simulates the admin's reply (the TEST project cannot receive Telegram messages). Run from the editor, e.g.
+ *  simulateCashReply('в кассе 2000 / в сейф 12500', 'Tangmo'). The DM to Khun Sak is relayed to George + Lena as «Сак (ЛС)». */
+function simulateCashReply(text, admin) {
+  return T_job_('cash', 'simulateCashReply', null, function () {
+    var r = CASH.cashReply_(text || 'в кассе 2000 / в сейф 12500', admin || 'admin', new Date());
+    if (r.ok && r.sak) T_relay_('Сак (ЛС)', r.sak);
+    return r;
   });
 }
 /** Daily ~09:15: recurring payment reminders (Aiz's supplier sheet, config PAY_SCHEDULE in payment-reminders.gs).

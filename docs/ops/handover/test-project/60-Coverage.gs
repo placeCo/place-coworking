@@ -76,17 +76,17 @@ function coverage_(mode) {
     gapsTotal += gaps.length;
     var label = Utilities.formatDate(d, SC_TZ, 'EEE dd.MM');
     var parts = [];
-    if (gaps.length) parts.push('🔴 НЕТ админа: ' + scRanges_(gaps));
-    if (single.length && c.single) parts.push('🟡 один админ: ' + scRanges_(single));
-    if (leave.length) parts.push((leave.length >= 2 ? '⚠️ ' : '') + 'отпуск/больничный: ' + leave.join(', '));
+    if (gaps.length) parts.push('🔴 нет админа ' + scRanges_(gaps));
+    if (single.length && c.single) parts.push('🟡 один ' + scRanges_(single));
+    if (leave.length) parts.push((leave.length >= 2 ? '⚠️ ' : '') + 'не работает: ' + leave.map(function (x) { return x.replace(/\s*\(.*\)$/, ''); }).join(', '));
     if (unknown.length) parts.push('❓ ' + unknown.join('; '));
     if (parts.length) lines.push(label + ': ' + parts.join(' · '));
   }
   // next month tab must exist by the 20th
   if (start.getDate() >= 20) { var nt = c.tabs[(start.getMonth() + 1) % 12]; if (!ss.getSheetByName(nt)) warn.push('К 20-му нет вкладки следующего месяца: ' + nt); }
-  var subject = 'Покрытие смен ' + Utilities.formatDate(start, SC_TZ, 'dd.MM') + ' + ' + c.win + ' дн.: дыр ' + gapsTotal + ' ч';
-  var body = (lines.length ? lines.join('\n') : 'Дыр и отпусков нет.') + (warn.length ? '\n\n' + warn.join('\n') : '') +
-    '\n\nЧасы ' + c.open + ':00–' + c.close + ':00, только строки Admin. Черновик, никому не отправлено.';
+  var endD = new Date(start.getTime() + c.win * 86400000);
+  var subject = 'График ' + Utilities.formatDate(start, SC_TZ, 'dd.MM') + '–' + Utilities.formatDate(endD, SC_TZ, 'dd.MM') + ': без админа ' + gapsTotal + ' ч';
+  var body = (lines.length ? lines.join('\n') : 'Всё закрыто.') + (warn.length ? '\n⚠️ ' + warn.join('\n⚠️ ') : '');
   if (mode === 'draft') GmailApp.createDraft(c.to, subject, body);
   Logger.log('[coverage ' + mode + '] ' + subject + '\n' + body);
   return {subject: subject, body: body, gaps: gapsTotal};
@@ -131,7 +131,7 @@ function scRanges_(hours) {
   var out = [], s = hours[0], p = hours[0];
   for (var i = 1; i <= hours.length; i++) {
     if (hours[i] === p + 1) { p = hours[i]; continue; }
-    out.push(s + ':00–' + (p + 1) + ':00'); s = p = hours[i];
+    out.push(s + '–' + (p + 1)); s = p = hours[i];
   }
   return out.join(', ');
 }

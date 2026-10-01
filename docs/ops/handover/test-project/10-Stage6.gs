@@ -108,24 +108,24 @@ function run_(mode) {
     };
     if (!t.tenant) continue;
     if (/^(ended|closed|cancel)/.test(t.status)) continue;
-    if (t.end && t.end < today) { warnings.push('Row ' + t.row + ' ' + t.tenant + ': contract ended ' + d_(t.end) + ' but status is not Ended'); continue; }
+    if (t.end && t.end < today) { warnings.push(t.tenant + ': договор кончился ' + d_(t.end) + ', статус не Ended'); continue; }
     active.push(t);
     if (t.nextPay) {
       var dp = diffDays_(today, t.nextPay);
       if (c.payDays.indexOf(dp) >= 0) items.push({type: 'PAYMENT', days: dp, t: t});
-      else if (dp < 0) warnings.push('Row ' + t.row + ' ' + t.tenant + ': next payment date ' + d_(t.nextPay) + ' is in the past (overdue or not updated)');
-    } else warnings.push('Row ' + t.row + ' ' + t.tenant + ': no next payment date');
+      else if (dp < 0) warnings.push(t.tenant + ': оплата ' + d_(t.nextPay) + ' просрочена или не обновлена');
+    } else warnings.push(t.tenant + ': нет даты оплаты');
     if (t.end) {
       var de = diffDays_(today, t.end);
       if (c.endDays.indexOf(de) >= 0) items.push({type: 'CONTRACT_END', days: de, t: t});
     }
     if (t.deposit > 0 && !t.depositPaid) items.push({type: 'DEPOSIT_UNPAID', days: null, t: t});
-    if (!t.email) warnings.push('Row ' + t.row + ' ' + t.tenant + ': no email');
+    if (!t.email) warnings.push(t.tenant + ': нет email');
   }
   // room overlaps
   for (var i = 0; i < active.length; i++) for (var j = i + 1; j < active.length; j++) {
     var a = active[i], b = active[j];
-    if (a.room && a.room === b.room && a.floor === b.floor && overlap_(a, b)) warnings.push('Room overlap: ' + a.floor + ' / ' + a.room + ' — ' + a.tenant + ' (row ' + a.row + ') and ' + b.tenant + ' (row ' + b.row + ')');
+    if (a.room && a.room === b.room && a.floor === b.floor && overlap_(a, b)) warnings.push(a.floor + ' эт. ' + a.room + ': две аренды — ' + a.tenant + ' и ' + b.tenant);
   }
 
   var log = JSON.parse(PropertiesService.getScriptProperties().getProperty('SENT_LOG') || '{}');
@@ -141,7 +141,7 @@ function run_(mode) {
   });
   var elec = electricityTasks_(active, today, log, mode);
   var digest = digest_(items, warnings, today);
-  if (elec.length) digest.body = 'Задачи «счёт за электричество» сегодня:\n• ' + elec.join('\n• ') + '\n\n' + digest.body;
+  if (elec.length) digest.body = elec.map(function (e) { return '⚡ ' + e.replace(/^выставить счёт за электричество: /, 'счёт за электричество: ').replace(/ → .*$/, ''); }).join('\n') + '\n' + digest.body;
   if (mode === 'draft' && (items.length || warnings.length || elec.length)) {
     GmailApp.createDraft(c.digestTo, digest.subject, digest.body);
     PropertiesService.getScriptProperties().setProperty('SENT_LOG', JSON.stringify(log));
@@ -168,17 +168,17 @@ function tenantMail_(it) {
 }
 
 function digest_(items, warnings, today) {
-  var label = {PAYMENT: 'Payment due', CONTRACT_END: 'Contract ends', DEPOSIT_UNPAID: 'Deposit NOT paid'};
+  // short (George 01.10): one line per item — what, who, room, date/amount
+  var label = {PAYMENT: '💳 оплата', CONTRACT_END: '📄 конец договора', DEPOSIT_UNPAID: '❗ депозит не оплачен'};
   var lines = items.map(function (it) {
     var t = it.t;
-    return '• ' + label[it.type] + (it.days !== null ? ' in ' + it.days + ' d' : '') + ': ' + t.tenant + ' — ' + [t.floor, t.room].join(' ') +
-      (it.type === 'PAYMENT' ? ', ' + d_(t.nextPay) + ', ' + t.rent + ' THB' : '') + (it.type === 'CONTRACT_END' ? ', ' + d_(t.end) : '') +
-      (it.type === 'DEPOSIT_UNPAID' ? ', ' + t.deposit + ' THB' : '') + (it.already ? ' (reminder already drafted)' : '');
+    return label[it.type] + ': ' + t.tenant + ', ' + [t.floor, t.room].filter(String).join(' ') +
+      (it.type === 'PAYMENT' ? ', ' + d_(t.nextPay) + ', ' + t.rent + ' ฿' : '') + (it.type === 'CONTRACT_END' ? ', ' + d_(t.end) : '') +
+      (it.type === 'DEPOSIT_UNPAID' ? ', ' + t.deposit + ' ฿' : '') + (it.already ? ' (уже было)' : '');
   });
   return {
-    subject: 'Offices digest ' + d_(today) + ': ' + items.length + ' reminders, ' + warnings.length + ' warnings',
-    body: (lines.length ? lines.join('\n') : 'No reminders today.') + (warnings.length ? '\n\nWarnings:\n• ' + warnings.join('\n• ') : '') +
-      '\n\n(Drafts only. Review in Gmail Drafts and send manually.)'
+    subject: 'Офисы ' + d_(today) + ': ' + items.length + ' напомин., ' + warnings.length + ' предупр.',
+    body: (lines.length ? lines.join('\n') : 'Напоминаний нет.') + (warnings.length ? '\n⚠️ ' + warnings.join('\n⚠️ ') : '')
   };
 }
 

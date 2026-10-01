@@ -2,7 +2,7 @@
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments()]
+  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments(), test_cash()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -131,15 +131,14 @@ function test_relay() {
     var sent = [], prev = T_CTX, fail = [];
     var fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
     var body = 'Сегодня брони: Meeting room 14:00–16:00';
-    function run(ids) { sent = []; T_CTX = {relay: true, ids: ids, send: fake}; var buf0 = T_BUF.length; var r = T_relay_('PLACE Team (TG группа)', body); var w = T_BUF.slice(buf0).join('\n'); T_CTX = prev; return {r: r, sent: sent, log: w}; }
+    function run(ids) { sent = []; T_CTX = {relay: true, ids: ids, send: fake}; var buf0 = T_BUF.length; var r = T_relay_('PLACE Team', body); var w = T_BUF.slice(buf0).join('\n'); T_CTX = prev; return {r: r, sent: sent, log: w}; }
     try {
       var a = run({george: '111111', lena: '222222'});
       if (a.sent.length !== 2 || a.sent[0].id !== '111111' || a.sent[1].id !== '222222') fail.push('both: ' + JSON.stringify(a.sent.map(function (x) { return x.id; })));
       a.sent.forEach(function (x) {
         var L = x.text.split('\n');
-        if (L[0] !== '🧪 ТЕСТ') fail.push('line1: ' + L[0]);
-        if (L[1] !== 'Куда ушло бы: PLACE Team (TG группа)') fail.push('line2: ' + L[1]);
-        if (L[2] !== '' || L.slice(3).join('\n') !== body) fail.push('body: ' + JSON.stringify(L.slice(2)));
+        if (L[0] !== '🧪 ТЕСТ · Куда ушло бы: PLACE Team') fail.push('line1: ' + L[0]);
+        if (L[1] !== '' || L.slice(2).join('\n') !== body) fail.push('body: ' + JSON.stringify(L.slice(1)));
       });
       var b = run({george: '111111', lena: ''});
       if (b.sent.length !== 1 || b.sent[0].id !== '111111') fail.push('no-lena: ' + JSON.stringify(b.sent.map(function (x) { return x.id; })));
@@ -161,9 +160,9 @@ function test_techRoute() {
     try {
       // 1) job header (T_issuesJob_ with fake relay)
       var saved = [T_PROFILE]; T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {TECH_CHAT_ID: ''}};
-      T_relay_('Тех вопросы (TG группа, сводка 10:07)', ISS.issuesDigest_('morning'));
-      if (sent.length !== 2 || sent[0].text.split('\n')[1] !== 'Куда ушло бы: Тех вопросы (TG группа, сводка 10:07)') fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[1]; })));
-      if (sent.some(function (x) { return /PLACE Team/.test(x.text.split('\n')[1]); })) fail.push('still PLACE Team');
+      T_relay_('Тех вопросы, 10:07', ISS.issuesDigest_('morning'));
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Тех вопросы, 10:07') fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
+      if (sent.some(function (x) { return /PLACE Team/.test(x.text.split('\n')[0]); })) fail.push('still PLACE Team');
       // 2) production path, TECH_CHAT_ID empty → not sent, warning
       sent = []; var buf0 = T_BUF.length;
       var a = ISS.issuesSendDigest_('evening');
@@ -171,7 +170,7 @@ function test_techRoute() {
       // 3) production path, TECH_CHAT_ID set → one sendMessage to it, relayed as «Тех вопросы (TG группа)»
       sent = []; T_CTX.props = {TECH_CHAT_ID: '-1009990077'};
       var b = ISS.issuesSendDigest_('evening');
-      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[1] !== 'Куда ушло бы: Тех вопросы (TG группа)') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[1]; })));
+      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Тех вопросы') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
     } finally { T_CTX = prev; }
     if (fail.length) throw new Error('TECH ROUTE FAIL ' + fail.join('; '));
     return 'OK: header «Тех вопросы (TG группа, сводка 10:07)»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID';
@@ -184,14 +183,17 @@ function test_payments() {
     var fail = [], D = function (s) { return new Date(s + 'T09:15:00+07:00'); };
     var names = function (d) { return PAY.payDue_(D(d)).map(function (x) { return x.entry.name + '@' + x.daysLeft; }).sort().join(' | '); };
     var cases = {
-      '2026-10-05': ['Electricity (PEA)@3', 'Internet 3BB line …4746@3', 'Internet 3BB line …4751@3', 'Billboard (advertising)@0'],
-      '2026-10-08': ['Electricity (PEA)@0', 'Internet 3BB line …4746@0', 'Internet 3BB line …4751@0'],
-      '2026-10-17': ['Water@3'],
-      '2026-10-25': ['Internet 3BB line …7790@3'],
-      '2026-10-29': ['Garbage (Chalong municipality)@3', 'Office mobile (Dtac)@3'],
-      '2027-01-28': ['Printer contract ends@30', 'Billboard contract ends@30', 'Internet 3BB line …7790@0'],
-      '2027-01-29': ['Secom (emergency button)@3', 'Office mobile (Dtac)@3'],
-      '2027-02-24': ['Printer contract ends@3', 'Billboard contract ends@3'],
+      '2026-10-05': ['Электричество (PEA)@3', 'Интернет 3BB …4746@3', 'Интернет 3BB …4751@3', 'Билборд@0'],
+      '2026-10-08': ['Электричество (PEA)@0', 'Интернет 3BB …4746@0', 'Интернет 3BB …4751@0'],
+      '2026-10-17': ['Вода@3'],
+      '2026-10-25': ['Интернет 3BB …7790@3'],
+      '2026-10-29': ['Вывоз мусора (Чалонг)@3', 'Обновить телефонный счёт Dtac@3'],
+      '2026-11-01': ['Вывоз мусора (Чалонг)@0', 'Обновить телефонный счёт Dtac@0'],
+      '2027-01-28': ['Конец договора: принтер@30', 'Конец договора: билборд@30', 'Интернет 3BB …7790@0'],
+      '2027-01-29': ['Secom (тревожная кнопка)@3', 'Обновить телефонный счёт Dtac@3'],
+      '2027-02-01': ['Secom (тревожная кнопка)@0', 'Обновить телефонный счёт Dtac@0'],
+      '2027-07-01': ['Secom (тревожная кнопка)@0', 'Обновить телефонный счёт Dtac@0'],
+      '2027-02-24': ['Конец договора: принтер@3', 'Конец договора: билборд@3'],
       '2026-10-14': []
     };
     Object.keys(cases).forEach(function (d) {
@@ -203,16 +205,45 @@ function test_payments() {
       var t = PAY.payText_(new Date(D('2026-10-01').getTime() + i * 86400000));
       if (/\d{10,}|\b\d{3}[- ]\d{1,3}[- ]\d{4,5}(?:[- ]\d)?\b/.test(t)) { fail.push('bank-like number in text ' + i); break; }
     }
+    var t27 = PAY.payText_(D('2027-02-27'));
+    if (!/принтер.*после этой даты принтер наш/.test(t27)) fail.push('printer note missing: ' + t27);
+    if (!/24 396 ฿ за платёж/.test(PAY.payText_(D('2027-02-01')))) fail.push('Secom wording');
+    if (PAY.payText_(D('2026-10-05')).split('\n').length > 6) fail.push('payments text too long');
     // relay: header + PAY label to George and Lena; production path with empty PAY_CHAT_ID sends nothing
     var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
     try {
       T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {PAY_CHAT_ID: ''}};
       T_relay_('PAY_CHAT_ID (группа, уточняется)', PAY.payText_(D('2026-10-08')));
-      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ' || sent[0].text.split('\n')[1] !== 'Куда ушло бы: PAY_CHAT_ID (группа, уточняется)') fail.push('relay header');
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: PAY_CHAT_ID (группа, уточняется)') fail.push('relay header');
       sent = []; var buf0 = T_BUF.length, r = PAY.payRemindersRun_(D('2026-10-08'));
       if (r.sent !== false || sent.length || !/WARN PAY_CHAT_ID not set/.test(T_BUF.slice(buf0).join('\n'))) fail.push('empty PAY_CHAT_ID: ' + JSON.stringify(r));
     } finally { T_CTX = prev; }
     if (fail.length) throw new Error('PAYMENTS FAIL ' + fail.join('; '));
     return {ok: Object.keys(cases).length + ' dates OK, no bank numbers, header OK, empty PAY_CHAT_ID → not sent', sample: PAY.payText_(D('2026-10-05'))};
+  });
+}
+
+/** Cash collection (George 01.10): short reminder asks «в кассе X / в сейф Y»; reply parsed; Sak DM relayed to George + Lena
+ *  as «Сак (ЛС)»; safe 0 → no collection, no DM; bad format → hint. Fake ids + fake sender, nothing is sent. */
+function test_cash() {
+  return T_fixture_('cash', 'CASH.cashReminderText_ / cashReply_ (fake ids, fake sender)', function () {
+    var fail = [], now = new Date('2026-10-04T23:05:00+07:00');
+    var rem = CASH.cashReminderText_();
+    if (rem.split('\n').length > 4 || rem.indexOf('«в кассе X / в сейф Y»') < 0 || /photo|фото/i.test(rem.replace('no photo', ''))) fail.push('reminder: ' + rem);
+    [['в кассе 2 000 / в сейф 12 500', 2000, 12500], ['касса 1500, сейф 0', 1500, 0], ['in till 3,000 / safe 9,800', 3000, 9800], ['ลิ้นชัก 2000 / เซฟ 7000', 2000, 7000]]
+      .forEach(function (c) { var v = CASH.cashParse_(c[0]); if (!v || v.till !== c[1] || v.safe !== c[2]) fail.push('parse ' + c[0] + ' → ' + JSON.stringify(v)); });
+    if (CASH.cashParse_('12500')) fail.push('parse without labels must fail');
+    var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
+    try {
+      T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake};
+      var r = CASH.cashReply_('в кассе 2000 / в сейф 12500', 'Tangmo', now);
+      if (r.ok && r.sak) T_relay_('Сак (ЛС)', r.sak);
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Сак (ЛС)' || !/12 500 ฿/.test(sent[0].text)) fail.push('sak dm: ' + JSON.stringify(sent));
+      var z = CASH.cashReply_('в кассе 800 / в сейф 0', 'Tangmo', now);
+      if (z.sak || !/no collection/.test(z.ack)) fail.push('zero safe: ' + JSON.stringify(z));
+      if (CASH.cashReply_('12500', 'Tangmo', now).ok) fail.push('bad format accepted');
+    } finally { T_CTX = prev; }
+    if (fail.length) throw new Error('CASH FAIL ' + fail.join('; '));
+    return {ok: 'reminder short + format; parse ru/en/th; Sak DM → George + Lena as «Сак (ЛС)»; safe 0 → no DM', reminder: rem, sak: r.sak, ack: r.ack};
   });
 }

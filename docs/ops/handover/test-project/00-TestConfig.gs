@@ -11,8 +11,7 @@
  *   - NOTHING goes to its real target. GmailApp.createDraft/sendEmail, MailApp and Telegram sendMessage from modules are
  *     intercepted and RELAYED (George's instruction 30.09 14:22) to BOTH George and Lena in their private chats with
  *     @PlaceLeadBot (Script Properties GEORGE_CHAT_ID and LENA_CHAT_ID) as:
- *       🧪 ТЕСТ
- *       Куда ушло бы: <real recipient + channel, from the production routing>
+ *       🧪 ТЕСТ · Куда ушло бы: <real recipient, short>
  *       <blank line>
  *       <the exact original text>
  *     Only private chat ids (positive numbers) are used. LENA_CHAT_ID empty → George only + a warning in Log.
@@ -38,7 +37,7 @@ var T_LOG_TAB = 'Log';
 var T_BOOKING_TABS = JSON.stringify(['Meeting room', '1 floor', '4 floor', 'ART Room ', '6 floor']);
 /** Known Telegram chats -> human label for the «would be sent to» line. */
 /** Known production Telegram chats -> «Куда ушло бы» label (used when a module calls sendMessage itself). */
-var T_CHAT_LABELS = {'-1003641241156': 'PLACE Team (TG группа)', '626363253': 'Лена в личку'};
+var T_CHAT_LABELS = {'-1003641241156': 'PLACE Team', '626363253': 'Лена (ЛС)'};
 
 var T_PROFILES = {
   /** fixture = synthetic data in the TEST copies (test_* functions, log only) */
@@ -130,7 +129,8 @@ function T_props_(mod) {
 
 // ---------- relay: the ONLY outgoing channel (private chats of George + Lena) ----------
 /** Test message text: header, «Куда ушло бы», blank line, original body. */
-function T_relayText_(where, text) { return '🧪 ТЕСТ\nКуда ушло бы: ' + where + '\n\n' + String(text == null ? '' : text); }
+/** One short header line (George 01.10: «кратко»): «🧪 ТЕСТ · Куда ушло бы: <where>», blank line, original text. */
+function T_relayText_(where, text) { return '🧪 ТЕСТ · Куда ушло бы: ' + where + '\n\n' + String(text == null ? '' : text); }
 /** Relay targets from Script Properties (or T_CTX.ids in the self-test). Returns {ids: [{who, id}], warnings: []}. */
 function T_relayTargets_() {
   var ids = T_CTX.ids, warn = [], out = [];
@@ -171,14 +171,13 @@ function T_relay_(where, text) {
   return 'relayed ' + res.join(' ');
 }
 /** T_CTX.mail(to) returns the «Куда ушло бы» label for an email/draft; default: «email <to> (черновик на info@)». */
-function T_mailTarget_(to) { return T_CTX.mail ? T_CTX.mail(to) : 'email ' + to + ' (черновик на info@)'; }
+function T_mailTarget_(to) { return T_CTX.mail ? T_CTX.mail(to) : to + ' (email-черновик)'; }
 var T_GMAIL = {
   createDraft: function (to, subject, body, opts) {
-    T_relay_(T_mailTarget_(to), 'Subject: ' + subject + (opts && opts.cc ? '\nCc: ' + opts.cc : '') +
-      (opts && opts.attachments ? '\nAttachments: ' + opts.attachments.length : '') + '\n\n' + body);
+    T_relay_(T_mailTarget_(to), 'Тема: ' + subject + (opts && opts.attachments ? ' · вложение: ' + opts.attachments.length : '') + '\n' + body);
     return { getId: function () { return 'TEST-RELAYED'; } };
   },
-  sendEmail: function (to, subject, body) { T_relay_(T_mailTarget_(to).replace(/\(черновик[^)]*\)/, '(письмо)'), 'Subject: ' + subject + '\n\n' + body); }
+  sendEmail: function (to, subject, body) { T_relay_(T_mailTarget_(to).replace(/\(черновик[^)]*\)/, '(письмо)'), 'Тема: ' + subject + '\n' + body); }
 };
 var T_MAIL = { sendEmail: function (to, subject, body) { T_GMAIL.sendEmail(to, subject, body); } };
 var T_FETCH = {
@@ -187,7 +186,7 @@ var T_FETCH = {
     if (/api\.telegram\.org\/bot[^/]+\/sendMessage/.test(url)) {
       var pl = {}; try { pl = JSON.parse((o && o.payload) || '{}'); } catch (e) {}
       var tech = String(T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID') || '');
-      T_relay_(tech && String(pl.chat_id) === tech ? 'Тех вопросы (TG группа)' : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
+      T_relay_(tech && String(pl.chat_id) === tech ? 'Тех вопросы' : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
       return { getResponseCode: function () { return 200; }, getContentText: function () { return '{"ok":true,"test":true}'; } };
     }
     throw new Error('TEST GUARD: UrlFetchApp blocked in modules: ' + T_mask_(url));

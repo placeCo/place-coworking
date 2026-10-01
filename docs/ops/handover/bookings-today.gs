@@ -33,16 +33,17 @@ function bookingsToday_(now) {
     if (disp.length < hr) return;
     var cols = bkDateCols_(disp[hr - 1], today.getFullYear());
     var key = bkKey_(today), col = cols.map[key];
-    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': сетка заканчивается ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy') + ', дальше брони некуда записать');
+    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': сетка до ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy'));
     if (col === undefined) return;
     var items = [];
     for (var r = hr; r < disp.length; r++) {
       var v = String(disp[r][col] || '').trim();
-      if (v) items.push((String(disp[r][0] || '').trim() || '?') + ' ' + v.replace(/\s+/g, ' ').slice(0, 120));
+      if (v) items.push((String(disp[r][0] || '').trim() || '?') + ' ' + v.replace(/\s+/g, ' ').slice(0, 60));
     }
-    if (items.length) lines.push('• ' + name.trim() + ':\n   ' + items.join('\n   '));
+    if (items.length) lines.push(name.trim() + ': ' + items.join('; '));
   });
-  return 'Брони на сегодня (' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + '):\n' + (lines.length ? lines.join('\n') : 'нет') +
+  // short (George 01.10): one line per room, warnings one line each
+  return '📅 Брони ' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + (lines.length ? '\n' + lines.join('\n') : ': нет') +
     (warn.length ? '\n⚠️ ' + warn.join('\n⚠️ ') : '');
 }
 

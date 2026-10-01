@@ -14,8 +14,7 @@
  *   - NOTHING goes to its real target. GmailApp.createDraft/sendEmail, MailApp and Telegram sendMessage from modules are
  *     intercepted and RELAYED (George's instruction 30.09 14:22) to BOTH George and Lena in their private chats with
  *     @PlaceLeadBot (Script Properties GEORGE_CHAT_ID and LENA_CHAT_ID) as:
- *       🧪 ТЕСТ
- *       Куда ушло бы: <real recipient + channel, from the production routing>
+ *       🧪 ТЕСТ · Куда ушло бы: <real recipient, short>
  *       <blank line>
  *       <the exact original text>
  *     Only private chat ids (positive numbers) are used. LENA_CHAT_ID empty → George only + a warning in Log.
@@ -41,7 +40,7 @@ var T_LOG_TAB = 'Log';
 var T_BOOKING_TABS = JSON.stringify(['Meeting room', '1 floor', '4 floor', 'ART Room ', '6 floor']);
 /** Known Telegram chats -> human label for the «would be sent to» line. */
 /** Known production Telegram chats -> «Куда ушло бы» label (used when a module calls sendMessage itself). */
-var T_CHAT_LABELS = {'-1003641241156': 'PLACE Team (TG группа)', '626363253': 'Лена в личку'};
+var T_CHAT_LABELS = {'-1003641241156': 'PLACE Team', '626363253': 'Лена (ЛС)'};
 
 var T_PROFILES = {
   /** fixture = synthetic data in the TEST copies (test_* functions, log only) */
@@ -133,7 +132,8 @@ function T_props_(mod) {
 
 // ---------- relay: the ONLY outgoing channel (private chats of George + Lena) ----------
 /** Test message text: header, «Куда ушло бы», blank line, original body. */
-function T_relayText_(where, text) { return '🧪 ТЕСТ\nКуда ушло бы: ' + where + '\n\n' + String(text == null ? '' : text); }
+/** One short header line (George 01.10: «кратко»): «🧪 ТЕСТ · Куда ушло бы: <where>», blank line, original text. */
+function T_relayText_(where, text) { return '🧪 ТЕСТ · Куда ушло бы: ' + where + '\n\n' + String(text == null ? '' : text); }
 /** Relay targets from Script Properties (or T_CTX.ids in the self-test). Returns {ids: [{who, id}], warnings: []}. */
 function T_relayTargets_() {
   var ids = T_CTX.ids, warn = [], out = [];
@@ -174,14 +174,13 @@ function T_relay_(where, text) {
   return 'relayed ' + res.join(' ');
 }
 /** T_CTX.mail(to) returns the «Куда ушло бы» label for an email/draft; default: «email <to> (черновик на info@)». */
-function T_mailTarget_(to) { return T_CTX.mail ? T_CTX.mail(to) : 'email ' + to + ' (черновик на info@)'; }
+function T_mailTarget_(to) { return T_CTX.mail ? T_CTX.mail(to) : to + ' (email-черновик)'; }
 var T_GMAIL = {
   createDraft: function (to, subject, body, opts) {
-    T_relay_(T_mailTarget_(to), 'Subject: ' + subject + (opts && opts.cc ? '\nCc: ' + opts.cc : '') +
-      (opts && opts.attachments ? '\nAttachments: ' + opts.attachments.length : '') + '\n\n' + body);
+    T_relay_(T_mailTarget_(to), 'Тема: ' + subject + (opts && opts.attachments ? ' · вложение: ' + opts.attachments.length : '') + '\n' + body);
     return { getId: function () { return 'TEST-RELAYED'; } };
   },
-  sendEmail: function (to, subject, body) { T_relay_(T_mailTarget_(to).replace(/\(черновик[^)]*\)/, '(письмо)'), 'Subject: ' + subject + '\n\n' + body); }
+  sendEmail: function (to, subject, body) { T_relay_(T_mailTarget_(to).replace(/\(черновик[^)]*\)/, '(письмо)'), 'Тема: ' + subject + '\n' + body); }
 };
 var T_MAIL = { sendEmail: function (to, subject, body) { T_GMAIL.sendEmail(to, subject, body); } };
 var T_FETCH = {
@@ -190,7 +189,7 @@ var T_FETCH = {
     if (/api\.telegram\.org\/bot[^/]+\/sendMessage/.test(url)) {
       var pl = {}; try { pl = JSON.parse((o && o.payload) || '{}'); } catch (e) {}
       var tech = String(T_props_('ISS').getScriptProperties().getProperty('TECH_CHAT_ID') || '');
-      T_relay_(tech && String(pl.chat_id) === tech ? 'Тех вопросы (TG группа)' : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
+      T_relay_(tech && String(pl.chat_id) === tech ? 'Тех вопросы' : (T_CHAT_LABELS[String(pl.chat_id)] || ('TG чат ' + pl.chat_id)), String(pl.text || ''));
       return { getResponseCode: function () { return 200; }, getContentText: function () { return '{"ok":true,"test":true}'; } };
     }
     throw new Error('TEST GUARD: UrlFetchApp blocked in modules: ' + T_mask_(url));
@@ -336,24 +335,24 @@ function run_(mode) {
     };
     if (!t.tenant) continue;
     if (/^(ended|closed|cancel)/.test(t.status)) continue;
-    if (t.end && t.end < today) { warnings.push('Row ' + t.row + ' ' + t.tenant + ': contract ended ' + d_(t.end) + ' but status is not Ended'); continue; }
+    if (t.end && t.end < today) { warnings.push(t.tenant + ': договор кончился ' + d_(t.end) + ', статус не Ended'); continue; }
     active.push(t);
     if (t.nextPay) {
       var dp = diffDays_(today, t.nextPay);
       if (c.payDays.indexOf(dp) >= 0) items.push({type: 'PAYMENT', days: dp, t: t});
-      else if (dp < 0) warnings.push('Row ' + t.row + ' ' + t.tenant + ': next payment date ' + d_(t.nextPay) + ' is in the past (overdue or not updated)');
-    } else warnings.push('Row ' + t.row + ' ' + t.tenant + ': no next payment date');
+      else if (dp < 0) warnings.push(t.tenant + ': оплата ' + d_(t.nextPay) + ' просрочена или не обновлена');
+    } else warnings.push(t.tenant + ': нет даты оплаты');
     if (t.end) {
       var de = diffDays_(today, t.end);
       if (c.endDays.indexOf(de) >= 0) items.push({type: 'CONTRACT_END', days: de, t: t});
     }
     if (t.deposit > 0 && !t.depositPaid) items.push({type: 'DEPOSIT_UNPAID', days: null, t: t});
-    if (!t.email) warnings.push('Row ' + t.row + ' ' + t.tenant + ': no email');
+    if (!t.email) warnings.push(t.tenant + ': нет email');
   }
   // room overlaps
   for (var i = 0; i < active.length; i++) for (var j = i + 1; j < active.length; j++) {
     var a = active[i], b = active[j];
-    if (a.room && a.room === b.room && a.floor === b.floor && overlap_(a, b)) warnings.push('Room overlap: ' + a.floor + ' / ' + a.room + ' — ' + a.tenant + ' (row ' + a.row + ') and ' + b.tenant + ' (row ' + b.row + ')');
+    if (a.room && a.room === b.room && a.floor === b.floor && overlap_(a, b)) warnings.push(a.floor + ' эт. ' + a.room + ': две аренды — ' + a.tenant + ' и ' + b.tenant);
   }
 
   var log = JSON.parse(PropertiesService.getScriptProperties().getProperty('SENT_LOG') || '{}');
@@ -369,7 +368,7 @@ function run_(mode) {
   });
   var elec = electricityTasks_(active, today, log, mode);
   var digest = digest_(items, warnings, today);
-  if (elec.length) digest.body = 'Задачи «счёт за электричество» сегодня:\n• ' + elec.join('\n• ') + '\n\n' + digest.body;
+  if (elec.length) digest.body = elec.map(function (e) { return '⚡ ' + e.replace(/^выставить счёт за электричество: /, 'счёт за электричество: ').replace(/ → .*$/, ''); }).join('\n') + '\n' + digest.body;
   if (mode === 'draft' && (items.length || warnings.length || elec.length)) {
     GmailApp.createDraft(c.digestTo, digest.subject, digest.body);
     PropertiesService.getScriptProperties().setProperty('SENT_LOG', JSON.stringify(log));
@@ -396,17 +395,17 @@ function tenantMail_(it) {
 }
 
 function digest_(items, warnings, today) {
-  var label = {PAYMENT: 'Payment due', CONTRACT_END: 'Contract ends', DEPOSIT_UNPAID: 'Deposit NOT paid'};
+  // short (George 01.10): one line per item — what, who, room, date/amount
+  var label = {PAYMENT: '💳 оплата', CONTRACT_END: '📄 конец договора', DEPOSIT_UNPAID: '❗ депозит не оплачен'};
   var lines = items.map(function (it) {
     var t = it.t;
-    return '• ' + label[it.type] + (it.days !== null ? ' in ' + it.days + ' d' : '') + ': ' + t.tenant + ' — ' + [t.floor, t.room].join(' ') +
-      (it.type === 'PAYMENT' ? ', ' + d_(t.nextPay) + ', ' + t.rent + ' THB' : '') + (it.type === 'CONTRACT_END' ? ', ' + d_(t.end) : '') +
-      (it.type === 'DEPOSIT_UNPAID' ? ', ' + t.deposit + ' THB' : '') + (it.already ? ' (reminder already drafted)' : '');
+    return label[it.type] + ': ' + t.tenant + ', ' + [t.floor, t.room].filter(String).join(' ') +
+      (it.type === 'PAYMENT' ? ', ' + d_(t.nextPay) + ', ' + t.rent + ' ฿' : '') + (it.type === 'CONTRACT_END' ? ', ' + d_(t.end) : '') +
+      (it.type === 'DEPOSIT_UNPAID' ? ', ' + t.deposit + ' ฿' : '') + (it.already ? ' (уже было)' : '');
   });
   return {
-    subject: 'Offices digest ' + d_(today) + ': ' + items.length + ' reminders, ' + warnings.length + ' warnings',
-    body: (lines.length ? lines.join('\n') : 'No reminders today.') + (warnings.length ? '\n\nWarnings:\n• ' + warnings.join('\n• ') : '') +
-      '\n\n(Drafts only. Review in Gmail Drafts and send manually.)'
+    subject: 'Офисы ' + d_(today) + ': ' + items.length + ' напомин., ' + warnings.length + ' предупр.',
+    body: (lines.length ? lines.join('\n') : 'Напоминаний нет.') + (warnings.length ? '\n⚠️ ' + warnings.join('\n⚠️ ') : '')
   };
 }
 
@@ -580,36 +579,24 @@ function issuesDigest_(kind, now, opts) {
     if (!String(x[col.issue_id] || '').trim() && !String(x[col.text] || '').trim()) continue;   // empty row
     if (issuesType_(x, col) !== 'issue') continue;                                             // tasks: Issues log only
     if (!opts.includeFixtures && String(x[col.tag] || '') === 'fixture') continue;             // test rows
-    var what = issuesShort_(x[col.text], 70); if (!what) continue;
-    var where = x[col.floor] ? x[col.floor] + ' эт.' : 'этаж не указан';
+    var what = issuesShort_(x[col.text], 50); if (!what) continue;
+    var where = x[col.floor] ? x[col.floor] + ' эт. ' : '';
     var st = String(x[col.status] || 'open');
     if (st === 'closed') {
       var c = x[col.closed_at_ict], cDay = c instanceof Date ? Utilities.formatDate(c, 'Asia/Bangkok', 'yyyy-MM-dd') : String(c);
-      if (cDay.indexOf(today) === 0) closedToday.push('✅ ' + where + ' — ' + what + (x[col.closed_by] ? ' (' + issuesShort_(x[col.closed_by], 30) + ')' : ''));
+      if (cDay.indexOf(today) === 0) closedToday.push('✅ ' + where + what);
       continue;
     }
     var ms = issuesMs_(x[col.opened_at_ict]), days = ms === null ? 0 : Math.max(0, Math.floor((nowMs - ms) / 86400000));
-    var age = days === 0 ? 'сегодня' : days + ' дн.';
-    var since = 'с ' + issuesWhen_(x[col.opened_at_ict]) + ' (' + age + ')';
-    var who = x[col.reporter] ? 'не взято, сообщил(а) ' + issuesShort_(x[col.reporter], 30) : '';
-    var note = st === 'in_progress' && x[col.last_note] ? 'в работе: ' + issuesShort_(x[col.last_note], 60) : (st === 'in_progress' ? 'в работе' : 'не взято');
-    var mark = st === 'in_progress' ? '🟡' : '🔴';
-    if (days >= 3) mark += '⏰';
-    open.push({taken: st === 'in_progress' ? 1 : 0, ms: ms || 0,
-      s: mark + ' ' + where + ' — ' + what + '\n    ' + [since, st === 'in_progress' ? note : who || note].filter(String).join(' · ')});
+    var taken = st === 'in_progress';
+    open.push({taken: taken ? 1 : 0, ms: ms || 0,
+      s: (taken ? '🟡 ' : '🔴 ') + where + what + ' — ' + (days ? days + ' дн.' : 'сегодня') + (taken ? ', в работе' : '')});
   }
-  open.sort(function (a, b) { return a.taken - b.taken || a.ms - b.ms; });   // not taken first, then oldest first
-  var nNew = open.filter(function (o) { return !o.taken; }).length, out = [];
-  if (!open.length) out.push('🛠 Поломки: открытых нет');
-  else {
-    out.push('🛠 Поломки: открыто ' + open.length + ' (не взято ' + nNew + ', в работе ' + (open.length - nNew) + ')');
-    open.forEach(function (o) { out.push(o.s); });
-  }
-  if (kind === 'evening') {
-    out.push(closedToday.length ? 'Закрыто сегодня: ' + closedToday.length : 'Закрыто сегодня: 0');
-    closedToday.forEach(function (c) { out.push(c); });
-  }
-  if (open.length) out.push('🔴 не взято · 🟡 в работе · ⏰ 3+ дня');
+  // short (George 01.10: «кратко»): count, one line per issue (where, what, age), closed today only in the evening
+  open.sort(function (a, b) { return a.taken - b.taken || a.ms - b.ms; });
+  var out = [open.length ? '🛠 Поломки: ' + open.length : '🛠 Поломок нет'];
+  open.forEach(function (o) { out.push(o.s); });
+  if (kind === 'evening' && closedToday.length) closedToday.forEach(function (c) { out.push(c); });
   return out.join('\n').replace(/\s+$/, '');
 }
 
@@ -679,16 +666,17 @@ function bookingsToday_(now) {
     if (disp.length < hr) return;
     var cols = bkDateCols_(disp[hr - 1], today.getFullYear());
     var key = bkKey_(today), col = cols.map[key];
-    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': сетка заканчивается ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy') + ', дальше брони некуда записать');
+    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': сетка до ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy'));
     if (col === undefined) return;
     var items = [];
     for (var r = hr; r < disp.length; r++) {
       var v = String(disp[r][col] || '').trim();
-      if (v) items.push((String(disp[r][0] || '').trim() || '?') + ' ' + v.replace(/\s+/g, ' ').slice(0, 120));
+      if (v) items.push((String(disp[r][0] || '').trim() || '?') + ' ' + v.replace(/\s+/g, ' ').slice(0, 60));
     }
-    if (items.length) lines.push('• ' + name.trim() + ':\n   ' + items.join('\n   '));
+    if (items.length) lines.push(name.trim() + ': ' + items.join('; '));
   });
-  return 'Брони на сегодня (' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + '):\n' + (lines.length ? lines.join('\n') : 'нет') +
+  // short (George 01.10): one line per room, warnings one line each
+  return '📅 Брони ' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + (lines.length ? '\n' + lines.join('\n') : ': нет') +
     (warn.length ? '\n⚠️ ' + warn.join('\n⚠️ ') : '');
 }
 
@@ -947,9 +935,9 @@ function buildTimesheet_(c) {
   var prevEnd = new Date(per.from.getFullYear(), per.from.getMonth(), 0), prevFrom = new Date(prevEnd.getFullYear(), prevEnd.getMonth(), c.cutoff + 1);
   var prev = (c.mode !== 'custom' && !(c.from && c.to_) && prevFrom <= prevEnd) ? collect_(c, prevFrom, prevEnd, warnings) : null;
   var D = function (x) { return fmt_(x, 'dd.MM.yyyy'); };
-  var afterLines = after ? sideLines_(after, true) : [], prevLines = prev ? sideLines_(prev, false) : [];
-  var afterTitle = after ? 'After cutoff ' + fmt_(afterFrom, 'dd.MM') + '–' + D(per.to) + ' (not yet worked → next month adjustments):' : '';
-  var prevTitle = prev ? 'Adjustments from previous month ' + fmt_(prevFrom, 'dd.MM') + '–' + D(prevEnd) + ' (leave after last cutoff):' : '';
+  var afterLines = after ? sideLines_(after, false) : [], prevLines = prev ? sideLines_(prev, false) : [];
+  var afterTitle = after ? 'After cutoff ' + fmt_(afterFrom, 'dd.MM') + '–' + D(per.to) + ' (next month):' : '';
+  var prevTitle = prev ? 'From last month ' + fmt_(prevFrom, 'dd.MM') + '–' + D(prevEnd) + ':' : '';
 
   var fromIso = fmt_(per.from, 'yyyy-MM-dd'), toIso = fmt_(per.to, 'yyyy-MM-dd');
   var head = ['Position', 'Name', 'Shifts', 'Hours', 'Annual leave (days)', 'Sick (days)', 'Unpaid leave (days)', 'Doctor', 'Unrecognised cells'];
@@ -957,20 +945,23 @@ function buildTimesheet_(c) {
     var p = people[k];
     return [p.position, p.name, p.shifts, round2_(p.hours), p.ANNUAL, p.SICK, p.UNPAID, p.DOCTOR, p.unknown.join('; ')];
   });
-  var range = D(per.from) + '–' + D(per.to) + (per.cut < per.to ? ' (counted to ' + D(per.cut) + ')' : '');
+  var range = D(per.from) + '–' + D(per.to) + (per.cut < per.to ? ' (to ' + fmt_(per.cut, 'dd.MM') + ')' : '');
   var subject = c.prefix + ' ' + D(per.from) + '–' + D(per.to);
-  var sections = (after ? '\n\n' + afterTitle + '\n' + (afterLines.length ? afterLines.map(function (l) { return '• ' + l; }).join('\n') : '• none') : '') +
-    (prev ? '\n\n' + prevTitle + '\n' + (prevLines.length ? prevLines.map(function (l) { return '• ' + l; }).join('\n') : '• none') : '');
-  var text = c.greeting + '\n\nPlease find the staff timesheet for the period ' + range + ' (from Schedule 26).\n\n' +
-    [head.join(' | ')].concat(rows.map(function (r) { return r.join(' | '); })).join('\n') + sections +
-    '\n\nUnpaid leave days are listed for the deduction (monthly salary / 30 per day; SSO 5% is calculated after the deduction, cap 875). Leave after the ' + c.cutoff + 'th is deducted in the next month.' +
-    '\nThe same table is attached as CSV. Please let us know if anything needs to be corrected.\n\nBest regards,\nPlace Coworking';
-  var htmlList = function (title, lines) { return '<p><b>' + esc_(title) + '</b></p><ul>' + (lines.length ? lines : ['none']).map(function (l) { return '<li>' + esc_(l) + '</li>'; }).join('') + '</ul>'; };
-  var html = '<p>' + esc_(c.greeting) + '</p><p>Please find the staff timesheet for the period <b>' + esc_(range) + '</b> (from Schedule 26).</p>' +
-    '<table border="1" cellpadding="4" style="border-collapse:collapse"><tr>' + head.map(function (h) { return '<th>' + esc_(h) + '</th>'; }).join('') + '</tr>' +
-    rows.map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc_(String(v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table>' +
+  // short (George 01.10): table without the empty «Unrecognised» column, side notes on one line each, no explanations
+  var showUnk = rows.some(function (r) { return r[8]; });
+  var shortHead = ['Name', 'Shifts', 'Hours', 'Annual', 'Sick', 'Unpaid', 'Doctor'].concat(showUnk ? ['Unrecognised'] : []);
+  var shortRows = rows.map(function (r) { return [r[1], r[2], r[3], r[4], r[5], r[6], r[7]].concat(showUnk ? [r[8]] : []); });
+  var sections = (after ? '\n' + afterTitle + ' ' + (afterLines.length ? afterLines.join('; ') : 'none') : '') +
+    (prev ? '\n' + prevTitle + ' ' + (prevLines.length ? prevLines.join('; ') : 'none') : '');
+  var text = c.greeting + '\n\nTimesheet ' + range + ', CSV attached.\n\n' +
+    [shortHead.join(' | ')].concat(shortRows.map(function (r) { return r.join(' | '); })).join('\n') + '\n' + sections +
+    '\nUnpaid leave: salary / 30 per day.\n\nBest regards,\nPlace Coworking';
+  var htmlList = function (title, lines) { return '<p><b>' + esc_(title) + '</b> ' + esc_((lines.length ? lines : ['none']).join('; ')) + '</p>'; };
+  var html = '<p>' + esc_(c.greeting) + '</p><p>Timesheet <b>' + esc_(range) + '</b>, CSV attached.</p>' +
+    '<table border="1" cellpadding="4" style="border-collapse:collapse"><tr>' + shortHead.map(function (h) { return '<th>' + esc_(h) + '</th>'; }).join('') + '</tr>' +
+    shortRows.map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc_(String(v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table>' +
     (after ? htmlList(afterTitle, afterLines) : '') + (prev ? htmlList(prevTitle, prevLines) : '') +
-    '<p>Unpaid leave days are listed for the deduction (monthly salary / 30 per day; SSO 5% is calculated after the deduction, cap 875). Leave after the ' + c.cutoff + 'th is deducted in the next month.<br>The same table is attached as CSV. Please let us know if anything needs to be corrected.</p><p>Best regards,<br>Place Coworking</p>';
+    '<p>Unpaid leave: salary / 30 per day.</p><p>Best regards,<br>Place Coworking</p>';
   var csvRows = [head].concat(rows);
   if (after) { csvRows.push([]); csvRows.push([afterTitle]); afterLines.forEach(function (l) { csvRows.push(['', l]); }); }
   if (prev) { csvRows.push([]); csvRows.push([prevTitle]); prevLines.forEach(function (l) { csvRows.push(['', l]); }); }
@@ -1126,17 +1117,17 @@ function coverage_(mode) {
     gapsTotal += gaps.length;
     var label = Utilities.formatDate(d, SC_TZ, 'EEE dd.MM');
     var parts = [];
-    if (gaps.length) parts.push('🔴 НЕТ админа: ' + scRanges_(gaps));
-    if (single.length && c.single) parts.push('🟡 один админ: ' + scRanges_(single));
-    if (leave.length) parts.push((leave.length >= 2 ? '⚠️ ' : '') + 'отпуск/больничный: ' + leave.join(', '));
+    if (gaps.length) parts.push('🔴 нет админа ' + scRanges_(gaps));
+    if (single.length && c.single) parts.push('🟡 один ' + scRanges_(single));
+    if (leave.length) parts.push((leave.length >= 2 ? '⚠️ ' : '') + 'не работает: ' + leave.map(function (x) { return x.replace(/\s*\(.*\)$/, ''); }).join(', '));
     if (unknown.length) parts.push('❓ ' + unknown.join('; '));
     if (parts.length) lines.push(label + ': ' + parts.join(' · '));
   }
   // next month tab must exist by the 20th
   if (start.getDate() >= 20) { var nt = c.tabs[(start.getMonth() + 1) % 12]; if (!ss.getSheetByName(nt)) warn.push('К 20-му нет вкладки следующего месяца: ' + nt); }
-  var subject = 'Покрытие смен ' + Utilities.formatDate(start, SC_TZ, 'dd.MM') + ' + ' + c.win + ' дн.: дыр ' + gapsTotal + ' ч';
-  var body = (lines.length ? lines.join('\n') : 'Дыр и отпусков нет.') + (warn.length ? '\n\n' + warn.join('\n') : '') +
-    '\n\nЧасы ' + c.open + ':00–' + c.close + ':00, только строки Admin. Черновик, никому не отправлено.';
+  var endD = new Date(start.getTime() + c.win * 86400000);
+  var subject = 'График ' + Utilities.formatDate(start, SC_TZ, 'dd.MM') + '–' + Utilities.formatDate(endD, SC_TZ, 'dd.MM') + ': без админа ' + gapsTotal + ' ч';
+  var body = (lines.length ? lines.join('\n') : 'Всё закрыто.') + (warn.length ? '\n⚠️ ' + warn.join('\n⚠️ ') : '');
   if (mode === 'draft') GmailApp.createDraft(c.to, subject, body);
   Logger.log('[coverage ' + mode + '] ' + subject + '\n' + body);
   return {subject: subject, body: body, gaps: gapsTotal};
@@ -1181,7 +1172,7 @@ function scRanges_(hours) {
   var out = [], s = hours[0], p = hours[0];
   for (var i = 1; i <= hours.length; i++) {
     if (hours[i] === p + 1) { p = hours[i]; continue; }
-    out.push(s + ':00–' + (p + 1) + ':00'); s = p = hours[i];
+    out.push(s + '–' + (p + 1)); s = p = hours[i];
   }
   return out.join(', ');
 }
@@ -1334,20 +1325,20 @@ var PAY = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlFe
 var PAY_TZ = 'Asia/Bangkok';
 /** kind: monthly {day} | yearly {month, day} | months {months:[..], day} | once {date:'yyyy-MM-dd'} (contract end).
  *  offsets: days before the due date to remind (0 = on the day). */
-var PAY_SCHEDULE = [
-  {name: 'Electricity (PEA)',              kind: 'monthly', day: 8,  amount: '43,000–57,000 ฿', who: 'Sak (controls)',        how: 'QR or at the PEA office'},
-  {name: 'Water',                          kind: 'monthly', day: 20, amount: '900–1,500 ฿',     who: 'bill to Lena',          how: 'QR or at the office'},
-  {name: 'Internet 3BB line …7174',        kind: 'monthly', day: 12, amount: '1,924.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
-  {name: 'Internet 3BB line …4746',        kind: 'monthly', day: 8,  amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
-  {name: 'Internet 3BB line …4751',        kind: 'monthly', day: 8,  amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
-  {name: 'Internet 3BB line …7790',        kind: 'monthly', day: 28, amount: '1,496.93 ฿',      who: 'inform Lena',           how: 'by customer number (3BB)'},
-  {name: 'Printer rental',                 kind: 'monthly', day: 10, amount: '2,675 ฿',         who: 'Lena',                  how: 'bank transfer (details in the supplier file)', note: 'after the 10th'},
-  {name: 'Billboard (advertising)',        kind: 'monthly', day: 5,  amount: '5,000 ฿',         who: 'Lena',                  how: 'bank transfer (details in the supplier file)'},
-  {name: 'Office mobile (Dtac)',           kind: 'monthly', day: 1,  amount: '300–400 ฿',       who: 'inform Lena',           how: 'top-up by phone number', note: 'no fixed date in the file: check balance on the 1st'},
-  {name: 'Secom (emergency button)',       kind: 'months',  months: [2, 7], day: 1, amount: '24,396 ฿', who: 'Lena',          how: 'QR code', note: 'twice a year, February and July'},
-  {name: 'Garbage (Chalong municipality)', kind: 'yearly',  month: 11, day: 1, amount: '7,200 ฿/year', who: 'inform Sak and Lena', how: 'cash or QR at the municipality', note: '«after October»'},
-  {name: 'Printer contract ends',          kind: 'once',    date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George + Lena', how: 'renew or cancel', note: 'file says «February, 27»: taken as 27.02.2027'},
-  {name: 'Billboard contract ends',        kind: 'once',    date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George + Lena', how: 'renew or cancel', note: 'file says «February, 27»: taken as 27.02.2027'}
+var PAY_SCHEDULE = [   // short texts (George 01.10: «кратко»)
+  {name: 'Электричество (PEA)',  kind: 'monthly', day: 8,  amount: '43–57 тыс. ฿', who: 'Sak',  how: 'QR / в офисе PEA'},
+  {name: 'Вода',                 kind: 'monthly', day: 20, amount: '0.9–1.5 тыс. ฿', who: 'счёт Лене', how: 'QR / в офисе'},
+  {name: 'Интернет 3BB …7174',   kind: 'monthly', day: 12, amount: '1 925 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB …4746',   kind: 'monthly', day: 8,  amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB …4751',   kind: 'monthly', day: 8,  amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB …7790',   kind: 'monthly', day: 28, amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Аренда принтера',      kind: 'monthly', day: 10, amount: '2 675 ฿', who: 'Лена', how: 'перевод'},
+  {name: 'Билборд',              kind: 'monthly', day: 5,  amount: '5 000 ฿', who: 'Лена', how: 'перевод'},
+  {name: 'Обновить телефонный счёт Dtac', kind: 'monthly', day: 1, amount: '300–400 ฿', who: 'админ', how: 'по номеру телефона'},
+  {name: 'Secom (тревожная кнопка)', kind: 'months', months: [2, 7], day: 1, amount: '24 396 ฿ за платёж', who: 'Лена', how: 'QR', note: '2 раза в год: 1.02 и 1.07'},
+  {name: 'Вывоз мусора (Чалонг)', kind: 'yearly', month: 11, day: 1, amount: '7 200 ฿ за год', who: 'Sak, Лена', how: 'наличные / QR в муниципалитете'},
+  {name: 'Конец договора: принтер', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: '', note: 'после этой даты принтер наш'},
+  {name: 'Конец договора: билборд', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: 'продлить или закрыть'}
 ];
 var PAY_OFFSETS = [3, 0];
 
@@ -1384,13 +1375,11 @@ function payDue_(today) {
 /** Message text for the day, or '' if nothing is due. */
 function payText_(today) {
   var r = payDue_(today); if (!r.length) return '';
-  var lines = ['💳 Payment reminders ' + Utilities.formatDate(today, PAY_TZ, 'dd.MM.yyyy')];
+  var lines = ['💳 Платежи'];
   r.forEach(function (x) {
-    var e = x.entry, when = x.daysLeft === 0 ? '🔴 TODAY' : '⏰ in ' + x.daysLeft + ' days';
-    lines.push(when + ' (' + Utilities.formatDate(x.due, PAY_TZ, 'dd.MM') + ') — ' + e.name + (e.amount ? ', ~' + e.amount : ''));
-    lines.push('    ' + [e.who, e.how, e.note].filter(Boolean).join(' · '));
+    var e = x.entry, when = x.daysLeft === 0 ? '🔴 сегодня' : '⏰ ' + Utilities.formatDate(x.due, PAY_TZ, 'dd.MM');
+    lines.push(when + ' — ' + e.name + (e.amount ? ', ' + e.amount : '') + ' (' + [e.who, e.how, e.note].filter(Boolean).join(', ') + ')');
   });
-  lines.push('Paid? Reply here with a photo of the receipt.');
   return lines.join('\n');
 }
 
@@ -1410,12 +1399,78 @@ function payRemindersRun_(today) {
 return {PAY_SCHEDULE: PAY_SCHEDULE, payDue_: payDue_, payText_: payText_, payRemindersRun_: payRemindersRun_};
 })(T_props_('PAY'), T_SS, T_GMAIL, T_MAIL, T_FETCH, T_SCRIPT, T_LOGGER);
 
+// ===== 85-Cash.gs =====
+/** GENERATED by build-test-project.sh from cash-collection.gs — do not edit here. Module CASH (TEST sandbox). */
+var CASH = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlFetchApp, ScriptApp, Logger) {
+
+/**
+ * Place Coworking — cash collection every 3 days (George 01.10.2026). DRAFT, NOT DEPLOYED (TEST only).
+ *
+ * Process:
+ *   - every 3 days at 20:00 the evening admin gets a short reminder (any amount; no cash → no collection);
+ *   - after closing the admin counts and writes to the bot, no photo: «в кассе X / в сейф Y»
+ *     (also «in till X / safe Y», «ลิ้นชัก X / เซฟ Y»); the surplus Y goes into the safe; the same figures go into the act;
+ *   - then Khun Sak gets a DM: money is in the safe, please come by.
+ *
+ * Receiving the admin's reply needs the bridge hook (live bridge is NOT changed now). Hook, when approved:
+ *   if (m.chat.type === 'private' && CASH_RE.test(text)) try { cashHandleReply_(text, name, new Date()); } catch (e) { Logger.log('CASH_ERR ' + e); }
+ * Script Properties (production): TOKEN (bridge bot), SAK_CHAT_ID (Khun Sak's private chat). Empty → WARN, nothing sent.
+ */
+var CASH_TZ = 'Asia/Bangkok';
+var CASH_RE = /(в\s*кассе|касса|in\s*till|till|ลิ้นชัก)\s*[:=-]?\s*\d/i;
+
+/** 20:00 reminder for the evening admin (EN + TH, short). */
+function cashReminderText_() {
+  return '💰 Cash collection today\n' +
+    'After closing, reply here (no photo): «в кассе X / в сейф Y». Same figures in the act. No cash → no collection.\n' +
+    'วันนี้เก็บเงินสด: หลังปิดร้านพิมพ์ «ลิ้นชัก X / เซฟ Y» ตัวเลขเดียวกันลงใบส่งมอบ ไม่มีเงินสด = ไม่ต้องเก็บ';
+}
+
+function cashNum_(s) { return Number(String(s).replace(/[\s,]/g, '')); }
+function cashFmt_(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ฿'; }
+
+/** «в кассе 2 000 / в сейф 12 500» → {till: 2000, safe: 12500} or null. */
+function cashParse_(text) {
+  var t = String(text || '');
+  var a = t.match(/(?:в\s*кассе|касса|in\s*till|till|ลิ้นชัก)\s*[:=-]?\s*([\d][\d\s,]*)/i);
+  var b = t.match(/(?:в\s*сейф|сейф|to\s*safe|safe|เซฟ|ตู้เซฟ)\s*[:=-]?\s*([\d][\d\s,]*)/i);
+  if (!a || !b) return null;
+  var till = cashNum_(a[1]), safe = cashNum_(b[1]);
+  if (isNaN(till) || isNaN(safe)) return null;
+  return {till: till, safe: safe};
+}
+
+/** Builds the texts for a reply. Returns {ok, till, safe, ack, sak} (sak = '' when nothing went to the safe). */
+function cashReply_(text, admin, now) {
+  var v = cashParse_(text);
+  if (!v) return {ok: false, ack: 'Format: «в кассе X / в сейф Y» · รูปแบบ: «ลิ้นชัก X / เซฟ Y»'};
+  var when = Utilities.formatDate(now || new Date(), CASH_TZ, 'dd.MM HH:mm');
+  var sak = v.safe > 0 ? '💰 In the safe: ' + cashFmt_(v.safe) + ' (' + admin + ', ' + when + '). Please come by.\nเงินในเซฟ ' + cashFmt_(v.safe) + ' กรุณามารับ' : '';
+  return {ok: true, till: v.till, safe: v.safe, sak: sak,
+    ack: '✅ Till ' + cashFmt_(v.till) + ' / safe ' + cashFmt_(v.safe) + (sak ? ' · Khun Sak notified' : ' · no collection')};
+}
+
+/** Production: handle the admin's reply (needs the bridge hook) → DM to Khun Sak. */
+function cashHandleReply_(text, admin, now) {
+  var r = cashReply_(text, admin, now);
+  if (!r.ok || !r.sak) return r;
+  var p = PropertiesService.getScriptProperties(), chat = String(p.getProperty('SAK_CHAT_ID') || '').trim(), tok = p.getProperty('TOKEN');
+  if (!chat || !tok) { Logger.log('WARN ' + (!chat ? 'SAK_CHAT_ID' : 'TOKEN') + ' not set → Sak NOT notified'); r.sent = false; return r; }
+  var x = UrlFetchApp.fetch('https://api.telegram.org/bot' + tok + '/sendMessage', {method: 'post', contentType: 'application/json',
+    payload: JSON.stringify({chat_id: chat, text: r.sak}), muteHttpExceptions: true});
+  r.sent = x.getResponseCode() === 200;
+  return r;
+}
+
+return {cashReminderText_: cashReminderText_, cashParse_: cashParse_, cashReply_: cashReply_, cashHandleReply_: cashHandleReply_};
+})(T_props_('CASH'), T_SS, T_GMAIL, T_MAIL, T_FETCH, T_SCRIPT, T_LOGGER);
+
 // ===== 90-Tests.gs =====
 /** PLACE automations TEST — test entry points. Run from the editor (Run ▸ function). No triggers. */
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments()]
+  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments(), test_cash()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -1544,15 +1599,14 @@ function test_relay() {
     var sent = [], prev = T_CTX, fail = [];
     var fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
     var body = 'Сегодня брони: Meeting room 14:00–16:00';
-    function run(ids) { sent = []; T_CTX = {relay: true, ids: ids, send: fake}; var buf0 = T_BUF.length; var r = T_relay_('PLACE Team (TG группа)', body); var w = T_BUF.slice(buf0).join('\n'); T_CTX = prev; return {r: r, sent: sent, log: w}; }
+    function run(ids) { sent = []; T_CTX = {relay: true, ids: ids, send: fake}; var buf0 = T_BUF.length; var r = T_relay_('PLACE Team', body); var w = T_BUF.slice(buf0).join('\n'); T_CTX = prev; return {r: r, sent: sent, log: w}; }
     try {
       var a = run({george: '111111', lena: '222222'});
       if (a.sent.length !== 2 || a.sent[0].id !== '111111' || a.sent[1].id !== '222222') fail.push('both: ' + JSON.stringify(a.sent.map(function (x) { return x.id; })));
       a.sent.forEach(function (x) {
         var L = x.text.split('\n');
-        if (L[0] !== '🧪 ТЕСТ') fail.push('line1: ' + L[0]);
-        if (L[1] !== 'Куда ушло бы: PLACE Team (TG группа)') fail.push('line2: ' + L[1]);
-        if (L[2] !== '' || L.slice(3).join('\n') !== body) fail.push('body: ' + JSON.stringify(L.slice(2)));
+        if (L[0] !== '🧪 ТЕСТ · Куда ушло бы: PLACE Team') fail.push('line1: ' + L[0]);
+        if (L[1] !== '' || L.slice(2).join('\n') !== body) fail.push('body: ' + JSON.stringify(L.slice(1)));
       });
       var b = run({george: '111111', lena: ''});
       if (b.sent.length !== 1 || b.sent[0].id !== '111111') fail.push('no-lena: ' + JSON.stringify(b.sent.map(function (x) { return x.id; })));
@@ -1574,9 +1628,9 @@ function test_techRoute() {
     try {
       // 1) job header (T_issuesJob_ with fake relay)
       var saved = [T_PROFILE]; T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {TECH_CHAT_ID: ''}};
-      T_relay_('Тех вопросы (TG группа, сводка 10:07)', ISS.issuesDigest_('morning'));
-      if (sent.length !== 2 || sent[0].text.split('\n')[1] !== 'Куда ушло бы: Тех вопросы (TG группа, сводка 10:07)') fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[1]; })));
-      if (sent.some(function (x) { return /PLACE Team/.test(x.text.split('\n')[1]); })) fail.push('still PLACE Team');
+      T_relay_('Тех вопросы, 10:07', ISS.issuesDigest_('morning'));
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Тех вопросы, 10:07') fail.push('header: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
+      if (sent.some(function (x) { return /PLACE Team/.test(x.text.split('\n')[0]); })) fail.push('still PLACE Team');
       // 2) production path, TECH_CHAT_ID empty → not sent, warning
       sent = []; var buf0 = T_BUF.length;
       var a = ISS.issuesSendDigest_('evening');
@@ -1584,7 +1638,7 @@ function test_techRoute() {
       // 3) production path, TECH_CHAT_ID set → one sendMessage to it, relayed as «Тех вопросы (TG группа)»
       sent = []; T_CTX.props = {TECH_CHAT_ID: '-1009990077'};
       var b = ISS.issuesSendDigest_('evening');
-      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[1] !== 'Куда ушло бы: Тех вопросы (TG группа)') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[1]; })));
+      if (!b.sent || sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Тех вопросы') fail.push('set TECH_CHAT_ID: ' + JSON.stringify(sent.map(function (x) { return x.text.split('\n')[0]; })));
     } finally { T_CTX = prev; }
     if (fail.length) throw new Error('TECH ROUTE FAIL ' + fail.join('; '));
     return 'OK: header «Тех вопросы (TG группа, сводка 10:07)»; TECH_CHAT_ID empty → not sent + WARN; set → sent to TECH_CHAT_ID';
@@ -1597,14 +1651,17 @@ function test_payments() {
     var fail = [], D = function (s) { return new Date(s + 'T09:15:00+07:00'); };
     var names = function (d) { return PAY.payDue_(D(d)).map(function (x) { return x.entry.name + '@' + x.daysLeft; }).sort().join(' | '); };
     var cases = {
-      '2026-10-05': ['Electricity (PEA)@3', 'Internet 3BB line …4746@3', 'Internet 3BB line …4751@3', 'Billboard (advertising)@0'],
-      '2026-10-08': ['Electricity (PEA)@0', 'Internet 3BB line …4746@0', 'Internet 3BB line …4751@0'],
-      '2026-10-17': ['Water@3'],
-      '2026-10-25': ['Internet 3BB line …7790@3'],
-      '2026-10-29': ['Garbage (Chalong municipality)@3', 'Office mobile (Dtac)@3'],
-      '2027-01-28': ['Printer contract ends@30', 'Billboard contract ends@30', 'Internet 3BB line …7790@0'],
-      '2027-01-29': ['Secom (emergency button)@3', 'Office mobile (Dtac)@3'],
-      '2027-02-24': ['Printer contract ends@3', 'Billboard contract ends@3'],
+      '2026-10-05': ['Электричество (PEA)@3', 'Интернет 3BB …4746@3', 'Интернет 3BB …4751@3', 'Билборд@0'],
+      '2026-10-08': ['Электричество (PEA)@0', 'Интернет 3BB …4746@0', 'Интернет 3BB …4751@0'],
+      '2026-10-17': ['Вода@3'],
+      '2026-10-25': ['Интернет 3BB …7790@3'],
+      '2026-10-29': ['Вывоз мусора (Чалонг)@3', 'Обновить телефонный счёт Dtac@3'],
+      '2026-11-01': ['Вывоз мусора (Чалонг)@0', 'Обновить телефонный счёт Dtac@0'],
+      '2027-01-28': ['Конец договора: принтер@30', 'Конец договора: билборд@30', 'Интернет 3BB …7790@0'],
+      '2027-01-29': ['Secom (тревожная кнопка)@3', 'Обновить телефонный счёт Dtac@3'],
+      '2027-02-01': ['Secom (тревожная кнопка)@0', 'Обновить телефонный счёт Dtac@0'],
+      '2027-07-01': ['Secom (тревожная кнопка)@0', 'Обновить телефонный счёт Dtac@0'],
+      '2027-02-24': ['Конец договора: принтер@3', 'Конец договора: билборд@3'],
       '2026-10-14': []
     };
     Object.keys(cases).forEach(function (d) {
@@ -1616,17 +1673,46 @@ function test_payments() {
       var t = PAY.payText_(new Date(D('2026-10-01').getTime() + i * 86400000));
       if (/\d{10,}|\b\d{3}[- ]\d{1,3}[- ]\d{4,5}(?:[- ]\d)?\b/.test(t)) { fail.push('bank-like number in text ' + i); break; }
     }
+    var t27 = PAY.payText_(D('2027-02-27'));
+    if (!/принтер.*после этой даты принтер наш/.test(t27)) fail.push('printer note missing: ' + t27);
+    if (!/24 396 ฿ за платёж/.test(PAY.payText_(D('2027-02-01')))) fail.push('Secom wording');
+    if (PAY.payText_(D('2026-10-05')).split('\n').length > 6) fail.push('payments text too long');
     // relay: header + PAY label to George and Lena; production path with empty PAY_CHAT_ID sends nothing
     var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
     try {
       T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake, props: {PAY_CHAT_ID: ''}};
       T_relay_('PAY_CHAT_ID (группа, уточняется)', PAY.payText_(D('2026-10-08')));
-      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ' || sent[0].text.split('\n')[1] !== 'Куда ушло бы: PAY_CHAT_ID (группа, уточняется)') fail.push('relay header');
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: PAY_CHAT_ID (группа, уточняется)') fail.push('relay header');
       sent = []; var buf0 = T_BUF.length, r = PAY.payRemindersRun_(D('2026-10-08'));
       if (r.sent !== false || sent.length || !/WARN PAY_CHAT_ID not set/.test(T_BUF.slice(buf0).join('\n'))) fail.push('empty PAY_CHAT_ID: ' + JSON.stringify(r));
     } finally { T_CTX = prev; }
     if (fail.length) throw new Error('PAYMENTS FAIL ' + fail.join('; '));
     return {ok: Object.keys(cases).length + ' dates OK, no bank numbers, header OK, empty PAY_CHAT_ID → not sent', sample: PAY.payText_(D('2026-10-05'))};
+  });
+}
+
+/** Cash collection (George 01.10): short reminder asks «в кассе X / в сейф Y»; reply parsed; Sak DM relayed to George + Lena
+ *  as «Сак (ЛС)»; safe 0 → no collection, no DM; bad format → hint. Fake ids + fake sender, nothing is sent. */
+function test_cash() {
+  return T_fixture_('cash', 'CASH.cashReminderText_ / cashReply_ (fake ids, fake sender)', function () {
+    var fail = [], now = new Date('2026-10-04T23:05:00+07:00');
+    var rem = CASH.cashReminderText_();
+    if (rem.split('\n').length > 4 || rem.indexOf('«в кассе X / в сейф Y»') < 0 || /photo|фото/i.test(rem.replace('no photo', ''))) fail.push('reminder: ' + rem);
+    [['в кассе 2 000 / в сейф 12 500', 2000, 12500], ['касса 1500, сейф 0', 1500, 0], ['in till 3,000 / safe 9,800', 3000, 9800], ['ลิ้นชัก 2000 / เซฟ 7000', 2000, 7000]]
+      .forEach(function (c) { var v = CASH.cashParse_(c[0]); if (!v || v.till !== c[1] || v.safe !== c[2]) fail.push('parse ' + c[0] + ' → ' + JSON.stringify(v)); });
+    if (CASH.cashParse_('12500')) fail.push('parse without labels must fail');
+    var prev = T_CTX, sent = [], fake = function (id, text) { sent.push({id: id, text: text}); return 200; };
+    try {
+      T_CTX = {relay: true, ids: {george: '111111', lena: '222222'}, send: fake};
+      var r = CASH.cashReply_('в кассе 2000 / в сейф 12500', 'Tangmo', now);
+      if (r.ok && r.sak) T_relay_('Сак (ЛС)', r.sak);
+      if (sent.length !== 2 || sent[0].text.split('\n')[0] !== '🧪 ТЕСТ · Куда ушло бы: Сак (ЛС)' || !/12 500 ฿/.test(sent[0].text)) fail.push('sak dm: ' + JSON.stringify(sent));
+      var z = CASH.cashReply_('в кассе 800 / в сейф 0', 'Tangmo', now);
+      if (z.sak || !/no collection/.test(z.ack)) fail.push('zero safe: ' + JSON.stringify(z));
+      if (CASH.cashReply_('12500', 'Tangmo', now).ok) fail.push('bad format accepted');
+    } finally { T_CTX = prev; }
+    if (fail.length) throw new Error('CASH FAIL ' + fail.join('; '));
+    return {ok: 'reminder short + format; parse ru/en/th; Sak DM → George + Lena as «Сак (ЛС)»; safe 0 → no DM', reminder: rem, sak: r.sak, ack: r.ack};
   });
 }
 
@@ -1742,36 +1828,36 @@ function removeTestTriggers() {
 function ST6_prop_(k) { return T_props_('ST6').getScriptProperties().getProperty(k); }
 function job_stage6() {
   return T_job_('stage6', 'job_stage6 (prod Resident info read-only)', function (to) {
-    if (to === 'info@placecoworking.com') return 'Place Ops и George, email info@ (черновик, дайджест офисов)';
-    return 'арендатор ' + to + ', email (черновик на info@)';
+    if (to === 'info@placecoworking.com') return 'Place Ops и George (email-черновик)';
+    return 'арендатор ' + to + ' (email-черновик)';
   }, function () {
     var reg = T_SS.openById(ST6_prop_('RESIDENT_SHEET_ID')).getSheetByName(ST6_prop_('TAB_NAME'));
     if (!reg || reg.getLastRow() < 2) return 'Office rent is empty in production Resident info: nothing to check (no relay)';
     var r = ST6.run_('draft');
     var rows = T_SS.openById(T_IDS.inbox).getSheetByName('Issues').getDataRange().getValues(), today = Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
     rows.filter(function (x) { return /^elec:/.test(x[0]) && String(x[1]).indexOf(today) === 0 && String(x[14] || '') !== 'fixture'; }).forEach(function (x) {
-      T_relay_('Лена в личку', '⚡ ' + x[4] + '\n(задача в Issues: ' + x[0] + ')');
+      T_relay_('Лена (ЛС)', '⚡ ' + x[4].replace(/^выставить счёт за электричество: /, 'Счёт за электричество: '));
     });
     return r;
   });
 }
 function job_coverage() {
   return T_job_('coverage', 'job_coverage (prod Schedule 26 read-only)', function (to) {
-    return 'Лена и Place Ops, email ' + to + ' (черновик, пробелы в графике)';
+    return 'Лена и Place Ops (email-черновик)';
   }, function () { var r = SC.coverage_('draft'); return {subject: r.subject, gaps: r.gaps}; });
 }
 function job_bookings() {
   return T_job_('bookings', 'job_bookings (prod Events and booking read-only)', null, function () {
     var t = BKG.bookingsToday_(new Date());
-    T_relay_('PLACE Team (TG группа, сводка 10:07)', t);
+    T_relay_('PLACE Team, 10:07', t);
     return t;
   });
 }
 /** Issues digests go to the TG group «Тех вопросы» (George 30.09 14:27), not PLACE Team. Real target = Script Property
  *  TECH_CHAT_ID (unknown yet). In TEST the digest is always relayed to George + Lena; empty TECH_CHAT_ID → WARN in Log
  *  (in production issuesSendDigest_ would then send nothing). */
-function job_issuesMorning() { return T_issuesJob_('morning', 'Тех вопросы (TG группа, сводка 10:07)'); }
-function job_issuesEvening() { return T_issuesJob_('evening', 'Тех вопросы (TG группа, сводка 23:10)'); }
+function job_issuesMorning() { return T_issuesJob_('morning', 'Тех вопросы, 10:07'); }
+function job_issuesEvening() { return T_issuesJob_('evening', 'Тех вопросы, 23:10'); }
 function T_issuesJob_(kind, channel) {
   return T_job_('issues', 'job_issues ' + kind, null, function () {
     var synced = T_syncIssuesFromQueue_();
@@ -1802,22 +1888,25 @@ function T_syncIssuesFromQueue_() {
 }
 function job_timesheet() {
   return T_job_('timesheet', 'job_timesheet (prod Schedule 26 read-only)', function (to) {
-    return 'email Khun Pat (черновик)' + (/@/.test(to) ? ' ' + to : '');
+    return 'Khun Pat (email-черновик)';
   }, function () { return ST5.createTimesheetDraft(); });
 }
 /** Every 3 days 20:00: remind the evening admin (shift ending 23:00) to prepare cash + count for the Thai partner. */
 function job_cashReminder() {
   return T_job_('cash', 'job_cashReminder (prod Schedule 26 read-only)', null, function () {
-    var now = new Date(), names = T_eveningAdmins_(now);
-    var text = 'Cash for the bank / เงินสดฝากธนาคาร\n' +
-      'Tomorrow the Thai partner collects the cash for the bank. After closing (23:00) please:\n' +
-      '1) count the cash in the till;\n2) put it in the envelope with the count sheet (date, total, notes/coins, your name);\n' +
-      '3) send the total + a photo of the count sheet here with #cash.\n\n' +
-      'พรุ่งนี้พาร์ทเนอร์จะมารับเงินสดไปฝากธนาคาร หลังปิดร้าน (23:00) กรุณา:\n' +
-      '1) นับเงินสดในลิ้นชัก\n2) ใส่ซองพร้อมใบนับเงิน (วันที่ ยอดรวม ธนบัตร/เหรียญ ชื่อผู้นับ)\n3) ส่งยอดรวม + รูปใบนับเงินที่นี่ พร้อม #cash';
-    var who = names.length ? 'вечерний админ ' + names.join(', ') + ' в личку' : 'вечерний админ (не найден в Schedule 26) → Place Ops и George в личку';
-    T_relay_(who, text);
+    var names = T_eveningAdmins_(new Date());
+    var who = names.length ? 'вечерний админ ' + names.join(', ') + ' (ЛС)' : 'вечерний админ (нет в графике) → Place Ops и George (ЛС)';
+    T_relay_(who, CASH.cashReminderText_());
     return {eveningAdmins: names};
+  });
+}
+/** Simulates the admin's reply (the TEST project cannot receive Telegram messages). Run from the editor, e.g.
+ *  simulateCashReply('в кассе 2000 / в сейф 12500', 'Tangmo'). The DM to Khun Sak is relayed to George + Lena as «Сак (ЛС)». */
+function simulateCashReply(text, admin) {
+  return T_job_('cash', 'simulateCashReply', null, function () {
+    var r = CASH.cashReply_(text || 'в кассе 2000 / в сейф 12500', admin || 'admin', new Date());
+    if (r.ok && r.sak) T_relay_('Сак (ЛС)', r.sak);
+    return r;
   });
 }
 /** Daily ~09:15: recurring payment reminders (Aiz's supplier sheet, config PAY_SCHEDULE in payment-reminders.gs).
