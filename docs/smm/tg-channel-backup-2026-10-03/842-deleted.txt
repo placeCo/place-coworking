@@ -1,0 +1,28 @@
+# Backup of https://t.me/coworking_place_phuket/842 — DELETED 2026-10-03 (George approved 04:17 ICT: Place Hotel sold)
+# Post date: 2025-11-15T05:05:38+00:00 (UTC)
+# Message ids in post: [842, 843]
+# Media: album of 2 photos
+# Media files saved (web-preview quality): ['842-1.jpg (66 KB)', '842-2.jpg (61 KB)']
+
+=== PLAIN TEXT ===
+Суббота в Place Hotel: можно не спешить, можно растянуть утро и забыть про суету 🍹
+Ваше право на полный релакс.
+
+=== TELEGRAM HTML ===
+<i>Суббота в Place Hotel: можно не спешить, можно растянуть утро и забыть про суету 🍹 
+</i>Ваше право на полный релакс<i>.</i>
+
+=== ENTITIES ===
+[
+ {
+  "type": "i",
+  "text": "Суббота в Place Hotel: можно не спешить, можно растянуть утро и забыть про суету 🍹 "
+ },
+ {
+  "type": "i",
+  "text": "."
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><div class="tgme_widget_message_text js-message_text" dir="auto"><i>Суббота в Place Hotel: можно не спешить, можно растянуть утро и забыть про суету <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8DB9.png')"><b>🍹</b></i> <br/></i>Ваше право на полный релакс<i>.</i></div></div>

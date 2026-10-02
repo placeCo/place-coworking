@@ -1,0 +1,78 @@
+# Backup of https://t.me/coworking_place_phuket/594 — DELETED 2026-10-03 (George approved 04:17 ICT: Place Hotel sold)
+# Post date: 2025-03-17T07:37:43+00:00 (UTC)
+# Message ids in post: [594, 595, 596, 597, 598, 599]
+# Media: album of 6 photos
+# Media files saved (web-preview quality): ['594-1.jpg (85 KB)', '594-2.jpg (74 KB)', '594-3.jpg (79 KB)', '594-4.jpg (67 KB)', '594-5.jpg (77 KB)', '594-6.jpg (54 KB)']
+
+=== PLAIN TEXT ===
+✨ Встречайте Place Hotel
+
+Вы знаете нас по комфортному и продуктивному Place Coworking. И сегодня мы рады поделиться еще одной замечательной новостью!
+
+Теперь мы предлагаем вам не только идеальное рабочее пространство, но и уютное размещение в нашем новом отеле.
+📍 Отель находится здесь
+
+Это отличное решение, если вам нужно остановиться в городе, принять гостей или просто сменить обстановку.
+И, конечно же, мы не забыли о наших резидентах! 😉
+🔣 Для всех резидентов Place Coworking действуют специальные цены на проживание в отеле 
+
+Чтобы узнать доступность номеров и цены с учетом скидки для резидентов, напишите админу канала 
+
+#place #новости
+
+=== TELEGRAM HTML ===
+<tg-emoji emoji-id="5879835040250073161">✨</tg-emoji> <b>Встречайте Place Hotel</b>
+
+Вы знаете нас по комфортному и продуктивному Place Coworking. И сегодня мы рады поделиться еще одной замечательной новостью!
+
+Теперь мы предлагаем вам не только идеальное рабочее пространство, но и уютное размещение в нашем <a href="https://www.booking.com/Share-SwJcg5">новом отеле.</a> 
+📍 <a href="https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc">Отель находится здесь</a>
+
+Это отличное решение, если вам нужно остановиться в городе, принять гостей или просто сменить обстановку.
+И, конечно же, мы не забыли о наших резидентах! 😉
+
+<tg-emoji emoji-id="5882200072581550212">🔣</tg-emoji> <b>Для всех резидентов Place Coworking действуют специальные цены на проживание в отеле </b>
+
+Чтобы узнать доступность номеров и цены с учетом скидки для резидентов, напишите <a href="https://t.me/coworking_place">админу канала </a>
+
+#place #новости
+
+=== ENTITIES ===
+[
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5879835040250073161",
+  "text": "✨"
+ },
+ {
+  "type": "b",
+  "text": "Встречайте Place Hotel"
+ },
+ {
+  "type": "text_link",
+  "url": "https://www.booking.com/Share-SwJcg5",
+  "text": "новом отеле."
+ },
+ {
+  "type": "text_link",
+  "url": "https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc",
+  "text": "Отель находится здесь"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5882200072581550212",
+  "text": "🔣"
+ },
+ {
+  "type": "b",
+  "text": "Для всех резидентов Place Coworking действуют специальные цены на проживание в отеле "
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place",
+  "text": "админу канала "
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><tg-emoji emoji-id="5879835040250073161"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> <b>Встречайте Place Hotel</b><br/><br/>Вы знаете нас по комфортному и продуктивному Place Coworking. И сегодня мы рады поделиться еще одной замечательной новостью!<br/><br/>Теперь мы предлагаем вам не только идеальное рабочее пространство, но и уютное размещение в нашем <a href="https://www.booking.com/Share-SwJcg5" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">новом отеле.</a> <br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938D.png')"><b>📍</b></i> <a href="https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Отель находится здесь</a><br/><br/>Это отличное решение, если вам нужно остановиться в городе, принять гостей или просто сменить обстановку.<br/>И, конечно же, мы не забыли о наших резидентах! <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F9889.png')"><b>😉</b></i><br/><br/><tg-emoji emoji-id="5882200072581550212"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94A3.png')"><b>🔣</b></i></tg-emoji> <b>Для всех резидентов Place Coworking действуют специальные цены на проживание в отеле </b><br/><br/>Чтобы узнать доступность номеров и цены с учетом скидки для резидентов, напишите <a href="https://t.me/coworking_place" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">админу канала </a><br/><br/>#place #новости</div>

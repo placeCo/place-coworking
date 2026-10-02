@@ -1,0 +1,74 @@
+# Backup of https://t.me/coworking_place_phuket/773 — DELETED 2026-10-03 (George approved 04:17 ICT: Place Hotel sold)
+# Post date: 2025-09-03T10:00:11+00:00 (UTC)
+# Message ids in post: [773, 774]
+# Media: album of 2 photos
+# Media files saved (web-preview quality): ['773-1.jpg (71 KB)', '773-2.jpg (57 KB)']
+
+=== PLAIN TEXT ===
+Ваша база на Пхукете — отель Place! 🌴✨ 
+
+Всего несколько минут до пляжей Ката и Карон! 
+• Берите питомцев — они тоже любят Пхукет;
+• Саморегистрация — заселяйтесь без очередей;
+• Всё для отдыха: кондиционер, Wi-Fi и тишина. 
+📌 Забронировать номер
+⚡️Place — это больше чем коворкинг. Это семья! ❤️ Поэтому мы даём бонус резидентам коворкинга за каждого приведённого гостя в наш отель.
+
+Пишите администратору  — расскажем, как сделать отдых друзей выгодным для вас 😉
+
+=== TELEGRAM HTML ===
+<b>Ваша база на Пхукете — </b><a href="https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc">отель Place</a><a href="https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc"><b>!</b></a><b> 🌴✨</b> 
+
+Всего несколько минут до пляжей Ката и Карон! 
+• Берите питомцев — они тоже любят Пхукет;
+• Саморегистрация — заселяйтесь без очередей;
+• Всё для отдыха: кондиционер, Wi-Fi и тишина. 
+📌 <a href="https://www.booking.com/Share-SwJcg5">Забронировать номер</a>
+
+<tg-emoji emoji-id="5321097148371058002">⚡️</tg-emoji>Place — это больше чем коворкинг. Это семья! ❤️ Поэтому мы даём бонус резидентам коворкинга за каждого приведённого гостя в наш отель.
+
+Пишите <a href="https://t.me/coworking_place">администратору</a>  — расскажем, как сделать отдых друзей выгодным для вас 😉
+
+=== ENTITIES ===
+[
+ {
+  "type": "b",
+  "text": "Ваша база на Пхукете — "
+ },
+ {
+  "type": "text_link",
+  "url": "https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc",
+  "text": "отель Place"
+ },
+ {
+  "type": "text_link",
+  "url": "https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc",
+  "text": "!"
+ },
+ {
+  "type": "b",
+  "text": "!"
+ },
+ {
+  "type": "b",
+  "text": " 🌴✨"
+ },
+ {
+  "type": "text_link",
+  "url": "https://www.booking.com/Share-SwJcg5",
+  "text": "Забронировать номер"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5321097148371058002",
+  "text": "⚡️"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place",
+  "text": "администратору"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><b>Ваша база на Пхукете — </b><a href="https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">отель Place</a><a href="https://maps.app.goo.gl/ph632payai1YRGpF7?g_st=ipc" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank"><b>!</b></a><b> <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8CB4.png')"><b>🌴</b></i><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></b> <br/><br/>Всего несколько минут до пляжей Ката и Карон! <br/>• Берите питомцев — они тоже любят Пхукет;<br/>• Саморегистрация — заселяйтесь без очередей;<br/>• Всё для отдыха: кондиционер, Wi-Fi и тишина. <br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i> <a href="https://www.booking.com/Share-SwJcg5" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Забронировать номер</a><br/><br/><tg-emoji emoji-id="5321097148371058002"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29AA1.png')"><b>⚡️</b></i></tg-emoji>Place — это больше чем коворкинг. Это семья! <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29DA4.png')"><b>❤️</b></i> Поэтому мы даём бонус резидентам коворкинга за каждого приведённого гостя в наш отель.<br/><br/>Пишите <a href="https://t.me/coworking_place" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">администратору</a>  — расскажем, как сделать отдых друзей выгодным для вас <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F9889.png')"><b>😉</b></i></div>
