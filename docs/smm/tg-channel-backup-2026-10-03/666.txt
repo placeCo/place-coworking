@@ -1,0 +1,93 @@
+# Backup of https://t.me/coworking_place_phuket/666
+# Post date: 2025-05-07T08:46:26+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+Сохраняйте себе прайс, чтобы не потерять 😉
+🔎 Хотите узнать подробнее про наши рабочие места? Кликайте!
+
+🔸 1 этаж
+🔸 2 этаж
+🔵 3 этаж
+🔵 Переговорные комнаты
+🔣 Скорее выбирайте пространство и используйте его по максимуму с выгодой!
+
+
+#place #прайс
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+Сохраняйте себе прайс, чтобы не потерять <tg-emoji emoji-id="5368519050517294053">😉</tg-emoji>
+
+🔎 Хотите узнать подробнее про наши рабочие места? Кликайте!
+
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji> <a href="https://t.me/coworking_place_phuket/127">1 этаж</a>
+<tg-emoji emoji-id="5433682388821489625">🔸</tg-emoji> <a href="https://t.me/coworking_place_phuket/139">2 этаж</a>
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> <a href="https://t.me/coworking_place_phuket/156">3 этаж</a>
+<tg-emoji emoji-id="5433971143767767211">🔵</tg-emoji> <a href="https://t.me/coworking_place_phuket/662">Переговорные комнаты</a>
+
+<tg-emoji emoji-id="5882200072581550212">🔣</tg-emoji> Скорее выбирайте пространство и используйте его по максимуму <b>с выгодой</b>!
+
+
+#place #прайс
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5368519050517294053",
+  "text": "😉"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/127",
+  "text": "1 этаж"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433682388821489625",
+  "text": "🔸"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/139",
+  "text": "2 этаж"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/156",
+  "text": "3 этаж"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433971143767767211",
+  "text": "🔵"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/662",
+  "text": "Переговорные комнаты"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5882200072581550212",
+  "text": "🔣"
+ },
+ {
+  "type": "b",
+  "text": "с выгодой"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto">Сохраняйте себе прайс, чтобы не потерять <tg-emoji emoji-id="5368519050517294053"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F9889.png')"><b>😉</b></i></tg-emoji><br/><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F948E.png')"><b>🔎</b></i> Хотите узнать подробнее про наши рабочие места? Кликайте!<br/><br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/127" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">1 этаж</a><br/><tg-emoji emoji-id="5433682388821489625"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/139" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">2 этаж</a><br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/156" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">3 этаж</a><br/><tg-emoji emoji-id="5433971143767767211"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/662" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Переговорные комнаты</a><br/><br/><tg-emoji emoji-id="5882200072581550212"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94A3.png')"><b>🔣</b></i></tg-emoji> Скорее выбирайте пространство и используйте его по максимуму <b>с выгодой</b>!<br/><br/><br/>#place #прайс</div>

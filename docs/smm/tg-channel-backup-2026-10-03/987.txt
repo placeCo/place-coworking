@@ -1,0 +1,160 @@
+# Backup of https://t.me/coworking_place_phuket/987
+# Post date: 2026-07-09T04:03:24+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+Ваш личный офис на Пхукете — работайте с комфортом и статусом 💼🌴
+Place теперь не просто коворкинг, это бизнес-центр с готовыми офисами для команд и предпринимателей.
+
+Вы получаете:
+🔥Свой офис с доступом 24/5 и по выходным с 8:00 до 23:00
+🔥 Скоростной Wi-Fi
+🔥 Юридический адрес для регистрации компании в Таиланде
+🔥 20% скидка на переговорки и студию Place Collab
+
+Гибкие условия:
+✨ Возможность отсрочки платежа до 2 месяцев
+✨ Прозрачные цены - без сюрпризов
+
+📎Все офисы готовы к работе, выбирайте свой формат:
+
+🔸The Artician Suite
+🔸The City View Suite
+🔵The Executive Hub
+🔹The Neon Den
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+<b>Ваш личный офис на Пхукете — работайте с комфортом и статусом 💼🌴</b>
+<b>Place</b> теперь не просто коворкинг, это бизнес-центр с готовыми офисами для команд и предпринимателей.
+
+<b>Вы получаете:</b>
+<tg-emoji emoji-id="5438266330107097494">🔥</tg-emoji><b>Свой офис</b> с доступом 24/5 и по выходным с 8:00 до 23:00
+<tg-emoji emoji-id="5438266330107097494">🔥</tg-emoji> <b>Скоростной Wi-Fi</b>
+<tg-emoji emoji-id="5438266330107097494">🔥</tg-emoji> <b>Юридический адрес</b> для регистрации компании в Таиланде
+<tg-emoji emoji-id="5438266330107097494">🔥</tg-emoji> <b>20% скидка</b> на переговорки и студию Place Collab
+
+<b>Гибкие условия:</b>
+<tg-emoji emoji-id="5435970859065949660">✨</tg-emoji> Возможность отсрочки платежа до 2 месяцев
+<tg-emoji emoji-id="5435970859065949660">✨</tg-emoji> Прозрачные цены - без сюрпризов
+
+<tg-emoji emoji-id="5433864525499609803">📎</tg-emoji>Все офисы готовы к работе, выбирайте свой формат:
+
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji><a href="https://t.me/coworking_place_phuket/991">The Artician Suite</a>
+<tg-emoji emoji-id="5433682388821489625">🔸</tg-emoji><a href="https://t.me/coworking_place_phuket/996">The City View Suite</a>
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji><a href="https://t.me/coworking_place_phuket/1001">The Executive Hub</a>
+<tg-emoji emoji-id="5434137651059898038">🔹</tg-emoji><a href="https://t.me/coworking_place_phuket/1008">The Neon Den</a>
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "b",
+  "text": "Ваш личный офис на Пхукете — работайте с комфортом и статусом 💼🌴"
+ },
+ {
+  "type": "b",
+  "text": "Place"
+ },
+ {
+  "type": "b",
+  "text": "Вы получаете:"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5438266330107097494",
+  "text": "🔥"
+ },
+ {
+  "type": "b",
+  "text": "Свой офис"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5438266330107097494",
+  "text": "🔥"
+ },
+ {
+  "type": "b",
+  "text": "Скоростной Wi-Fi"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5438266330107097494",
+  "text": "🔥"
+ },
+ {
+  "type": "b",
+  "text": "Юридический адрес"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5438266330107097494",
+  "text": "🔥"
+ },
+ {
+  "type": "b",
+  "text": "20% скидка"
+ },
+ {
+  "type": "b",
+  "text": "Гибкие условия:"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5435970859065949660",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5435970859065949660",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433864525499609803",
+  "text": "📎"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/991",
+  "text": "The Artician Suite"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433682388821489625",
+  "text": "🔸"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/996",
+  "text": "The City View Suite"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/1001",
+  "text": "The Executive Hub"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5434137651059898038",
+  "text": "🔹"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/1008",
+  "text": "The Neon Den"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><b>Ваш личный офис на Пхукете — работайте с комфортом и статусом <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F92BC.png')"><b>💼</b></i><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8CB4.png')"><b>🌴</b></i></b><br/><b>Place</b> теперь не просто коворкинг, это бизнес-центр с готовыми офисами для команд и предпринимателей.<br/><br/><b>Вы получаете:</b><br/><tg-emoji emoji-id="5438266330107097494"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94A5.png')"><b>🔥</b></i></tg-emoji><b>Свой офис</b> с доступом 24/5 и по выходным с 8:00 до 23:00<br/><tg-emoji emoji-id="5438266330107097494"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94A5.png')"><b>🔥</b></i></tg-emoji> <b>Скоростной Wi-Fi</b><br/><tg-emoji emoji-id="5438266330107097494"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94A5.png')"><b>🔥</b></i></tg-emoji> <b>Юридический адрес</b> для регистрации компании в Таиланде<br/><tg-emoji emoji-id="5438266330107097494"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94A5.png')"><b>🔥</b></i></tg-emoji> <b>20% скидка</b> на переговорки и студию Place Collab<br/><br/><b>Гибкие условия:</b><br/><tg-emoji emoji-id="5435970859065949660"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> Возможность отсрочки платежа до 2 месяцев<br/><tg-emoji emoji-id="5435970859065949660"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> Прозрачные цены - без сюрпризов<br/><br/><tg-emoji emoji-id="5433864525499609803"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938E.png')"><b>📎</b></i></tg-emoji>Все офисы готовы к работе, выбирайте свой формат:<br/><br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji><a href="https://t.me/coworking_place_phuket/991" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">The Artician Suite</a><br/><tg-emoji emoji-id="5433682388821489625"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji><a href="https://t.me/coworking_place_phuket/996" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">The City View Suite</a><br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji><a href="https://t.me/coworking_place_phuket/1001" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">The Executive Hub</a><br/><tg-emoji emoji-id="5434137651059898038"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B9.png')"><b>🔹</b></i></tg-emoji><a href="https://t.me/coworking_place_phuket/1008" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">The Neon Den</a></div>

@@ -1,0 +1,85 @@
+# Backup of https://t.me/coworking_place_phuket/1001
+# Post date: 2026-07-11T04:05:13+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+The Executive Hub
+Офис для стратегов: лаунж-зона + рабочее пространство 💼
+Площадь: 31 кв.м., с лаунж-зоной и видом на горы и город.
+🔵 Современный дизайн с акцентными голубыми деталями 
+🔵 Эргономичные кресла и рабочие столы 
+🔵 Панорамные окна с видом на горы и город 
+🔵 Выделенный быстрый Wi-Fi 
+🔵 Кондиционер, уборка, отдельный санузел 
+🔵 Официальный адрес для регистрации бизнеса
+
+Стоимость:
+📌 30 000 бат/мес — помесячно 
+📌 25 000 бат/мес — при контракте на 6 месяцев 
+📌 15 000 бат/мес — при годовом контракте
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+<b>The Executive Hub
+Офис для стратегов: лаунж-зона + рабочее пространство 💼</b>
+Площадь: <b>31 кв.м.</b>, с лаунж-зоной и видом на горы и город.
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> Современный дизайн с акцентными голубыми деталями 
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> Эргономичные кресла и рабочие столы 
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> Панорамные окна с видом на горы и город 
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> Выделенный быстрый Wi-Fi 
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> Кондиционер, уборка, отдельный санузел 
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> Официальный адрес для регистрации бизнеса
+
+<b>Стоимость:</b> 
+📌 30 000 бат/мес — помесячно 
+📌 25 000 бат/мес — при контракте на 6 месяцев 
+📌 15 000 бат/мес — при годовом контракте
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "b",
+  "text": "The Executive HubОфис для стратегов: лаунж-зона + рабочее пространство 💼"
+ },
+ {
+  "type": "b",
+  "text": "31 кв.м."
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "b",
+  "text": "Стоимость:"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><b>The Executive Hub<br/>Офис для стратегов: лаунж-зона + рабочее пространство <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F92BC.png')"><b>💼</b></i></b><br/>Площадь: <b>31 кв.м.</b>, с лаунж-зоной и видом на горы и город.<br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> Современный дизайн с акцентными голубыми деталями <br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> Эргономичные кресла и рабочие столы <br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> Панорамные окна с видом на горы и город <br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> Выделенный быстрый Wi-Fi <br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> Кондиционер, уборка, отдельный санузел <br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> Официальный адрес для регистрации бизнеса<br/><br/><b>Стоимость:</b> <br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i> 30 000 бат/мес — помесячно <br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i> 25 000 бат/мес — при контракте на 6 месяцев <br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i> 15 000 бат/мес — при годовом контракте</div>

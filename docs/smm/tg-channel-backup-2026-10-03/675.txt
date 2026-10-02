@@ -1,0 +1,125 @@
+# Backup of https://t.me/coworking_place_phuket/675
+# Post date: 2025-05-14T05:28:35+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+ℹ️ Всё о коворкинге Place
+
+⭐️ Прайс на посещение коворкинга
+⭐️ Прайс на аренду пространств целиком
+⭐️ Аренда офисов
+⭐️Дополнительные услуги:
+🍽️ Кафе
+📷 Аренда оборудования
+🏨 PLACE HOTEL
+📚 Библиотека
+🖨️ Печать
+ч/б: 5 бат/лист
+цветная: 10 бат/лист
+➡️ Контакты и навигация по каналу
+
+#place #прайс
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+<tg-emoji emoji-id="5334544901428229844">ℹ️</tg-emoji> Всё о коворкинге Place
+
+<tg-emoji emoji-id="5433709460000355244">⭐️</tg-emoji> <a href="https://t.me/coworking_place_phuket/666">Прайс на посещение коворкинга</a>
+
+<tg-emoji emoji-id="5434051889152929526">⭐️</tg-emoji> <a href="https://t.me/coworking_place_phuket/646">Прайс на аренду пространств целиком</a>
+
+<tg-emoji emoji-id="5434051889152929526">⭐️</tg-emoji> <a href="https://t.me/coworking_place_phuket/987">Аренда офисов</a>
+
+<tg-emoji emoji-id="5433709460000355244">⭐️</tg-emoji>Дополнительные услуги:
+🍽️ <a href="https://t.me/coworking_place_phuket/813">Кафе</a>
+📷 <a href="https://t.me/place_coworking_phuket/3529">Аренда оборудования</a>
+🏨 <a href="https://t.me/coworking_place_phuket/594">PLACE HOTEL</a> 
+<tg-emoji emoji-id="5282749704667410197">📚</tg-emoji> <a href="https://t.me/library_phuket">Библиотека</a>
+🖨️ Печать
+ч/б: 5 бат/лист
+цветная: 10 бат/лист
+<tg-emoji emoji-id="5321300317504030049">➡️</tg-emoji> <a href="https://t.me/coworking_place_phuket/26">Контакты и навигация по каналу</a>
+
+#place #прайс
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5334544901428229844",
+  "text": "ℹ️"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433709460000355244",
+  "text": "⭐️"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/666",
+  "text": "Прайс на посещение коворкинга"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5434051889152929526",
+  "text": "⭐️"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/646",
+  "text": "Прайс на аренду пространств целиком"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5434051889152929526",
+  "text": "⭐️"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/987",
+  "text": "Аренда офисов"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433709460000355244",
+  "text": "⭐️"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/813",
+  "text": "Кафе"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/place_coworking_phuket/3529",
+  "text": "Аренда оборудования"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/594",
+  "text": "PLACE HOTEL"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5282749704667410197",
+  "text": "📚"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/library_phuket",
+  "text": "Библиотека"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5321300317504030049",
+  "text": "➡️"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/26",
+  "text": "Контакты и навигация по каналу"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><tg-emoji emoji-id="5334544901428229844"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E284B9.png')"><b>ℹ️</b></i></tg-emoji> Всё о коворкинге Place<br/><br/><tg-emoji emoji-id="5433709460000355244"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E2AD90.png')"><b>⭐️</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/666" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Прайс на посещение коворкинга</a><br/><br/><tg-emoji emoji-id="5434051889152929526"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E2AD90.png')"><b>⭐️</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/646" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Прайс на аренду пространств целиком</a><br/><br/><tg-emoji emoji-id="5434051889152929526"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E2AD90.png')"><b>⭐️</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/987" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Аренда офисов</a><br/><br/><tg-emoji emoji-id="5433709460000355244"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E2AD90.png')"><b>⭐️</b></i></tg-emoji>Дополнительные услуги:<br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8DBD.png')"><b>🍽️</b></i> <a href="https://t.me/coworking_place_phuket/813" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Кафе</a><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F93B7.png')"><b>📷</b></i> <a href="https://t.me/place_coworking_phuket/3529" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Аренда оборудования</a><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8FA8.png')"><b>🏨</b></i> <a href="https://t.me/coworking_place_phuket/594" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">PLACE HOTEL</a> <br/><tg-emoji emoji-id="5282749704667410197"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F939A.png')"><b>📚</b></i></tg-emoji> <a href="https://t.me/library_phuket" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Библиотека</a><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F96A8.png')"><b>🖨️</b></i> Печать<br/>ч/б: 5 бат/лист<br/>цветная: 10 бат/лист<br/><tg-emoji emoji-id="5321300317504030049"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29EA1.png')"><b>➡️</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/26" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Контакты и навигация по каналу</a><br/><br/>#place #прайс</div>

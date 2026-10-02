@@ -1,0 +1,68 @@
+# Backup of https://t.me/coworking_place_phuket/1012
+# Post date: 2026-07-13T07:02:31+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+🛍 30% — и это не шутка🔥
+
+В низкий сезон мы решили, что работать в Place должно быть не только комфортно, но и выгодно. 
+☄️Даем скидку 30% на дневные абонементы от 7 дней до 3 месяцев.
+Приходите работать, творить, зависать с ноутом на мягком кресле или в тихой кабинке — у нас есть всё, чтобы вы чувствовали себя продуктивно и уютно.
+
+📌 Скидка действует ограниченное время
+📌 Подобрать абонемент можно на ресепшене или написав админу канала
+ 
+Успевайте — низкий сезон для того и создан, чтобы работать с выгодой 😉
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+<tg-emoji emoji-id="5406683434124859552">🛍</tg-emoji> <b>30% — и это не шутка🔥</b>
+
+В низкий сезон мы решили, что работать в Place должно быть не только комфортно, но и выгодно. 
+<tg-emoji emoji-id="5224607267797606837">☄️</tg-emoji>Даем <b>скидку 30%</b> на дневные абонементы от 7 дней до 3 месяцев.
+Приходите работать, творить, зависать с ноутом на мягком кресле или в тихой кабинке — у нас есть всё, чтобы вы чувствовали себя продуктивно и уютно.
+
+<tg-emoji emoji-id="5397782960512444700">📌</tg-emoji> Скидка действует ограниченное время
+<tg-emoji emoji-id="5397782960512444700">📌</tg-emoji> Подобрать абонемент можно на ресепшене или написав <a href="https://t.me/coworking_place">админу</a> канала
+ 
+Успевайте — низкий сезон для того и создан, чтобы работать с выгодой 😉
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5406683434124859552",
+  "text": "🛍"
+ },
+ {
+  "type": "b",
+  "text": "30% — и это не шутка🔥"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5224607267797606837",
+  "text": "☄️"
+ },
+ {
+  "type": "b",
+  "text": "скидку 30%"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5397782960512444700",
+  "text": "📌"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5397782960512444700",
+  "text": "📌"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place",
+  "text": "админу"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><tg-emoji emoji-id="5406683434124859552"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F9B8D.png')"><b>🛍</b></i></tg-emoji> <b>30% — и это не шутка<i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94A5.png')"><b>🔥</b></i></b><br/><br/>В низкий сезон мы решили, что работать в Place должно быть не только комфортно, но и выгодно. <br/><tg-emoji emoji-id="5224607267797606837"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29884.png')"><b>☄️</b></i></tg-emoji>Даем <b>скидку 30%</b> на дневные абонементы от 7 дней до 3 месяцев.<br/>Приходите работать, творить, зависать с ноутом на мягком кресле или в тихой кабинке — у нас есть всё, чтобы вы чувствовали себя продуктивно и уютно.<br/><br/><tg-emoji emoji-id="5397782960512444700"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i></tg-emoji> Скидка действует ограниченное время<br/><tg-emoji emoji-id="5397782960512444700"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i></tg-emoji> Подобрать абонемент можно на ресепшене или написав <a href="https://t.me/coworking_place" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">админу</a> канала<br/> <br/>Успевайте — низкий сезон для того и создан, чтобы работать с выгодой <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F9889.png')"><b>😉</b></i></div>

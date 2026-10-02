@@ -1,0 +1,134 @@
+# Backup of https://t.me/coworking_place_phuket/976
+# Post date: 2026-06-24T02:03:43+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+Арендуйте офис в Place Coworking!
+
+Готовый меблированный офис в Place Coworking, Phuket
+
+Подходит для команды до 8 человек: можно заехать и сразу работать.
+
+Включено:
+✨ мебель на фото
+✨ высокоскоростной Wi‑Fi
+✨ доступ: пн-пт круглосуточно, сб-вс 8:00–23:00
+✨ душ и туалет в каждом офисе
+✨ ежедневная уборка
+✨ юридический адрес
+✨ скидка 20% на переговорные и услуги Place Collab studio
+
+🌿Электричество оплачивается отдельно по счетчику.
+
+🔸Стоимость:
+
+〰️30 000 бат/мес
+〰️25 000 бат/мес при аренде на 6 месяцев
+〰️20 000 бат/мес при годовом контракте
+💡Депозит: 1 месяц
+
+Дополнительная информация и экскурсия по запросу
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+<b>Арендуйте офис в Place Coworking!</b>
+
+Готовый меблированный офис в Place Coworking, Phuket
+
+Подходит для команды до 8 человек: можно заехать и сразу работать.
+
+Включено:
+<tg-emoji emoji-id="5370869875096959959">✨</tg-emoji> мебель на фото
+<tg-emoji emoji-id="5370869875096959959">✨</tg-emoji> высокоскоростной Wi‑Fi
+<tg-emoji emoji-id="5370869875096959959">✨</tg-emoji> доступ: пн-пт круглосуточно, сб-вс 8:00–23:00
+<tg-emoji emoji-id="5370869875096959959">✨</tg-emoji> душ и туалет в каждом офисе
+<tg-emoji emoji-id="5370869875096959959">✨</tg-emoji> ежедневная уборка
+<tg-emoji emoji-id="5370869875096959959">✨</tg-emoji> юридический адрес
+<tg-emoji emoji-id="5370869875096959959">✨</tg-emoji> скидка 20% на переговорные и услуги Place Collab studio
+
+<tg-emoji emoji-id="5224723764490548632">🌿</tg-emoji>Электричество оплачивается отдельно по счетчику.
+
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji>Стоимость:
+
+<tg-emoji emoji-id="5433599899679602747">〰️</tg-emoji>30 000 бат/мес
+<tg-emoji emoji-id="5433599899679602747">〰️</tg-emoji>25 000 бат/мес при аренде на 6 месяцев
+<tg-emoji emoji-id="5433599899679602747">〰️</tg-emoji>20 000 бат/мес при годовом контракте
+<tg-emoji emoji-id="5305436288860568246">💡</tg-emoji>Депозит: 1 месяц
+
+Дополнительная информация и экскурсия по запросу
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "b",
+  "text": "Арендуйте офис в Place Coworking!"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5370869875096959959",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5370869875096959959",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5370869875096959959",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5370869875096959959",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5370869875096959959",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5370869875096959959",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5370869875096959959",
+  "text": "✨"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5224723764490548632",
+  "text": "🌿"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433599899679602747",
+  "text": "〰️"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433599899679602747",
+  "text": "〰️"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433599899679602747",
+  "text": "〰️"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5305436288860568246",
+  "text": "💡"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><b>Арендуйте офис в Place Coworking!</b><br/><br/>Готовый меблированный офис в Place Coworking, Phuket<br/><br/>Подходит для команды до 8 человек: можно заехать и сразу работать.<br/><br/>Включено:<br/><tg-emoji emoji-id="5370869875096959959"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> мебель на фото<br/><tg-emoji emoji-id="5370869875096959959"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> высокоскоростной Wi‑Fi<br/><tg-emoji emoji-id="5370869875096959959"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> доступ: пн-пт круглосуточно, сб-вс 8:00–23:00<br/><tg-emoji emoji-id="5370869875096959959"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> душ и туалет в каждом офисе<br/><tg-emoji emoji-id="5370869875096959959"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> ежедневная уборка<br/><tg-emoji emoji-id="5370869875096959959"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> юридический адрес<br/><tg-emoji emoji-id="5370869875096959959"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29CA8.png')"><b>✨</b></i></tg-emoji> скидка 20% на переговорные и услуги Place Collab studio<br/><br/><tg-emoji emoji-id="5224723764490548632"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8CBF.png')"><b>🌿</b></i></tg-emoji>Электричество оплачивается отдельно по счетчику.<br/><br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji>Стоимость:<br/><br/><tg-emoji emoji-id="5433599899679602747"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E380B0.png')"><b>〰️</b></i></tg-emoji>30 000 бат/мес<br/><tg-emoji emoji-id="5433599899679602747"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E380B0.png')"><b>〰️</b></i></tg-emoji>25 000 бат/мес при аренде на 6 месяцев<br/><tg-emoji emoji-id="5433599899679602747"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E380B0.png')"><b>〰️</b></i></tg-emoji>20 000 бат/мес при годовом контракте<br/><tg-emoji emoji-id="5305436288860568246"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F92A1.png')"><b>💡</b></i></tg-emoji>Депозит: 1 месяц<br/><br/>Дополнительная информация и экскурсия по запросу</div>

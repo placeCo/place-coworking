@@ -1,0 +1,62 @@
+{
+ "955": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "127": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "156": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "641": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "139": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "991": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "996": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "1001": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "1008": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "987": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "976": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "646": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "1012": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "675": {
+  "ok": true,
+  "desc": "ok (custom_emoji kept: 0)"
+ },
+ "26": {
+  "ok": false,
+  "desc": "400: Bad Request: MEDIA_CAPTION_TOO_LONG"
+ }
+}

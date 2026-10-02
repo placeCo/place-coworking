@@ -1,0 +1,121 @@
+# Backup of https://t.me/coworking_place_phuket/139
+# Post date: 2024-06-10T04:01:15+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+Индивидуальные закрепленные рабочие места на втором этаже 💻🤫 
+
+Тишина, продуктивность и комфорт для работы. 
+
+Что предлагаем:
+💻Полностью оснащенное, уединенное рабочее место
+🔒Закрепление места за вами
+🛜 Высокоскоростной интернет 
+Регулируемое освещение, звукопоглощающие панели 
+Шкаф для личных вещей 
+Кулер с водой, туалет 
+Зона отдыха с проектором 
+
+💰Прайс
+День (10 часов): 700฿
+Неделя: 4200฿
+10 дней: 5500฿
+Месяц: 11000฿ 
+
+🎁Включены завтрак (кроме однодневного визита), напиток, бесплатная печать (до 10 листов), дополнительный монитор
+
+Работайте с комфортом в Place!
+
+Другие этажи:
+🔸 1 этаж
+🔵 3 этаж
+🔵 Переговорные комнаты
+
+#place #рабочиеместа
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+Индивидуальные закрепленные рабочие места на втором этаже 💻🤫 
+
+Тишина, продуктивность и комфорт для работы. 
+
+<b>Что предлагаем:</b> 
+<tg-emoji emoji-id="5370909878422351703">💻</tg-emoji>Полностью оснащенное, уединенное рабочее место
+🔒Закрепление места за вами
+🛜 Высокоскоростной интернет 
+Регулируемое освещение, звукопоглощающие панели 
+Шкаф для личных вещей 
+Кулер с водой, туалет 
+Зона отдыха с проектором 
+
+<tg-emoji emoji-id="5192866170989987029">💰</tg-emoji><b>Прайс</b>
+День (10 часов): 700฿
+Неделя: 4200฿
+10 дней: 5500฿
+Месяц: 11000฿ 
+
+🎁Включены завтрак (кроме однодневного визита), напиток, бесплатная печать (до 10 листов), дополнительный монитор
+
+Работайте с комфортом в Place!
+
+Другие этажи:
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji> <a href="https://t.me/coworking_place_phuket/127">1 этаж</a>
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> <a href="https://t.me/coworking_place_phuket/156">3 этаж</a>
+<tg-emoji emoji-id="5433971143767767211">🔵</tg-emoji> <a href="https://t.me/coworking_place_phuket/662">Переговорные комнаты</a>
+
+#place #рабочиеместа
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "b",
+  "text": "Что предлагаем:"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5370909878422351703",
+  "text": "💻"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5192866170989987029",
+  "text": "💰"
+ },
+ {
+  "type": "b",
+  "text": "Прайс"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/127",
+  "text": "1 этаж"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/156",
+  "text": "3 этаж"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433971143767767211",
+  "text": "🔵"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/662",
+  "text": "Переговорные комнаты"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto">Индивидуальные закрепленные рабочие места на втором этаже <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F92BB.png')"><b>💻</b></i><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09FA4AB.png')"><b>🤫</b></i> <br/><br/>Тишина, продуктивность и комфорт для работы. <br/><br/><b>Что предлагаем:</b> <br/><tg-emoji emoji-id="5370909878422351703"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F92BB.png')"><b>💻</b></i></tg-emoji>Полностью оснащенное, уединенное рабочее место<br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F9492.png')"><b>🔒</b></i>Закрепление места за вами<br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F9B9C.png')"><b>🛜</b></i> Высокоскоростной интернет <br/>Регулируемое освещение, звукопоглощающие панели <br/>Шкаф для личных вещей <br/>Кулер с водой, туалет <br/>Зона отдыха с проектором <br/><br/><tg-emoji emoji-id="5192866170989987029"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F92B0.png')"><b>💰</b></i></tg-emoji><b>Прайс</b><br/>День (10 часов): 700฿<br/>Неделя: 4200฿<br/>10 дней: 5500฿<br/>Месяц: 11000฿ <br/><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8E81.png')"><b>🎁</b></i>Включены завтрак (кроме однодневного визита), напиток, бесплатная печать (до 10 листов), дополнительный монитор<br/><br/>Работайте с комфортом в Place!<br/><br/>Другие этажи:<br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/127" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">1 этаж</a><br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/156" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">3 этаж</a><br/><tg-emoji emoji-id="5433971143767767211"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> <a href="https://t.me/coworking_place_phuket/662" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Переговорные комнаты</a><br/><br/>#place #рабочиеместа</div>

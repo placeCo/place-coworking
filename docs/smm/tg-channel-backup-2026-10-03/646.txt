@@ -1,0 +1,59 @@
+# Backup of https://t.me/coworking_place_phuket/646
+# Post date: 2025-04-22T06:41:07+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+Друзья, а вы знаете о том, что в Place можно арендовать пространство полностью?
+Напоминаем: можно!
+
+Мы предоставляем выгодные условия для проведения мероприятий. Выбирай удобный формат и бронируй понравившийся этаж.
+
+🔸 1 этаж (50 мест) 1500 бат/час
+🔸 4 этаж (фотостудия, до 200 мест) - 2500 бат/час
+🔵 5/6 этаж (с крышей, до 30 мест) - 1000 бат/час
+🔹 Кинотеатр (до 30 мест) - 1500 бат/фильм
+
+
+#place #прайс
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+Друзья, а вы знаете о том, что в Place можно арендовать пространство полностью?
+Напоминаем: можно!
+
+Мы предоставляем выгодные условия для проведения мероприятий. Выбирай удобный формат и бронируй понравившийся этаж.
+
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji> 1 этаж (50 мест) 1500 бат/час
+<tg-emoji emoji-id="5433682388821489625">🔸</tg-emoji> 4 этаж (фотостудия, до 200 мест) - 2500 бат/час
+<tg-emoji emoji-id="5431675595417203658">🔵</tg-emoji> 5/6 этаж (с крышей, до 30 мест) - 1000 бат/час
+<tg-emoji emoji-id="5434137651059898038">🔹</tg-emoji> Кинотеатр (до 30 мест) - 1500 бат/фильм
+
+
+#place #прайс
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433682388821489625",
+  "text": "🔸"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5431675595417203658",
+  "text": "🔵"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5434137651059898038",
+  "text": "🔹"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto">Друзья, а вы знаете о том, что в Place можно арендовать пространство полностью?<br/>Напоминаем: можно!<br/><br/>Мы предоставляем выгодные условия для проведения мероприятий. Выбирай удобный формат и бронируй понравившийся этаж.<br/><br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> 1 этаж (50 мест) 1500 бат/час<br/><tg-emoji emoji-id="5433682388821489625"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> 4 этаж (фотостудия, до 200 мест) - 2500 бат/час<br/><tg-emoji emoji-id="5431675595417203658"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B5.png')"><b>🔵</b></i></tg-emoji> 5/6 этаж (с крышей, до 30 мест) - 1000 бат/час<br/><tg-emoji emoji-id="5434137651059898038"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B9.png')"><b>🔹</b></i></tg-emoji> Кинотеатр (до 30 мест) - 1500 бат/фильм<br/><br/><br/>#place #прайс</div>

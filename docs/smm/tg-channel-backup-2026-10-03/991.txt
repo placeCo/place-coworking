@@ -1,0 +1,88 @@
+# Backup of https://t.me/coworking_place_phuket/991
+# Post date: 2026-07-09T05:00:56+00:00 (UTC)
+# Fetched: 2026-10-03 via t.me embed (?embed=1), read-only
+# Media: photo (caption post)
+
+=== PLAIN TEXT ===
+The Artician Suite — творческая атмосфера в тёплых тонах 🌿
+Площадь: 31 кв.м., до 8 человек.
+
+🔸 Мебель из тика и ротанга - уютно, стильно, небанально
+🔸 Высокие потолки, просторная планировка 
+🔸 Отдельный канал Wi-Fi, кондиционер, уборка и санузел
+🔸 Официальный адрес для регистрации бизнеса
+
+Стоимость:
+📌 30 000 бат/мес — помесячно
+📌 25 000 бат/мес — при контракте на 6 месяцев
+📌 15 000 бат/мес — при годовом контракте
+
+Хотите посмотреть? Пишите - проведём экскурсию 😎
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+<b>The Artician Suite</b> — творческая атмосфера в тёплых тонах 🌿
+Площадь: <b>31 кв.м.</b>, до <b>8 человек</b>.
+
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji> Мебель из тика и ротанга - уютно, стильно, небанально
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji> Высокие потолки, просторная планировка 
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji> Отдельный канал Wi-Fi, кондиционер, уборка и санузел
+<tg-emoji emoji-id="5433960784306649469">🔸</tg-emoji> Официальный адрес для регистрации бизнеса
+
+<b>Стоимость:</b>
+📌 30 000 бат/мес — помесячно
+📌 25 000 бат/мес — при контракте на 6 месяцев
+📌 15 000 бат/мес — при годовом контракте
+
+<i>Хотите посмотреть? Пишите - проведём экскурсию </i><tg-emoji emoji-id="5969794573373805571">😎</tg-emoji>
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "b",
+  "text": "The Artician Suite"
+ },
+ {
+  "type": "b",
+  "text": "31 кв.м."
+ },
+ {
+  "type": "b",
+  "text": "8 человек"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5433960784306649469",
+  "text": "🔸"
+ },
+ {
+  "type": "b",
+  "text": "Стоимость:"
+ },
+ {
+  "type": "i",
+  "text": "Хотите посмотреть? Пишите - проведём экскурсию "
+ },
+ {
+  "type": "custom_emoji",
+  "custom_emoji_id": "5969794573373805571",
+  "text": "😎"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><b>The Artician Suite</b> — творческая атмосфера в тёплых тонах <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8CBF.png')"><b>🌿</b></i><br/>Площадь: <b>31 кв.м.</b>, до <b>8 человек</b>.<br/><br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> Мебель из тика и ротанга - уютно, стильно, небанально<br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> Высокие потолки, просторная планировка <br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> Отдельный канал Wi-Fi, кондиционер, уборка и санузел<br/><tg-emoji emoji-id="5433960784306649469"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F94B8.png')"><b>🔸</b></i></tg-emoji> Официальный адрес для регистрации бизнеса<br/><br/><b>Стоимость:</b><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i> 30 000 бат/мес — помесячно<br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i> 25 000 бат/мес — при контракте на 6 месяцев<br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F938C.png')"><b>📌</b></i> 15 000 бат/мес — при годовом контракте<br/><br/><i>Хотите посмотреть? Пишите - проведём экскурсию </i><tg-emoji emoji-id="5969794573373805571"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F988E.png')"><b>😎</b></i></tg-emoji></div>
