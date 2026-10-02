@@ -44,7 +44,7 @@ Read-only inventory collected from `user-Canva` and `user-Canva--team2` on 2026-
 
 ## Шаблоны Никиты (зелёный стиль), получены 02.10
 
-Источник: ссылка Никиты 02.10 18:11 → один дизайн «Instagram», 47 страниц, 1080×1350 (4:5): https://www.canva.com/d/ZVJGy7jlsTj9r6t
+Источник: ссылка Никиты 02.10 18:11 → один дизайн «Instagram», 47 страниц, 1080×1350 (4:5): https://www.canva.com/d/ZVJGy7jlsTj9r6t (design ID **DAHR4c1mD-w**; shortlink canva.link/r5qxnd9sj2kh7es → resolve-shortlink в user-Canva)
 **Оригинал не редактировать — работать только на копиях.** Текстовые слои есть на 45/47 стр. (3 и 15 — без текста).
 
 | Тема октября | Страницы |
