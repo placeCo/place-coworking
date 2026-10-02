@@ -1,0 +1,16 @@
+Campaign report
+"July 1, 2026 - July 31, 2026"
+Campaign status,Campaign,Budget,Budget name,Budget type,Currency code,Status,Status reasons,Optimization score,Campaign type,Bid strategy type,Conv. value,Conversions,Conv. rate,Cost / conv.,Impr.,Clicks,CTR,Cost
+Paused,Coworking Place | to site | 11 km radius | Smart | English,200.00, --,Daily,THB,Paused,campaign paused, --,Smart,Maximize clicks,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Enabled,"Фото / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объявления на Англ",50.00, --,Daily,THB,Eligible,,67.26,Performance Max,Maximize Conversions,0.00,0.00,0.00%,0.00,157,15,9.55%,25.41
+Enabled,"Подкасты / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объявления на Англ",50.00, --,Daily,THB,Eligible (Limited),some asset groups limited by policy,81.60,Performance Max,Maximize Conversions,0.00,0.00,0.00%,0.00,14,0,0.00%,0.07
+Paused,"Аренда Офиса и Митинг Рум / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",50.00, --,Daily,THB,Paused,campaign paused, --,Performance Max,Maximize Conversions,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Enabled,"Эвенты / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",140.00, --,Daily,THB,Eligible,,71.60,Performance Max,Maximize Conversions,2.00,2.00,0.64%,46.90,931,39,4.19%,93.81
+Enabled,"Коворкинг и Юр адреса / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",140.00, --,Daily,THB,Eligible,,72.39,Performance Max,Maximize Conversions,9.00,9.00,5.45%,13.82,892,48,5.38%,124.37
+Enabled,"Search | Office for Rent | Phuket | EN ads | RU,EN,TH,CH",100.00, --,Daily,THB,Eligible (Limited),limited by budget; missing enough relevant keywords,63.40,Search,Maximize clicks,0.00,0.00,0.00%,0.00,28,8,28.57%,77.73
+Paused,10 минут от пляжа Ката,29.10, --,Daily,THB,Paused,campaign paused, --,Smart,Maximize clicks,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Campaigns, --, --, --, --,THB, --,, --, --, --,11.00,11.00,2.85%,29.22,"2,022",110,5.44%,321.38
+Total: Account,,,,,THB,,,,,,11.00,11.00,2.85%,29.22,"2,022",110,5.44%,321.38
+Total: Smart,,,,,THB,,,,Smart,,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Search,,,,,THB,,,,Search,,0.00,0.00,0.00%,0.00,28,8,28.57%,77.73
+Total: Performance Max,,,,,THB,,,,Performance Max,,11.00,11.00,2.92%,22.15,"1,994",102,5.12%,243.65

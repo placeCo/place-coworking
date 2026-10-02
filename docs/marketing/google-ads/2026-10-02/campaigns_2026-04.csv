@@ -1,0 +1,16 @@
+Campaign report
+"April 1, 2026 - April 30, 2026"
+Campaign status,Campaign,Budget,Budget name,Budget type,Currency code,Status,Status reasons,Optimization score,Campaign type,Bid strategy type,Conv. value,Conversions,Conv. rate,Cost / conv.,Impr.,Clicks,CTR,Cost
+Enabled,"Фото / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объявления на Англ",50.00, --,Daily,THB,Eligible,,67.26,Performance Max,Maximize Conversions,59.03,59.03,9.37%,9.78,"8,924",630,7.06%,577.08
+Paused,10 минут от пляжа Ката,29.10, --,Daily,THB,Paused,campaign paused, --,Smart,Maximize clicks,6.00,6.00,14.63%,25.71,"2,466",41,1.66%,154.27
+Enabled,"Search | Office for Rent | Phuket | EN ads | RU,EN,TH,CH",100.00, --,Daily,THB,Eligible (Limited),limited by budget; missing enough relevant keywords,63.40,Search,Maximize clicks,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Enabled,"Эвенты / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",140.00, --,Daily,THB,Eligible,,71.60,Performance Max,Maximize Conversions,223.00,223.00,35.02%,8.16,"10,832",269,2.48%,1819.75
+Enabled,"Коворкинг и Юр адреса / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",140.00, --,Daily,THB,Eligible,,72.39,Performance Max,Maximize Conversions,210.88,210.88,57.93%,8.64,"2,728",252,9.24%,1821.72
+Enabled,"Подкасты / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объявления на Англ",50.00, --,Daily,THB,Eligible (Limited),some asset groups limited by policy,81.60,Performance Max,Maximize Conversions,57.00,57.00,8.92%,10.69,"8,896",639,7.18%,609.25
+Paused,"Аренда Офиса и Митинг Рум / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",50.00, --,Daily,THB,Paused,campaign paused, --,Performance Max,Maximize Conversions,57.00,57.00,25.93%,11.56,"12,169",135,1.11%,659.12
+Paused,Coworking Place | to site | 11 km radius | Smart | English,200.00, --,Daily,THB,Paused,campaign paused, --,Smart,Maximize clicks,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Campaigns, --, --, --, --,THB, --,, --, --, --,612.91,612.91,23.78%,9.20,"46,015","1,966",4.27%,5641.20
+Total: Account,,,,,THB,,,,,,612.91,612.91,23.78%,9.20,"46,015","1,966",4.27%,5641.20
+Total: Smart,,,,,THB,,,,Smart,,6.00,6.00,14.63%,25.71,"2,466",41,1.66%,154.27
+Total: Search,,,,,THB,,,,Search,,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Performance Max,,,,,THB,,,,Performance Max,,606.91,606.91,23.94%,9.04,"43,549","1,925",4.42%,5486.92

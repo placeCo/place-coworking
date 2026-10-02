@@ -1,0 +1,30 @@
+Google Business Profile PLACE COWORKING PHUKET — product prices
+Old list observed before edits:
+- Printing service — THB 5
+- Weekly access (สมาชิก...) — THB 1,800
+- One-time access (รายวัน), 1 floor — THB 300
+- VR helmet rental — THB 200
+- Photo/video shooting — THB 500
+- Meeting room 1st floor — THB 250
+- 3 month, 1 floor — THB 15,000 (one listing already correct)
+- Hourly access — THB 50 (two listings observed)
+- Monthly membership (สมาชิก...) — THB 6,000 (already correct)
+- BREAKFAST — THB 200
+- Space on the 1 floor — THB 1,500
+- Rooftop — THB 1,000
+- Monitor rental — THB 200
+- Cinema — THB 1,000
+- Art studio — THB 500
+- Meeting room 5th floor — THB 250
+- 3 month, 1 floor — THB 7,500
+- 10 days — THB 2,500
+- Weekly access (สมาชิก...) — THB 900
+- duplicate One-time access (รายวัน), 3 floor — THB 300
+Edits completed:
+- One-time access (รายวัน), 1 floor: THB 300 -> THB 400
+- 3 month, 1 floor: THB 7,500 -> THB 15,000
+- 10 days deleted
+- duplicate One-time access (รายวัน), 3 floor deleted
+Already matching: Hourly access THB 50; Monthly membership THB 6,000; Weekly access THB 1,800; one 3 month listing THB 15,000.
+- 24/7 and 5 hours products were not present in the product list observed; no such items were added.
+- No separate product explicitly named “500/day” or “floor-1 pass” was present; the duplicate floor access listing was removed.

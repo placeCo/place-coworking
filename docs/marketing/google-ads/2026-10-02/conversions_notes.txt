@@ -1,0 +1,58 @@
+Google Ads account 487-476-0915 — read-only conversion review
+Date range: Sep 1–30, 2026 (account timezone GMT+7).
+
+Goals > Conversions > Summary:
+The Summary goal cards showed these September totals by goal/category: Contacts 654; Get directions 546; Page views 47; Submit lead forms 7; Phone call leads 0. The conversion-action table contained 24 actions. Visible action metadata (source / optimization / count / tracking status):
+- PLACE COWORKING (web) purchase — Website (Google Analytics (GA4)); Primary; Every; No recent conversions.
+- Business profile - Form — Other (Google Business Profile); Primary; One; No recent conversions.
+- Business profile - Form submit — Other (Google Business Profile); Primary; One; No recent conversions.
+- PLACE COWORKING (web) form_submitted — Website (GA4); Primary; Every; Active.
+- PLACE COWORKING (web) click_google_map — Website (GA4); Primary; Every; Active.
+- PLACE COWORKING (web) click_mail — Website (GA4); Primary; Every; Active.
+- PLACE COWORKING (web) click_phone — Website (GA4); Primary; Every; Active.
+- PLACE COWORKING (web) click_telegram — Website (GA4); Primary; Every; Active.
+- PLACE COWORKING (web) click_whatsapp — Website (GA4); Primary; Every; Active.
+- Local actions - Directions — Google hosted; Primary; Every; Active.
+- Smart campaign map directions — Google hosted; Primary; Every; No recent conversions.
+- Business profile - Directions — Other; Primary; One; No recent conversions.
+- PLACE COWORKING (web) begin_trial — Website (GA4); Primary; Every; No recent conversions.
+- Local actions - Orders — Google hosted; Primary; Every; No recent conversions.
+- Store visits — Store; Primary; Every; Needs attention.
+- Local actions - Other engagements — Google hosted; Primary; Every; Active.
+- Local actions - Website visits — Google hosted; Primary; Every; Active.
+- CLICKS TO CALL — Google hosted; Primary; Every; Active.
+- Smart campaign ad clicks to call — Call from Ads; Primary; Every; No recent conversions.
+- Smart campaign map clicks to call — Google hosted; Primary; Every; No recent conversions.
+- Business profile - Call — Other; Primary; One; No recent conversions.
+- PLACE COWORKING (web) click_mail — Website (GA4); Primary; Every; Active.
+(There were 24 rows total; two duplicate-looking website click actions were present in the table. All visible actions were Primary; no Secondary action was visible.)
+
+Campaign breakdown (Sep 1–30, Segment > Conversions > Conversion action):
+- Фото / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай — Performance Max, THB50/day. Campaign total: 111.74 conversions. Visible segmented rows: PLACE COWORKING (web) click_google_map 38.57; PLACE COWORKING (web) click_mail 1.00; PLACE COWORKING (web) click_phone 47.04. Asset-group total Фотостудия: 111.74.
+- Search | Office for Rent | Phuket | EN ads | RU,EN,TH,CH — Search, THB100/day. Campaign total: 10.00 conversions (187 clicks; 5.35% conversion rate). Visible segmented row PLACE COWORKING (web) click_google_map: 2.00 conversions; Office Near Me row showed 20.00% conversion rate (1 conversion inferred from the displayed rate/click count); remaining visible ad-group rows had 0 conversions. Rows 11–16 (Flex-Hourly Part-Time, Flex-Flexible Monthly, Executive-Premium, Small Office (1-2), etc.) all showed 0.00.
+
+No changes were made. The Google Ads UI did not expose a per-action “Sept conversions” column in the conversion-action Summary table without further table export; the category totals and campaign segmented values above are the values directly observed.
+
+2026-10-02 approved settings change attempt:
+- Updated successfully: PLACE COWORKING (web) purchase -> Secondary; Count remained Every (user requested Secondary; no Count requirement for this action).
+- Updated successfully: PLACE COWORKING (web) form_submitted -> Primary; Count One.
+- Business profile - Form and Business profile - Form submit were already Primary; Count One.
+- Remaining requested actions were not changed in this run because the Google Ads UI required opening and saving each conversion action individually: click_phone, click_whatsapp, click_telegram, CLICKS TO CALL, Business profile - Call, click_mail duplicate resolution, click_google_map, Local actions - Directions, Smart campaign map directions, Business profile - Directions, Local actions - Website visits, Local actions - Other engagements, Store visits, Local actions - Orders, begin_trial, and page-view actions.
+- No budgets, campaigns, or conversion actions were deleted. Campaign-specific goal status was not changed; no campaign-specific goal override was observed during this partial run.
+
+2026-10-02 continuation (conversion edits):
+- Successfully saved: PLACE COWORKING (web) click_phone -> Primary; Count One.
+- Successfully saved: PLACE COWORKING (web) click_whatsapp -> Primary; Count One.
+- Successfully saved: PLACE COWORKING (web) click_telegram -> Primary; Count One.
+- Successfully saved: PLACE COWORKING (web) click_mail (GA4 action opened from Contact goal) -> Secondary; Count remains Every. This is the duplicate-resolution choice; the other duplicate-looking click_mail action was not separately exposed in the current goal table.
+- Could not edit Google-hosted managed actions in current UI: Local actions - Website visits (Action optimization marked Not editable), CLICKS TO CALL (Google hosted; Action optimization Not editable). Business profile - Call showed a lock/managed indicator and was not changed.
+- Page-view actions/Google-managed actions remain unchanged pending individual editability review. No campaigns or budgets changed; no actions deleted.
+
+2026-10-02 continuation attempt (after GBP task):
+- Google Ads Summary became non-responsive/blank while loading after browser recovery; no additional conversion-action edits could be completed or verified in this attempt.
+- Remaining requested actions still pending/unchanged unless listed as successfully saved above: PLACE COWORKING (web) click_google_map, Local actions - Directions, Smart campaign map directions, Business profile - Directions, PLACE COWORKING (web) begin_trial, Local actions - Other engagements, Store visits, Local actions - Orders, and page-view actions.
+- Previously confirmed uneditable/managed: Local actions - Website visits, CLICKS TO CALL, and Business profile - Call. No deletions, budget changes, campaign changes, or campaign-specific goal changes were made.
+
+2026-10-02 focused retry (requested targets):
+- Opened the existing Google Ads conversion Summary and expanded Get directions. The requested click_google_map action page opened but remained blank; performed exactly one reload as instructed, and it remained blank/loading.
+- No changes were saved in this retry. Requested targets remain unchanged/not verified: PLACE COWORKING (web) click_google_map; Local actions - Directions; Local actions - Other engagements; Smart campaign map directions / Business profile - Directions; PLACE COWORKING (web) begin_trial; Local actions - Orders.

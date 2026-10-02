@@ -1,0 +1,16 @@
+Campaign report
+"August 1, 2026 - August 31, 2026"
+Campaign status,Campaign,Budget,Budget name,Budget type,Currency code,Status,Status reasons,Optimization score,Campaign type,Bid strategy type,Conv. value,Conversions,Conv. rate,Cost / conv.,Impr.,Clicks,CTR,Cost
+Enabled,"Search | Office for Rent | Phuket | EN ads | RU,EN,TH,CH",100.00, --,Daily,THB,Eligible (Limited),limited by budget; missing enough relevant keywords,63.40,Search,Maximize clicks,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Paused,10 минут от пляжа Ката,29.10, --,Daily,THB,Paused,campaign paused, --,Smart,Maximize clicks,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Enabled,"Фото / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объявления на Англ",50.00, --,Daily,THB,Eligible,,67.26,Performance Max,Maximize Conversions,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Enabled,"Эвенты / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",140.00, --,Daily,THB,Eligible,,71.60,Performance Max,Maximize Conversions,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Paused,Coworking Place | to site | 11 km radius | Smart | English,200.00, --,Daily,THB,Paused,campaign paused, --,Smart,Maximize clicks,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Enabled,"Подкасты / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объявления на Англ",50.00, --,Daily,THB,Eligible (Limited),some asset groups limited by policy,81.60,Performance Max,Maximize Conversions,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Enabled,"Коворкинг и Юр адреса / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",140.00, --,Daily,THB,Eligible,,72.39,Performance Max,Maximize Conversions,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Paused,"Аренда Офиса и Митинг Рум / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ",50.00, --,Daily,THB,Paused,campaign paused, --,Performance Max,Maximize Conversions,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Campaigns, --, --, --, --,THB, --,, --, --, --,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Account,,,,,THB,,,,,,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Performance Max,,,,,THB,,,,Performance Max,,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Smart,,,,,THB,,,,Smart,,0.00,0.00,0.00%,0.00,0,0, --,0.00
+Total: Search,,,,,THB,,,,Search,,0.00,0.00,0.00%,0.00,0,0, --,0.00

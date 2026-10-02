@@ -1,0 +1,24 @@
+Google Ads account 487-476-0915 | read-only
+Monthly account totals from campaign CSV exports (THB):
+- April 1, 2026 - April 30, 2026: cost 5641.20, clicks 1,966, conversions 612.91
+- May 1, 2026 - May 31, 2026: cost 11424.00, clicks 9,689, conversions 847.10
+- June 1, 2026 - June 30, 2026: cost 12915.43, clicks 8,804, conversions 1,102.12
+- July 1, 2026 - July 31, 2026: cost 321.38, clicks 110, conversions 11.00
+- August 1, 2026 - August 31, 2026: cost 0.00, clicks 0, conversions 0.00
+- September 1, 2026 - September 30, 2026: cost 14648.27, clicks 14,255, conversions 1,324.02
+- October 1, 2026 - October 2, 2026: cost 555.98, clicks 714, conversions 52.00
+
+Last-90-day coverage exports: Jul 1-Oct 2 (Jul 1-3 included; exact Jul 4-Oct 2 requires custom range).
+Jul 1-Oct 2 aggregate from exports: cost 15525.63 THB, clicks 15079, conversions 1387.02.
+
+September campaign detail (cost/clicks/conversions, budget/day, status/type/bidding):
+- Search | Office for Rent | Phuket | EN ads | RU,EN,TH,CH | Enabled | Search | Maximize clicks | budget 100.00 THB/day | cost 3039.92 | clicks 187 | conv 10.00 | CTR 9.23% | avg cost/conv 303.99
+- 10 минут от пляжа Ката | Paused | Smart | Maximize clicks | budget 29.10 THB/day | cost 0.00 | clicks 0 | conv 0.00 | CTR  -- | avg cost/conv 0.00
+- Фото / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объявления на Англ | Enabled | Performance Max | Maximize Conversions | budget 50.00 THB/day | cost 1563.96 | clicks 1,325 | conv 111.74 | CTR 6.67% | avg cost/conv 14.00
+- Эвенты / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ | Enabled | Performance Max | Maximize Conversions | budget 140.00 THB/day | cost 4265.12 | clicks 2,228 | conv 485.72 | CTR 5.91% | avg cost/conv 8.78
+- Coworking Place | to site | 11 km radius | Smart | English | Paused | Smart | Maximize clicks | budget 200.00 THB/day | cost 0.00 | clicks 0 | conv 0.00 | CTR  -- | avg cost/conv 0.00
+- Коворкинг и Юр адреса / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ | Enabled | Performance Max | Maximize Conversions | budget 140.00 THB/day | cost 4259.22 | clicks 2,099 | conv 716.57 | CTR 6.19% | avg cost/conv 5.94
+- Подкасты / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объявления на Англ | Enabled | Performance Max | Maximize Conversions | budget 50.00 THB/day | cost 1520.04 | clicks 8,416 | conv 0.00 | CTR 5.13% | avg cost/conv 0.00
+- Аренда Офиса и Митинг Рум / Ключи-темы на англ / сайт и карты / 11 км радиус / Пмакс / Англ, Рус, Тай но объ на Англ | Paused | Performance Max | Maximize Conversions | budget 50.00 THB/day | cost 0.00 | clicks 0 | conv 0.00 | CTR  -- | avg cost/conv 0.00
+
+Not captured in these campaign exports: search terms/keyword rankings, conversion-action names, locations/top locations, device split, ad schedule, network toggles, and PMax/Display placement detail. No changes made.
