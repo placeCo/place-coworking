@@ -42,6 +42,23 @@ Read-only inventory collected from `user-Canva` and `user-Canva--team2` on 2026-
 | 33 | Minimalist Sports Event Flyer with QR Codes | [open](https://www.canva.com/d/tPvmiyT43cAJ_VX) | unknown · 532×376 px | other/event | sports event with QR codes | unknown | event-specific; verify QR | not suitable | 2026-09-24 19:49 |
 | 34 | baner podcast | [open](https://www.canva.com/d/63-L_ftKW2QPv8W) | custom · 513×390 px (3 pages) | old/other | podcast banner | unknown | old banner; verify text/branding | needs text tweak | 2026-09-25 09:18 |
 
+## Шаблоны Никиты (зелёный стиль), получены 02.10
+
+Источник: ссылка Никиты 02.10 18:11 → один дизайн «Instagram», 47 страниц, 1080×1350 (4:5): https://www.canva.com/d/ZVJGy7jlsTj9r6t
+**Оригинал не редактировать — работать только на копиях.** Текстовые слои есть на 45/47 стр. (3 и 15 — без текста).
+
+| Тема октября | Страницы |
+|---|---|
+| Как нас найти / ресепшен | 32–33 («HOW TO GET IT») |
+| Офисы | 18–22 (аренда, удобства, часы, бронь) |
+| Студия / подкаст | 42–43 (цены студии) |
+| Фасад / парковка | нет прямого; 7–9 — этажи/навигация |
+| Пассы / цены | 11, 14, 19 |
+| Часы | 21 (есть «24-hour access» — проверить) |
+| Кафе / меню | 23–30 (завтрак 100 ฿, топпинги) |
+
+Проверить перед использованием: «THREE FREE DAYS» (похоже на триал), «24-hour access», цены 500 ฿ (йога/пасс) — сверить с каноном.
+
 ## Подходит для октября
 
 Best existing designs by planned topic:
