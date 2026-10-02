@@ -1,5 +1,8 @@
 # Place Coworking — Canva catalog for SMM
 
+> ⚠️ Поправка 02.10: строки «DRAFT …» — это черновики Lead (свой генератор, СТАРЫЙ синий стиль), а не Никиты; колонка «green/current» у них ошибочна. Шаблонов Никиты в наших Canva-аккаунтах нет — доступ на просмотр запрошен у Никиты 02.10 (бот msg 213). Зелёный стиль: фон #1B3A2A/#163D2F, акцент золото #E0D3A0/#DCCB8A, белый жирный sans капсом (листовки Sports Street A/B). Правило George: для SMM ничего не генерировать, работать только на копиях шаблонов Никиты.
+
+
 Read-only inventory collected from `user-Canva` and `user-Canva--team2` on 2026-10-02 (ICT, UTC+7). Links are Canva edit links where available. `unknown` means Canva did not expose a more specific design type; text editability was not verified by opening/editing designs.
 
 | # | Title | Link | Type / size | Style | What it shows | Text editable? | Outdated info | Ready rating | Last modified (ICT) |
