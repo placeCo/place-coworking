@@ -56,3 +56,13 @@ No changes were made. The Google Ads UI did not expose a per-action “Sept conv
 2026-10-02 focused retry (requested targets):
 - Opened the existing Google Ads conversion Summary and expanded Get directions. The requested click_google_map action page opened but remained blank; performed exactly one reload as instructed, and it remained blank/loading.
 - No changes were saved in this retry. Requested targets remain unchanged/not verified: PLACE COWORKING (web) click_google_map; Local actions - Directions; Local actions - Other engagements; Smart campaign map directions / Business profile - Directions; PLACE COWORKING (web) begin_trial; Local actions - Orders.
+
+2026-10-02 evening retry (20:38 UTC+7):
+- Closed the prior Google Ads browser state and opened a fresh tab. Direct URL https://ads.google.com/aw/conversions?ocid=487-476-0915 returned Google Error 400.
+- Navigating via Ads homepage/history led to Google account chooser showing info@placecoworking.com as “Signed out”. Login is required and cannot be completed in this run; no conversion edits were made.
+- Requested actions remain unchanged/not verified: click_google_map, Local actions - Directions, Local actions - Other engagements, Smart campaign map directions, Business profile - Directions, begin_trial, Local actions - Orders.
+
+2026-10-02 evening continuation after George sign-in:
+- Successfully changed and saved: PLACE COWORKING (web) click_google_map -> Secondary. The action settings confirmed the “Secondary action not used for bidding optimization” selection and Save completed.
+- Could not continue to the remaining requested actions (Local actions - Directions, Local actions - Other engagements, Smart campaign map directions, Business profile - Directions, PLACE COWORKING (web) begin_trial, Local actions - Orders): returning to the Summary caused the Google account authentication page to time out (ERR_TIMED_OUT), ending the usable Ads session.
+- No campaigns, budgets, or actions were deleted or otherwise changed. Google-managed/uneditable actions were not touched.
