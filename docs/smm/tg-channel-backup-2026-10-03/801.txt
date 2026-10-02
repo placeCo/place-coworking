@@ -1,0 +1,30 @@
+# Backup of https://t.me/coworking_place_phuket/801
+# Post date: 2025-10-12T05:04:48+00:00 (UTC)
+# Fetched: 2026-10-03 ~04:20 ICT via t.me embed, before hotel removal
+# Media: ['video_player']
+
+=== PLAIN TEXT ===
+Просыпаетесь в своем номере - и через пару минут уже у моря 🌊
+
+Пляжи Ката и Карон — многие считают лучшими на юге Пхукета: мягкий песок, бирюзовая вода, кафе, бары и всё для отдыха.
+
+А если хотите чего-то особенного — прогуляйтесь по Карону и послушайте, как песок скрипит под ногами 💛
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+Просыпаетесь в <a href="https://t.me/coworking_place_phuket/800">своем номере</a> - и через пару минут уже у моря 🌊
+
+Пляжи Ката и Карон — многие считают лучшими на юге Пхукета: мягкий песок, бирюзовая вода, кафе, бары и всё для отдыха.
+
+А если хотите чего-то особенного — прогуляйтесь по Карону и послушайте, как песок скрипит под ногами 💛
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/800",
+  "text": "своем номере"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto">Просыпаетесь в <a href="https://t.me/coworking_place_phuket/800" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">своем номере</a> - и через пару минут уже у моря <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8C8A.png')"><b>🌊</b></i><br/><br/>Пляжи Ката и Карон — многие считают лучшими на юге Пхукета: мягкий песок, бирюзовая вода, кафе, бары и всё для отдыха.<br/><br/>А если хотите чего-то особенного — прогуляйтесь по Карону и послушайте, как песок скрипит под ногами <i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F929B.png')"><b>💛</b></i></div>

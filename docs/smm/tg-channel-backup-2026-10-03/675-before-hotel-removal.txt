@@ -1,0 +1,92 @@
+# Backup of https://t.me/coworking_place_phuket/675
+# Post date: 2025-05-14T05:28:35+00:00 (UTC)
+# Fetched: 2026-10-03 ~04:20 ICT via t.me embed, before hotel removal
+# Media: ['photo_wrap']
+
+=== PLAIN TEXT ===
+ℹ️ Всё о коворкинге Place
+🕗 Работаем ежедневно с 08:00 до 23:00
+
+⭐️ Прайс на посещение коворкинга
+⭐️ Прайс на аренду пространств целиком
+⭐️ Аренда офисов
+⭐️Дополнительные услуги:
+🍽️ Кафе
+📷 Аренда оборудования
+🏨 PLACE HOTEL
+📚 Библиотека
+🖨️ Печать
+ч/б: 5 бат/лист
+цветная: 10 бат/лист
+➡️ Контакты и навигация по каналу
+
+#place #прайс
+
+=== TELEGRAM HTML (reconstructed, parse_mode=HTML) ===
+ℹ️ Всё о коворкинге Place
+🕗 Работаем ежедневно с 08:00 до 23:00
+
+⭐️ <a href="https://t.me/coworking_place_phuket/666">Прайс на посещение коворкинга</a>
+
+⭐️ <a href="https://t.me/coworking_place_phuket/646">Прайс на аренду пространств целиком</a>
+
+⭐️ <a href="https://t.me/coworking_place_phuket/987">Аренда офисов</a>
+
+⭐️Дополнительные услуги:
+🍽️ <a href="https://t.me/coworking_place_phuket/813">Кафе</a>
+📷 <a href="https://t.me/place_coworking_phuket/3529">Аренда оборудования</a>
+🏨 <a href="https://t.me/coworking_place_phuket/594">PLACE HOTEL</a> 
+📚 <a href="https://t.me/library_phuket">Библиотека</a>
+🖨️ Печать
+ч/б: 5 бат/лист
+цветная: 10 бат/лист
+➡️ <a href="https://t.me/coworking_place_phuket/26">Контакты и навигация по каналу</a>
+
+#place #прайс
+
+=== ENTITIES (from web preview) ===
+[
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/666",
+  "text": "Прайс на посещение коворкинга"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/646",
+  "text": "Прайс на аренду пространств целиком"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/987",
+  "text": "Аренда офисов"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/813",
+  "text": "Кафе"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/place_coworking_phuket/3529",
+  "text": "Аренда оборудования"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/594",
+  "text": "PLACE HOTEL"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/library_phuket",
+  "text": "Библиотека"
+ },
+ {
+  "type": "text_link",
+  "url": "https://t.me/coworking_place_phuket/26",
+  "text": "Контакты и навигация по каналу"
+ }
+]
+
+=== RAW WIDGET HTML ===
+<div class="tgme_widget_message_text js-message_text" dir="auto"><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E284B9.png')"><b>ℹ️</b></i> Всё о коворкинге Place<br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F9597.png')"><b>🕗</b></i> Работаем ежедневно с 08:00 до 23:00<br/><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E2AD90.png')"><b>⭐️</b></i> <a href="https://t.me/coworking_place_phuket/666" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Прайс на посещение коворкинга</a><br/><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E2AD90.png')"><b>⭐️</b></i> <a href="https://t.me/coworking_place_phuket/646" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Прайс на аренду пространств целиком</a><br/><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E2AD90.png')"><b>⭐️</b></i> <a href="https://t.me/coworking_place_phuket/987" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Аренда офисов</a><br/><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E2AD90.png')"><b>⭐️</b></i>Дополнительные услуги:<br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8DBD.png')"><b>🍽️</b></i> <a href="https://t.me/coworking_place_phuket/813" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Кафе</a><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F93B7.png')"><b>📷</b></i> <a href="https://t.me/place_coworking_phuket/3529" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Аренда оборудования</a><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F8FA8.png')"><b>🏨</b></i> <a href="https://t.me/coworking_place_phuket/594" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">PLACE HOTEL</a> <br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F939A.png')"><b>📚</b></i> <a href="https://t.me/library_phuket" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Библиотека</a><br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/F09F96A8.png')"><b>🖨️</b></i> Печать<br/>ч/б: 5 бат/лист<br/>цветная: 10 бат/лист<br/><i class="emoji" style="background-image:url('//telegram.org/img/emoji/40/E29EA1.png')"><b>➡️</b></i> <a href="https://t.me/coworking_place_phuket/26" onclick="return confirm('Open this link?\n\n'+this.href);" rel="noopener" target="_blank">Контакты и навигация по каналу</a><br/><br/>#place #прайс</div>

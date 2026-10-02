@@ -34,3 +34,29 @@ Approve: George (owner). Основание: `docs/smm/TG-CHANNEL-AUDIT-2026-10-
 
 ## 03.10 03:45 — картинки заменены (OK George)
 /666 → P03_s2, /641 → P03_s1, /127 → P07_s5, /156 → P13_s2 (oct-v2-slides). /139 без замены.
+
+---
+
+## Раунд 2 — удаление PLACE HOTEL (George 03.10: отель продан), ~04:25 ICT
+
+Скан: весь канал через `t.me/s/coworking_place_phuket?before=…` (699 постов в превью, #1–#1048), поиск: hotel / отел(ь) / гостиниц / номер / проживание / ссылки на /594 и другие посты про отель. Посты без текста (только картинка) поиском по тексту не проверить.
+/26 не трогали — уже чистый (упоминаний отеля нет).
+Бэкап перед правкой: `tg-channel-backup-2026-10-03/675-before-hotel-removal.txt`, `690.txt`, `697.txt`, `702.txt`, `787.txt`, `801.txt`; новые caption — `_corrected-captions-hotel.json`; ответы API — `_api-results-hotel.json`.
+
+| Пост | Что изменено | Статус |
+|---|---|---|
+| [/675](https://t.me/coworking_place_phuket/675) (закреп) | Удалена строка «🏨 PLACE HOTEL» со ссылкой на /594; остальное как было | ✅ |
+| [/690](https://t.me/coworking_place_phuket/690) (Лето в PLACE, 2 фото) | Удалён блок «1️⃣ Коворкинг + Place Hotel / Июнь–Август / проживание в отеле Делюкс + 2 этаж / 30 000»; убран номер «2️⃣» у оставшегося пункта | ✅ |
+| [/697](https://t.me/coworking_place_phuket/697) (Лето в PLACE) | Удалён блок «Коворкинг + Place Hotel …» | ✅ (custom emoji-буквы 🔠 стали обычными 🔠) |
+| [/702](https://t.me/coworking_place_phuket/702) (Лето в PLACE) | Удалён пункт «1. Коворкинг + Place Hotel …», убран номер «2.» | ✅ (то же про 🔠) |
+| [/787](https://t.me/coworking_place_phuket/787) (видео) | Из фразы «Добавьте всё остальное: …» убрано «уютные номера» | ✅ |
+
+Посты ТОЛЬКО про отель — не удалялись, кандидаты на удаление (нужен OK George):
+- https://t.me/coworking_place_phuket/594 — «Встречайте Place Hotel»
+- https://t.me/coworking_place_phuket/773 — «Ваша база на Пхукете — отель Place!» (бронирование, бонус резидентам)
+- https://t.me/coworking_place_phuket/800 — дубль /773
+- https://t.me/coworking_place_phuket/801 — «Просыпаетесь в своём номере…» (видео, ссылка на /800)
+- https://t.me/coworking_place_phuket/822 — «Ваш номер в Place Hotel…»
+- https://t.me/coworking_place_phuket/842 — «Суббота в Place Hotel…»
+
+Заметка: в /690, /697, /702 остался старый оффер «Пробный месяц −50%, любой этаж» (вне канона, акция лета 2025) — не трогали, вне задачи.
