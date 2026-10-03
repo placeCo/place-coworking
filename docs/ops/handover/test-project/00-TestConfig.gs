@@ -8,7 +8,9 @@
  *   - Production sheets (Resident info, Schedule 26, Events and booking, Place Inbox / orders bridge) open READ-ONLY:
  *     every method except get…, is…, has… throws «TEST GUARD». Writes are possible only in the TEST copies (T_IDS),
  *     in practice only Issues + Log in «Place Inbox TEST». Any other spreadsheet id throws.
- *   - NOTHING goes to its real target. GmailApp.createDraft/sendEmail, MailApp and Telegram sendMessage from modules are
+ *   - SINCE 03.10.2026 09:17 (George): scheduled jobs go to the REAL recipients with a «[TEST] » prefix — see T_REAL /
+ *     T_realTarget_ below (PLACE Team, «Тех вопросы», Payments Place, Lena). Script Property T_ROUTING=relay restores the old mode:
+ *   - (old mode) NOTHING goes to its real target. GmailApp.createDraft/sendEmail, MailApp and Telegram sendMessage from modules are
  *     intercepted and RELAYED (George's instruction 30.09 14:22) to BOTH George and Lena in their private chats with
  *     @PlaceLeadBot (Script Properties GEORGE_CHAT_ID and LENA_CHAT_ID) as:
  *       🧪 ТЕСТ · Куда ушло бы: <real recipient, short>
@@ -152,8 +154,46 @@ function T_tgSend_(chatId, text) {
     payload: JSON.stringify({chat_id: chatId, text: text, disable_web_page_preview: true}), muteHttpExceptions: true});
   return r.getResponseCode();
 }
+// ---------- REAL routing (George 03.10.2026 09:17): TEST jobs go to the real recipients, every message starts with [TEST] ----------
+/** Real chats (not secrets). Script Properties TECH_CHAT_ID / PAY_CHAT_ID / LENA_CHAT_ID / TEAM_CHAT_ID / SAK_CHAT_ID override.
+ *  Admins have no private chats with @PlaceLeadBot (only the shared @place_coworking_admin), so admin messages go to PLACE Team.
+ *  Alena (fired 02.10) is not a recipient. Tenants and the accountant get nothing: office/e-mail/timesheet items go to Lena. */
+var T_REAL = {team: '-1003641241156', tech: '-5341674959', pay: '-1003702681187', lena: '626363253', sak: ''};
+/** Script Property T_ROUTING: 'real' (default since 03.10) | 'relay' (old mode: George + Lena DMs with «Куда ушло бы»). */
+function T_routing_() { return String(PropertiesService.getScriptProperties().getProperty('T_ROUTING') || 'real').toLowerCase(); }
+function T_realId_(k) {
+  var map = {team: 'TEAM_CHAT_ID', tech: 'TECH_CHAT_ID', pay: 'PAY_CHAT_ID', lena: 'LENA_CHAT_ID', sak: 'SAK_CHAT_ID'};
+  return String(PropertiesService.getScriptProperties().getProperty(map[k]) || T_REAL[k] || '').trim();
+}
+/** «where» label → {key, name, pre} | null (= not a real send: use the old George + Lena relay, e.g. the ping). */
+function T_realTarget_(where) {
+  var w = where == null ? '' : String(where);
+  if (!w) return {key: 'tech', name: 'Тех вопросы'};                                   // issues digests (label-less)
+  if (/никуда|проверка связи/i.test(w)) return null;                                   // sendTestPing
+  if (/PLACE Team/i.test(w)) return {key: 'team', name: 'PLACE Team'};
+  if (/вечерний админ/i.test(w)) {
+    var m = w.match(/вечерний админ\s+([^()→]+?)\s*\(ЛС\)/i);
+    return {key: 'team', name: 'PLACE Team (вечерний админ)', pre: m ? 'Вечерний админ: ' + m[1].trim() + '\n' : ''};
+  }
+  if (/PAY_CHAT_ID|Payments/i.test(w)) return {key: 'pay', name: 'Payments Place'};
+  if (/Тех вопросы/i.test(w)) return {key: 'tech', name: 'Тех вопросы'};
+  if (/Сак/i.test(w)) return {key: 'sak', name: 'Сак (ЛС)'};
+  return {key: 'lena', name: 'Лена (ЛС)', pre: /email|черновик|арендатор|Pat/i.test(w) ? 'Для: ' + w + '\n' : ''};   // offices, coverage, timesheet, leave
+}
+/** Real send: «[TEST] » + text to the real chat. Empty chat id / no TG_TOKEN → log only. */
+function T_sendReal_(t, text) {
+  var id = T_realId_(t.key), body = '[TEST] ' + (t.pre || '') + String(text == null ? '' : text);
+  if (!id) { T_BUF.push('[real: ' + t.name + ' chat id not set → NOT sent]\n' + body); return 'not-sent(no chat id)'; }
+  if (!PropertiesService.getScriptProperties().getProperty('TG_TOKEN')) { T_BUF.push('[real LOG ONLY: TG_TOKEN not set] → ' + t.name + '\n' + body); return 'log-only'; }
+  var parts = [], s = body; while (s.length) { parts.push(s.slice(0, 3900)); s = s.slice(3900); }
+  var codes = parts.map(function (part, i) { try { return T_tgSend_(id, (i ? '[TEST] (продолжение)\n' : '') + part); } catch (e) { return 'ERR ' + (e && e.message); } });
+  T_BUF.push('[sent → ' + t.name + ' ' + id + ': ' + codes.join(',') + ']\n' + body);
+  return 'sent ' + t.name + ':' + codes.join(',');
+}
+
 /** where = the real recipient + channel in plain Russian, e.g. «PLACE Team (TG группа)», «Лена в личку». */
 function T_relay_(where, text) {
+  if (T_CTX.relay && !T_CTX.send && T_routing_() === 'real') { var rt = T_realTarget_(where); if (rt) return T_sendReal_(rt, text); }
   var full = T_relayText_(where, text);
   if (!T_CTX.relay) { T_BUF.push('[relay off: fixture test]\n' + full); return 'log-only(fixture)'; }
   var send = T_CTX.send || T_tgSend_;

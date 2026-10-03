@@ -281,3 +281,16 @@ Common rules for every item:
 - [ ] Config: `SCHEDULE_SHEET_ID`=production, `ACCOUNTANT_TO` = the real accountant, `DRAFT_ENABLED=true`.
 - [ ] Monthly trigger on the **28th**, 09:30, **draft** only (period = current month; leave after the 28th → next month). George sends it himself.
 - [ ] For 2027: `SHEET_ID_BY_YEAR`.
+
+## REAL routing (George 03.10.2026 09:17)
+Scheduled TEST jobs now go to the real recipients, each message starts with `[TEST] `. Production sheets stay read-only.
+| Job | Time ICT | Recipient (chat_id) |
+|---|---|---|
+| job_stage6 (offices, electricity) | 09:05 daily | Lena DM 626363253 (tenant/e-mail items as «Для: …») |
+| job_coverage | 09:10 daily | Lena DM 626363253 |
+| job_paymentReminders | 09:15 daily (only when due) | Payments Place −1003702681187 |
+| job_bookings | 10:07 daily | PLACE Team −1003641241156 |
+| job_issuesMorning / Evening | 10:07 / 23:10 (nothing open → nothing sent) | Тех вопросы −5341674959 |
+| job_cashReminder | 22:30 every 3 days | PLACE Team −1003641241156 («Вечерний админ: …») — admins have no DMs with the bot |
+| job_timesheet | 28th 09:30 | Lena DM 626363253 (accountant gets nothing) |
+Not sent: Sak (SAK_CHAT_ID empty), Alena (fired), tenants, accountant. Override chats via Script Properties TEAM/TECH/PAY/LENA/SAK_CHAT_ID; `T_ROUTING=relay` = old George+Lena relay. `sendTestPing` still uses the old relay.
