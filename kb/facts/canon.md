@@ -76,3 +76,4 @@ Main drop-in was **5h**, not day. Export has **no** week/month/9000/offices/stud
 - Wifi Mbps numbers — **ASSUMPTION / need George measurement**
 - Live occupancy % — not in canon (pull Resident sheet counts if needed)
 - IG bio “100฿ café credit” — in old bio, **not in canon** (Teamly extract: George decide)
+- **2 этаж (George 03.10.2026):** арендатор Макс снимает половину этажа, 70 000 ฿/мес, электричество включено. Вторая половина свободна/уточнить.
