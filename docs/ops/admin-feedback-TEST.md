@@ -14,3 +14,6 @@
 - 12:21 Leena: дослан полный онбординг админа [TEST] (intro + O1–O19, подходит ли / что лишнее / чего нет). msg_ids 272, 273. Ждём ответ.
 - 12:21 Lena: спросили 2 этаж (арендаторы + электричество); fingerprint ещё без ответа. msg_id 274.
 - 12:21 брони: без новых (4 floor Event 10:00–21:00 как в snapshot); админам не слали.
+- 12:27 Lena: 2 этаж — арендатор Макс; электричество включено в аренду 70 000 ฿/мес (→ kb/facts/offices-access.md).
+- 12:29 Lena: fingerprint — доступы у Aiz, ждём (→ kb/facts/offices-access.md). Fingerprint ещё открыт до ответа Aiz.
+- 14:21 sweep: Tangmo/Leena без ответа в usage-log — не пушили. Брони без новых (4 floor Event 10:00–21:00). Lena: спросили admin processes/duties [TEST].
