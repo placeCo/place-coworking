@@ -17,3 +17,6 @@
 - 12:27 Lena: 2 этаж — арендатор Макс; электричество включено в аренду 70 000 ฿/мес (→ kb/facts/offices-access.md).
 - 12:29 Lena: fingerprint — доступы у Aiz, ждём (→ kb/facts/offices-access.md). Fingerprint ещё открыт до ответа Aiz.
 - 14:21 sweep: Tangmo/Leena без ответа в usage-log — не пушили. Брони без новых (4 floor Event 10:00–21:00). Lena: спросили admin processes/duties [TEST].
+
+## 04.10.2026
+- ~10:27 sweep: новая бронь 4 floor 18:00 event nikita → Tangmo (msg 302), Leena (msg 303) [TEST]. George DM 304. Новых /start нет. Checklist Tangmo/Leena без ответа — не пушили. Lena admin_processes (280) без ответа — ask не слали.
