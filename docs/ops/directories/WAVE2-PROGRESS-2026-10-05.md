@@ -12,6 +12,11 @@
 | TripAdvisor | Blocked: info@ account exists, password unknown, reset email didn't arrive; Google login needs George's Honor approval | Owners page https://www.tripadvisor.com/Owners · listing «Place Coworking — Chalong» |
 | Wongnai | Add/claim form sent, receipt unconfirmed; type cafe; no hours/photos fields | https://www.wongnai.com/business/form · account info@ (password in secrets) |
 | Nomadwise | Free claim submitted, waiting approval email; photos after approval via https://nomadmaps.io/?owner | — |
+| SearchRemotely | Correction via contact form (2 msgs; week price fixed to 1 800 in 2nd) | https://searchremotely.com/product/place-coworking-phuket/ |
+| Thailand Stuff | Ownership claim pending review; edit after approve | https://thailandstuff.com/phuket/listings/place-coworking-phuket |
+| Phuket Insider | Correction via contact form (EN+RU hours 08–23) | https://phuket-insider.com/en/places/place-coworking-phuket/ |
+| Wanderlog | Correction email sent 05.10 from info@ to support@wanderlog.com | https://wanderlog.com/place/details/12919054/place-coworking-phuket |
+| Petal Maps | Skip: add/claim is app-only | — |
 
 Also 05.10: LINE OA «Place co-working» (@294bqkju, free plan) logged in on the box via Lena's QR scan; friend link https://line.me/R/ti/p/@294bqkju. Pat must add the OA before we can message her.
 Accounts: logins in /home/box/secrets/directories.txt (box only).
