@@ -1,22 +1,38 @@
-# Directories wave 2 — progress 05.10.2026 (Place Ops)
+# Directories wave 2 — progress 05.10.2026 (ICT)
 
-| Platform | Status | URL / notes |
-|---|---|---|
-| Coworkies | Live; staff-admin confirmation pending (email to info@) | https://www.coworkies.com/cities/phuket/place-coworking-633 · edit: /spaces/1340/editspace · country field read-only (blank), no logo yet |
-| Bing Places | Imported from GBP (weekly sync), "Pending publish", no verification needed | Dashboard https://www.bing.com/forbusiness/multipleEntities · imported all 5 GBP cards incl. Place Hotel, Farang Ice Cream, Photostudio, Podcast room — George to decide on removal |
-| Phuket Community | Submitted, review ≤48 h (Yogi, may WhatsApp +66951170481) | https://phuketcommunity.com/join · offices capacity not stated |
-| Phuket.Net | Submitted, review ≤48 h, confirmation to info@ | https://www.phuket.net/directory/add/ · category Professional Services (no coworking) · pin ~80 m off |
-| icowork.co | NOT fixed: no claim/edit; owner panel only adds new space + agency agreement | Listing https://icowork.co/phuket/coworking/place-coworking (24/7, 700/day) · account on icowork.pro created · correction email to admin@icowork.co drafted for George |
-| Foursquare | Live (added, not claimed) | https://app.foursquare.com/v/place-coworking/6ac32e078ad0c7383682f4c4 · website + hours sent as suggested edit (pending) · map pin approximate |
-| CoworkBooking | Corrected & live (owner dashboard via manager link in info@ email, account «Victoria Skorobogatova») | https://www.coworkbooking.com/asia/thailand/phuket/place-coworking · 3-month 15 000 added, dedicated desk (700/10 days) unpublished, office up to 6 / 30 000, meeting rooms 6/13/20 at 250/h (price unverified) |
-| TripAdvisor | Blocked: info@ account exists, password unknown, reset email didn't arrive; Google login needs George's Honor approval | Owners page https://www.tripadvisor.com/Owners · listing «Place Coworking — Chalong» |
-| Wongnai | Add/claim form sent, receipt unconfirmed; type cafe; no hours/photos fields | https://www.wongnai.com/business/form · account info@ (password in secrets) |
-| Nomadwise | Free claim submitted, waiting approval email; photos after approval via https://nomadmaps.io/?owner | — |
-| SearchRemotely | Correction via contact form (2 msgs; week price fixed to 1 800 in 2nd) | https://searchremotely.com/product/place-coworking-phuket/ |
-| Thailand Stuff | Ownership claim pending review; edit after approve | https://thailandstuff.com/phuket/listings/place-coworking-phuket |
-| Phuket Insider | Correction via contact form (EN+RU hours 08–23) | https://phuket-insider.com/en/places/place-coworking-phuket/ |
-| Wanderlog | Correction email sent 05.10 from info@ to support@wanderlog.com | https://wanderlog.com/place/details/12919054/place-coworking-phuket |
-| Petal Maps | Skip: add/claim is app-only | — |
+Updated evening session ~16:00. Verify against live systems, not earlier plans.
 
-Also 05.10: LINE OA «Place co-working» (@294bqkju, free plan) logged in on the box via Lena's QR scan; friend link https://line.me/R/ti/p/@294bqkju. Pat must add the OA before we can message her.
-Accounts: logins in /home/box/secrets/directories.txt (box only).
+## Done today
+| Item | Status |
+|---|---|
+| Office Hub Partnership Agreement | Signed 10% (Place Company Limited / Georgii Sergeev / TAX 0835566036743) |
+| Office Hub Coworking Desk | Saved suite **CW1**: 1 desk · 6000฿/mo · 10 m² · Available 05.10.2026 |
+| Office Hub Private Offices | Waiting Lena evening (m² / suite / light per room) |
+| Tilda live | Hours 08–23 all langs; offices up to 6; «1 этаж» column already hidden (Place Site) |
+| Bing Places | Place Hotel + Farang deleted from account |
+| GBP | Place Hotel + FARANG ICE CREAM → Permanently closed / Published |
+| TripAdvisor Place Hotel | Permanently closed → Processing |
+| TripAdvisor Farang | Unverified claim — George skip for now |
+| Photo TZ | [docs/ops/TZ-PHOTOS-PLACE-2026-10-05.md](https://github.com/placeCo/place-coworking/blob/main/docs/ops/TZ-PHOTOS-PLACE-2026-10-05.md) commit `0e413d2` |
+| Floor 3 hall size (George) | ≈ 350 m² (form used 10 m²/desk for OH validation) |
+| Lena | Monthly 6000 confirmed; floor 3 = 40 seats |
+
+## Blocked / waiting
+| Item | Wait |
+|---|---|
+| coworker.com publish | George picks 5 horizontal photos (TZ §2) |
+| mycowork.space | Not submitted — photos + Google signup |
+| OSM node 12835699401 | Already OK (08–23, NAP) — no edit |
+| Deskimo last access 22:00 | Field resets to 18:00 — support draft ready |
+| Apple Business Connect / Yandex | George phone |
+| Google Ads debt | Later per George |
+| Payments Place + @place_coworking_admin | Lena add manually (bot not admin) |
+
+## Emails sent earlier (wave 2)
+Croissant follow-up · icowork · Wezoo (letter only)
+
+## Next Ops without Lena
+1. Deskimo: retry last access 22:00 or send support draft
+2. Progress note → GitHub `docs/ops/directories/`
+3. When photos OK → coworker.com + mycowork
+4. Evening: Private Office listings on Office Hub from Lena data
