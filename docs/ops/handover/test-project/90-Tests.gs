@@ -2,7 +2,7 @@
 var T_FAKE_CHAT = {id: -1009990001, title: 'Тех вопросы TEST', type: 'supergroup'};
 
 function test_all() {
-  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_issuesThread(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments(), test_cash()]
+  var r = [test_guard(), test_relay(), test_techRoute(), test_stage6(), test_issues(), test_issuesBridgeHook(), test_issuesThread(), test_issuesIntake(), test_bookings(), test_keyholders(), test_timesheet(), test_leave(), test_payments(), test_cash()]
     .map(function (x) { return x.status; });
   r.push('cleanup: ' + cleanupTestFixtures().status);   // test rows must not reach the scheduled summaries
   return r;
@@ -145,6 +145,54 @@ function test_issuesThread() {
   });
 }
 
+/** George 05.10: strict intake. Lena's informational posts in «Тех вопросы» (Wi‑Fi network list, «Все камеры … на Стафф
+ *  переходят», «И принтеры») were logged as breakdowns. Now: no problem signal → not logged; FYI / password or network list →
+ *  never written (passwords never reach Issues); a real breakdown still opens. Samples are REDACTED (no real passwords). */
+function test_issuesIntake() {
+  return T_fixture_('issues', 'strict intake: info skipped, breakdown logged (in-memory sheet)', function () {
+    var fail = [], chat = T_FAKE_CHAT, D = function (s) { return Math.floor(new Date(s + ':00+07:00').getTime() / 1000); };
+    var night = new Date('2026-10-05T23:10:00+07:00'), sh = T_memSheet_(), h = [], n = 0;
+    var wifi = 'Для информации\nWi‑Fi сети:\nPLACE_1F — пароль: REDACTED01\nPLACE_2F — пароль: REDACTED02\nPLACE_Staff — пароль: REDACTED03';
+    var wifiBare = 'Wi‑Fi\nPLACE_1F: REDACTED01\nPLACE_2F: REDACTED02\nPLACE_Staff: REDACTED03';
+    var cams = 'Все камеры … на Стафф переходят', printers = 'И принтеры', ac = 'Не работает кондиционер на 4 этаже';
+    var send = function (id, at, text, reply, edit) {
+      var m = {chat: chat, message_id: id, date: D(at), from: {username: 'hey_len'}}; if (reply) m.reply_to_message = {message_id: reply};
+      return ISS.issuesHandle_(sh, m, text, 'Hey_len', !!edit);
+    };
+    h.push(send(1001, '2026-10-05T10:00', wifi));
+    h.push(send(1002, '2026-10-05T10:01', wifiBare));
+    h.push(send(1003, '2026-10-05T10:02', cams));
+    h.push(send(1004, '2026-10-05T10:03', printers));
+    h.push(send(1005, '2026-10-05T10:05', ac));
+    h.push(send(1006, '2026-10-05T10:06', printers));                 // same author, 1 min later, other object → still not an issue
+    h.push(send(1007, '2026-10-05T10:07', wifi, 1005));               // even as a reply: password list is never written
+    h.push(send(1005, '2026-10-05T10:08', 'FYI ' + wifiBare, null, true));   // edit of the breakdown into an info post → ignored
+    if (h.join(',') !== 'skip-info,skip-info,skip-noproblem,skip-noproblem,open,skip-noproblem,skip-info,skip-info') fail.push('handled: ' + h.join(','));
+    if (sh.values.length !== 2) fail.push('rows: ' + (sh.values.length - 1) + ' (want 1)');
+    var dump = JSON.stringify(sh.values);
+    if (/REDACTED|парол|PLACE_/i.test(dump)) fail.push('secret/network list written to Issues');
+    var dg = ISS.issuesDigest_('evening', night, {rows: sh.values, includeFixtures: true});
+    if (dg !== '🛠 Поломки: 1\n🔴 4 эт. — кондиционер · открыто, сегодня') fail.push('digest: ' + dg);
+    // rows already wrongly logged (before the fix) are dropped by the digest; the real breakdown stays
+    var old = [ISS.ISSUES_HEAD, T_issueRow_('w1', '2026-10-05 10:00', wifi, 'Hey_len'), T_issueRow_('w2', '2026-10-05 10:02', cams, 'Hey_len'),
+      T_issueRow_('w3', '2026-10-05 10:03', printers, 'Hey_len'), T_issueRow_('w4', '2026-10-05 10:45', ac, 'Hey_len')];
+    var dOld = ISS.issuesDigest_('evening', night, {rows: old});
+    if (dOld !== '🛠 Поломки: 1\n🔴 4 эт. — кондиционер · открыто, сегодня') fail.push('old rows digest: ' + dOld);
+    // classifier: problem signal RU / EN / TH; info = FYI start / password / network list
+    ['Не работает кондиционер на 4 этаже', 'Надо починить розетку', 'Кран течёт на 2 этаже', 'Сломался стул', 'Проблема с принтером', 'printer is broken',
+     'AC not working on 3rd floor', 'toilet leak', 'ชั้น 2 แอร์ไม่ทำงาน', 'ปลั๊กเสีย', 'น้ำรั่ว ชั้น 4', 'ชั้น 1 ไฟดับ'].forEach(function (t) { if (!ISS.issuesIsProblem_(t)) fail.push('not a problem: ' + t); });
+    [cams, printers, 'Для информации: принтеры теперь на 2 этаже', 'Привет всем'].forEach(function (t) { if (ISS.issuesIsProblem_(t) && !ISS.issuesIsInfo_(t)) fail.push('false problem: ' + t); });
+    [wifi, wifiBare, 'FYI: printer moved to floor 2', 'для информации — камеры переключены', 'Пароль от Wi‑Fi: REDACTED99'].forEach(function (t) { if (!ISS.issuesIsInfo_(t)) fail.push('not info: ' + t); });
+    [ac, 'Wi‑Fi на 2 этаже не работает', 'Все камеры на 3 этаже не работают'].forEach(function (t) { if (ISS.issuesIsInfo_(t)) fail.push('false info: ' + t); });
+    // a breakdown that mentions a password: logged, value redacted
+    var sh2 = T_memSheet_(), st = ISS.issuesHandle_(sh2, {chat: chat, message_id: 1101, date: D('2026-10-05T12:00'), from: {username: 'som'}}, 'Wi‑Fi PLACE_2F не работает, пароль: REDACTED07', 'Som');
+    if (st !== 'open' || /REDACTED07/.test(JSON.stringify(sh2.values)) || !/пароль: \*\*\*/.test(JSON.stringify(sh2.values))) fail.push('redaction: ' + st + ' ' + JSON.stringify(sh2.values[1]));
+    if (fail.length) throw new Error('INTAKE FAIL ' + fail.join(' | '));
+    return {ok: 'Wi‑Fi list / cameras / printers skipped, «Не работает кондиционер на 4 этаже» logged, no passwords in Issues, old wrong rows dropped from digest',
+      handled: h, digest: dg};
+  });
+}
+
 /** G-5: bookings for 01.10.2026 (TEST booking in Meeting room) and for today. */
 function test_bookings() {
   return T_fixture_('bookings', 'BKG.bookingsToday_', function () {
@@ -280,12 +328,15 @@ function test_payments() {
       var t = PAY.payText_(new Date(D('2026-10-01').getTime() + i * 86400000));
       if (/\d{10,}|\b\d{3}[- ]\d{1,3}[- ]\d{4,5}(?:[- ]\d)?\b/.test(t)) { fail.push('bank-like number in text ' + i); break; }
     }
-    // open one-off debt (Jerky): not before `since`, in every message from `since`, gone once paid: true
+    // open one-off debt (Jerky): George 05.10 — already PAID → never shown. Mechanism (unpaid copy): not before `since`, every day from `since`.
     var jerky = function (d) { return PAY.payDue_(D(d)).filter(function (x) { return x.entry.kind === 'open'; }).length; };
     var jx = PAY.PAY_SCHEDULE.filter(function (e) { return e.name === 'Долг Chicken JERKY'; })[0];
-    if (!jx || jerky('2026-10-04') || !jerky('2026-10-05') || !jerky('2026-10-14')) fail.push('Jerky open debt');
-    if (!/❗ не оплачено — Долг Chicken JERKY, 5 160 ฿/.test(PAY.payText_(D('2026-10-14')))) fail.push('Jerky text');
-    if (jx) { jx.paid = true; try { if (jerky('2026-10-14') || PAY.payText_(D('2026-10-14'))) fail.push('Jerky paid still shown'); } finally { delete jx.paid; } }
+    if (!jx || !jx.paid) fail.push('Jerky must be marked paid');
+    if (jerky('2026-10-05') || jerky('2026-10-14') || /не оплачено|JERKY/.test(PAY.payText_(D('2026-10-05')) + PAY.payText_(D('2026-10-14')))) fail.push('Jerky paid still shown');
+    if (jx) { var pd = jx.paid; delete jx.paid; try {
+      if (jerky('2026-10-04') || !jerky('2026-10-05') || !jerky('2026-10-14')) fail.push('open-debt mechanism');
+      if (!/❗ не оплачено — Долг Chicken JERKY, 5 160 ฿/.test(PAY.payText_(D('2026-10-14')))) fail.push('open-debt text');
+    } finally { jx.paid = pd; } }
     if (!/Билборд, 5 000 ฿ \(George \(John\)/.test(PAY.payText_(D('2026-10-05')))) fail.push('billboard owner');
     if (PAY.PAY_SCHEDULE.filter(function (e) { return /3BB/.test(e.name) && e.who !== 'George (John)'; }).length) fail.push('3BB owner must be George (John)');
     var t27 = PAY.payText_(D('2027-02-27'));

@@ -34,7 +34,8 @@ var PAY_SCHEDULE = [   // short texts (George 01.10: «кратко»)
   {name: 'Конец договора: принтер', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: '', note: 'после этой даты принтер наш'},
   {name: 'Конец договора: билборд', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: 'продлить или закрыть'},
   // George 05.10.2026: PEA → 15-го (Sak); билборд → 5-го, платит George (John); 3BB — см. выше; долг Jerky.
-  {name: 'Долг Chicken JERKY',   kind: 'open', since: '2026-10-05', amount: '5 160 ฿', how: 'перевод Krungsri, Iurii Rasskazov, № счёта в таблице поставщиков', note: 'счета 17.09 660 ฿ + 19.09 1 800 ฿ + 26.09 2 700 ฿'}
+  // George 05.10.2026 (later): долг Jerky уже оплачен → paid, больше не напоминаем («❗ не оплачено» не выводится).
+  {name: 'Долг Chicken JERKY',   kind: 'open', since: '2026-10-05', paid: '2026-10-05', amount: '5 160 ฿', how: 'перевод Krungsri, Iurii Rasskazov, № счёта в таблице поставщиков', note: 'счета 17.09 660 ฿ + 19.09 1 800 ฿ + 26.09 2 700 ฿'}
 ];
 var PAY_OFFSETS = [3, 0];
 

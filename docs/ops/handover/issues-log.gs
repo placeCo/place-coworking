@@ -21,6 +21,13 @@
  *   if (m.chat.type === 'private' && issuesCloserDm_(m.chat.id) && issuesIsDone_(text)) try { issuesHandle_(issuesSheet_(),
  *     {chat: {id: TECH_CHAT_ID}, message_id: 'dm' + m.message_id, date: m.date, from: m.from}, text, name); } catch (e) { Logger.log('ISSUES_ERR ' + e); }
  *
+ * STRICT INTAKE (George 05.10.2026): Lena's informational posts in «Тех вопросы» (Wi‑Fi network list, «Все камеры … на Стафф
+ * переходят», «И принтеры») were logged as breakdowns. Now a message OPENS an issue only if issuesIsProblem_() (не работает,
+ * сломал, течёт, починить, проблема, broken, not working, leak, ไม่ทำงาน, เสีย, รั่ว …) → else 'skip-noproblem'. Informational
+ * messages (issuesIsInfo_: start with «для информации»/«к сведению»/«FYI», or contain a password / network list) are never
+ * written at all (also not as follow-ups or edits) → 'skip-info'. Any written text goes through issuesRedact_() (password
+ * values → ***), so Wi‑Fi passwords never reach the Issues sheet. Digests skip such rows already in the sheet.
+ *
  * SAFETY: ISSUES_MODE (Script Property) defaults to 'dry' = log only, no sheet writes. 'live' writes to «Issues»
  * — only after George OK. ISSUES_CONFIRMERS (optional) = comma list of names/usernames whose «ок» closes an item
  * (default: george, джордж, lena, лена).
@@ -41,6 +48,18 @@ var WORKS_RE = /(работает|works(\s+now)?|working\s+now|ใช้ได�
 var ISSUES_CLOSER_IDS = '5953708446';   // Aleksandr K (@Solar_element), tech director — closes issues from his DM with the bot
 var CONFIRM_RE = /^\s*(ок|окей|ok|okay|принято|подтверждаю|подтверждено|confirmed|спасибо|thanks|👍|✅|\+)[\s.!👍✅]*$/i;
 var BOT_RE = /placeleadbot/i;
+// Problem signal (RU / EN / TH). A message without it never opens a new issue.
+var PROBLEM_RE = new RegExp('(не\\s*(работа|включа|включи|горит|греет|охлажда|холодит|дует|печата|открыва|закрыва|ловит|грузит|сливает|смывает)|' +
+  'нет\\s+(света|воды|электрич|интернета|инета|сети|связи|wi[-‑‐]?fi|вай[-‑‐]?фай)|сломал|слома[лн]|поломк|теч[её]т|протек|подтек|протечк|потоп|капает|засор|забил(ся|ась|ось|ись)|' +
+  'почин|ремонт|проблем|неисправ|барахл|глюч|отвал|перегор|сгорел|искрит|замыкан|выбил|вырубил|скрип|разбит|треснул|запах\\s+гар|' +
+  'broken|not\\s+working|n[o\']?t\\s+work|does\\s+not\\s+work|won[\']?t\\s+(work|start|open|close|turn)|leak|out\\s+of\\s+order|problem|' +
+  'fix|repair|power\\s*(cut|out)|blackout|no\\s+(power|water|internet|wi[-‑‐]?fi)|clogged|jammed|stuck|' +
+  'ไม่ทำงาน|เสีย|รั่ว|ซ่อม|พัง|ไฟดับ|ดับ|ไม่ติด|ไม่เย็น|ตัน|ใช้ไม่ได้|ปัญหา)', 'i');
+// Informational message: «для информации» / «к сведению» / «FYI» at the start.
+var INFO_START_RE = /^(?:\s|[.,!:;()«»"'*•\-–—]|ℹ️?|📌|❗)*(для\s+информации|к\s+сведению|информирую|информация\s*[:\-–—]|fyi|for\s+your\s+information|info\s*[:\-–—]|เพื่อทราบ|แจ้งเพื่อทราบ)/i;
+// A secret value: «пароль: xxx», «pass - xxx», «password=xxx», «รหัส: xxx».
+var SECRET_RE = /(парол[а-яё]*|password|passwd|passcode|pass|pwd|pw|ключ\s+сети|รหัส[^\s:=]*)((?:\s+(?:от|для|к|for|of|to)\s+\S+?)?\s*[:=–—-]\s*|\s+)(?=\S*\d|\S{6,})(\S+)/gi;
+var NETWORK_RE = /(wi[-‑‐]?fi|вай[-‑‐]?фай|ssid|сет[ьи]|network|ไวไฟ)/i;
 var ISSUES_WINDOW_MS = 30 * 60000;
 
 function issuesSheet_() {
@@ -84,7 +103,7 @@ var ISSUES_OBJECTS = [
   [B_ + 'кран|смесител|faucet|' + B_ + 'tap(?![a-z])|ก๊อก', 'кран'],
   [B_ + 'душ' + '(?![а-я])|shower', 'душ'],
   ['лампа|лампочк|светильник|' + B_ + 'свет(?![а-я]*ск)|' + B_ + 'light|bulb|ไฟ', 'свет'],
-  ['wi-?fi|вай-?фай|интернет|internet|ไวไฟ', 'Wi‑Fi'],
+  ['wi[-‑‐]?fi|вай[-‑‐]?фай|интернет|internet|ไวไฟ', 'Wi‑Fi'],
   ['принтер|printer|เครื่องพิมพ์', 'принтер'],
   [B_ + 'замок|' + B_ + 'lock(?![a-z])|กุญแจ', 'замок'],
   [B_ + 'двер|' + B_ + 'door|ประตู', 'дверь'],
@@ -134,6 +153,20 @@ function issuesConfirmer_(name) {
   var n = String(name || '').toLowerCase();
   return v.split(',').map(function (x) { return x.trim().toLowerCase(); }).filter(Boolean).some(function (x) { return n.indexOf(x) >= 0; });
 }
+/** true if the text signals a problem/breakdown (PROBLEM_RE). */
+function issuesIsProblem_(text) { return PROBLEM_RE.test(String(text || '')); }
+/** true for informational posts: FYI-style start, a password value, or a network list (Wi‑Fi/сеть + ≥ 2 «name: value» lines). */
+function issuesIsInfo_(text) {
+  var t = String(text || '');
+  if (INFO_START_RE.test(t)) return true;
+  SECRET_RE.lastIndex = 0; var secret = SECRET_RE.test(t); SECRET_RE.lastIndex = 0;
+  // a password value, or a multi-line post mentioning passwords = network/password list, unless it reports a problem (then redacted)
+  if ((secret || (/(парол|password|รหัสผ่าน)/i.test(t) && t.split('\n').length >= 3)) && !issuesIsProblem_(t)) return true;
+  var kv = t.split('\n').filter(function (l) { return /\S\s*[:=]\s*\S|\S\s+[–—-]\s+\S/.test(l); }).length;
+  return NETWORK_RE.test(t) && kv >= 2 && !issuesIsProblem_(t);
+}
+/** Password values → ***. Applied to every text written to the Issues sheet. */
+function issuesRedact_(text) { SECRET_RE.lastIndex = 0; var r = String(text || '').replace(SECRET_RE, function (a, k, sep) { return k + (/[:=–—-]/.test(sep) ? sep : ': ') + '***'; }); SECRET_RE.lastIndex = 0; return r; }
 function issuesIsDone_(text) { var t = String(text || ''); return (DONE_RE.test(t) || WORKS_RE.test(t)) && !NOT_DONE_RE.test(t); }
 /** true if chatId (private chat with the bot) belongs to a closer (Script Property ISSUES_CLOSER_IDS, default Aleksandr K). */
 function issuesCloserDm_(chatId) {
@@ -192,11 +225,14 @@ function issuesThreads_(rows, opts) {
     msgs.push({row: r, chat: String(x[col.tg_chat_id] || ''), id: String(x[col.tg_message_id] || x[col.issue_id]), ms: issuesMs_(x[col.opened_at_ict]) || 0,
       author: String(x[col.reporter] || ''), text: text, floor: String(x[col.floor] || pl.floor || ''), room: pl.room, obj: issuesObject_(text),
       status: st, closedMs: issuesMs_(x[col.closed_at_ict]) || issuesMs_(x[col.last_update_ict]), closedBy: String(x[col.closed_by] || ''),
-      extra: String(x[col.thread_ids] || '').split(/\s+/).filter(Boolean)});
+      extra: String(x[col.thread_ids] || '').split(/\s+/).filter(Boolean), tg: !!String(x[col.tg_message_id] || '').trim()});
   }
   msgs.sort(function (a, b) { return a.ms - b.ms || a.row - b.row; });
   msgs.forEach(function (m) {
+    if (issuesIsInfo_(m.text)) return;                                                                      // informational post (e.g. Wi‑Fi list)
     var t = issuesAttach_(threads, m), isNew = !t;
+    // strict intake (05.10): a Telegram row with no problem signal does not open an item (old wrongly logged rows); manual rows stay
+    if (isNew && m.tg && m.status === 'open' && !issuesIsProblem_(m.text) && !issuesIsDone_(m.text)) return;
     if (isNew) { t = issuesNewThread_(m); threads.push(t); }
     t.rows.push(m.row);
     m.extra.forEach(function (id) { if (t.ids.indexOf(id) < 0) t.ids.push(id); });
@@ -205,11 +241,15 @@ function issuesThreads_(rows, opts) {
   return threads;
 }
 
-/** Handles one «Тех вопросы» message (isEdit = edited_message). Returns 'open' | 'in_progress' | 'closed' | 'edit' | 'dup' | 'skip-bot'. */
+/** Handles one «Тех вопросы» message (isEdit = edited_message). Returns 'open' | 'in_progress' | 'closed' | 'edit' | 'dup' | 'skip-bot'
+ *  | 'skip-info' (informational / password list — nothing written) | 'skip-noproblem' (no problem signal, nothing open to attach to)
+ *  | 'done-untracked'. */
 function issuesHandle_(sh, m, text, sender, isEdit) {
   var f = m.from || {};
   if (BOT_RE.test(f.username || '')) return 'skip-bot';
   text = String(text || '');
+  if (issuesIsInfo_(text)) { Logger.log('[issues] skip-info (informational, not logged)'); return 'skip-info'; }   // never store Wi‑Fi lists
+  text = issuesRedact_(text);
   var when = Utilities.formatDate(new Date(m.date * 1000), 'Asia/Bangkok', 'yyyy-MM-dd HH:mm');
   var live = issuesMode_() === 'live' && sh;
   var rows = sh ? sh.getDataRange().getValues() : [ISSUES_HEAD], col = issuesCol_();
@@ -228,6 +268,7 @@ function issuesHandle_(sh, m, text, sender, isEdit) {
   if (!t) {
     var newRow = [msg.chat + ':' + msg.id, when, pl.floor, sender, text.slice(0, 1000), 'open', '', when, '', '', msg.chat, msg.id, '', 'issue', issuesTag_(), ''];
     if (issuesIsDone_(text)) return 'done-untracked';   // «починили» with nothing open: not a breakdown
+    if (!issuesIsProblem_(text)) { Logger.log('[issues] skip-noproblem: ' + text.slice(0, 80)); return 'skip-noproblem'; }   // strict intake
     if (live) sh.appendRow(newRow); else Logger.log('[issues dry] new: ' + JSON.stringify(newRow));
     return 'open';
   }
