@@ -10,22 +10,26 @@
  * Daily trigger ~09:15 Asia/Bangkok: payRemindersRun_().
  */
 var PAY_TZ = 'Asia/Bangkok';
-/** kind: monthly {day} | yearly {month, day} | months {months:[..], day} | once {date:'yyyy-MM-dd'} (contract end).
+/** kind: monthly {day} | yearly {month, day} | months {months:[..], day} | once {date:'yyyy-MM-dd'} (contract end)
+ *        | open {since:'yyyy-MM-dd'} — one-off unpaid debt: in EVERY daily message from `since` until paid
+ *          (set paid: true or delete the line once it is paid).
  *  offsets: days before the due date to remind (0 = on the day). */
 var PAY_SCHEDULE = [   // short texts (George 01.10: «кратко»)
-  {name: 'Электричество (PEA)',  kind: 'monthly', day: 8,  amount: '43–57 тыс. ฿', who: 'Sak',  how: 'QR / в офисе PEA'},
+  {name: 'Электричество (PEA)',  kind: 'monthly', day: 15, amount: '43–57 тыс. ฿', who: 'Sak',  how: 'QR / в офисе PEA'},
   {name: 'Вода',                 kind: 'monthly', day: 20, amount: '0.9–1.5 тыс. ฿', who: 'счёт Лене', how: 'QR / в офисе'},
   {name: 'Интернет 3BB …7174',   kind: 'monthly', day: 12, amount: '1 925 ฿', who: 'Лена', how: 'по номеру абонента'},
-  {name: 'Интернет 3BB …4746',   kind: 'monthly', day: 8,  amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
-  {name: 'Интернет 3BB …4751',   kind: 'monthly', day: 8,  amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB …4746',   kind: 'monthly', day: 5,  amount: '1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB …4751',   kind: 'monthly', day: 5,  amount: '1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
   {name: 'Интернет 3BB …7790',   kind: 'monthly', day: 28, amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
   {name: 'Аренда принтера',      kind: 'monthly', day: 10, amount: '2 675 ฿', who: 'Лена', how: 'перевод'},
-  {name: 'Билборд',              kind: 'monthly', day: 5,  amount: '5 000 ฿', who: 'Лена', how: 'перевод'},
+  {name: 'Билборд',              kind: 'monthly', day: 5,  amount: '5 000 ฿', who: 'George (John)', how: 'перевод'},
   {name: 'Обновить телефонный счёт Dtac', kind: 'monthly', day: 1, amount: '300–400 ฿', who: 'админ', how: 'по номеру телефона'},
   {name: 'Secom (тревожная кнопка)', kind: 'months', months: [2, 7], day: 1, amount: '24 396 ฿ за платёж', who: 'Лена', how: 'QR', note: '2 раза в год: 1.02 и 1.07'},
   {name: 'Вывоз мусора (Чалонг)', kind: 'yearly', month: 11, day: 1, amount: '7 200 ฿ за год', who: 'Sak, Лена', how: 'наличные / QR в муниципалитете'},
   {name: 'Конец договора: принтер', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: '', note: 'после этой даты принтер наш'},
-  {name: 'Конец договора: билборд', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: 'продлить или закрыть'}
+  {name: 'Конец договора: билборд', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: 'продлить или закрыть'},
+  // George 05.10.2026: PEA → 15-го (Sak); билборд + 3BB …4746/…4751 → 5-го, платит George (John); долг Jerky.
+  {name: 'Долг Chicken JERKY',   kind: 'open', since: '2026-10-05', amount: '5 160 ฿', how: 'перевод Krungsri, Iurii Rasskazov, № счёта в таблице поставщиков', note: 'счета 17.09 660 ฿ + 19.09 1 800 ฿ + 26.09 2 700 ฿'}
 ];
 var PAY_OFFSETS = [3, 0];
 
@@ -36,6 +40,7 @@ function payParts_(d) { var s = payYmd_(d).split('-'); return {y: +s[0], m: +s[1
 /** Due dates of an entry in [from, to] (inclusive, ICT days). */
 function payDueDates_(e, from, to) {
   var out = [], a = payParts_(from), b = payParts_(to);
+  if (e.kind === 'open') return out;
   if (e.kind === 'once') { var p = e.date.split('-'); var d = payDate_(+p[0], +p[1], +p[2]); if (payYmd_(d) >= payYmd_(from) && payYmd_(d) <= payYmd_(to)) out.push(d); return out; }
   for (var y = a.y; y <= b.y; y++) for (var m = 1; m <= 12; m++) {
     if (e.kind === 'yearly' && m !== e.month) continue;
@@ -50,6 +55,7 @@ function payDueDates_(e, from, to) {
 function payDue_(today) {
   var t = payParts_(today), base = payDate_(t.y, t.m, t.d), res = [];
   PAY_SCHEDULE.forEach(function (e) {
+    if (e.kind === 'open') { if (!e.paid && payYmd_(base) >= e.since) res.push({entry: e, due: base, daysLeft: -1}); return; }
     (e.offsets || PAY_OFFSETS).forEach(function (off) {
       var due = new Date(base.getTime() + off * 86400000);
       if (payDueDates_(e, due, due).length) res.push({entry: e, due: due, daysLeft: off});
@@ -64,7 +70,7 @@ function payText_(today) {
   var r = payDue_(today); if (!r.length) return '';
   var lines = ['💳 Платежи'];
   r.forEach(function (x) {
-    var e = x.entry, when = x.daysLeft === 0 ? '🔴 сегодня' : '⏰ ' + Utilities.formatDate(x.due, PAY_TZ, 'dd.MM');
+    var e = x.entry, when = x.daysLeft < 0 ? '❗ не оплачено' : x.daysLeft === 0 ? '🔴 сегодня' : '⏰ ' + Utilities.formatDate(x.due, PAY_TZ, 'dd.MM');
     lines.push(when + ' — ' + e.name + (e.amount ? ', ' + e.amount : '') + ' (' + [e.who, e.how, e.note].filter(Boolean).join(', ') + ')');
   });
   return lines.join('\n');

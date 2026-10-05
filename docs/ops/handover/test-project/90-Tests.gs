@@ -245,10 +245,13 @@ function test_techRoute() {
 function test_payments() {
   return T_fixture_('payments', 'PAY.payDue_ / payText_ / payRemindersRun_ (fake ids, fake sender)', function () {
     var fail = [], D = function (s) { return new Date(s + 'T09:15:00+07:00'); };
-    var names = function (d) { return PAY.payDue_(D(d)).map(function (x) { return x.entry.name + '@' + x.daysLeft; }).sort().join(' | '); };
+    var names = function (d) { return PAY.payDue_(D(d)).filter(function (x) { return x.entry.kind !== 'open'; }).map(function (x) { return x.entry.name + '@' + x.daysLeft; }).sort().join(' | '); };
     var cases = {
-      '2026-10-05': ['Электричество (PEA)@3', 'Интернет 3BB …4746@3', 'Интернет 3BB …4751@3', 'Билборд@0'],
-      '2026-10-08': ['Электричество (PEA)@0', 'Интернет 3BB …4746@0', 'Интернет 3BB …4751@0'],
+      '2026-10-02': ['Интернет 3BB …4746@3', 'Интернет 3BB …4751@3', 'Билборд@3'],
+      '2026-10-05': ['Интернет 3BB …4746@0', 'Интернет 3BB …4751@0', 'Билборд@0'],
+      '2026-10-08': [],
+      '2026-10-12': ['Электричество (PEA)@3', 'Интернет 3BB …7174@0'],
+      '2026-10-15': ['Электричество (PEA)@0'],
       '2026-10-17': ['Вода@3'],
       '2026-10-25': ['Интернет 3BB …7790@3'],
       '2026-10-29': ['Вывоз мусора (Чалонг)@3', 'Обновить телефонный счёт Dtac@3'],
@@ -269,6 +272,13 @@ function test_payments() {
       var t = PAY.payText_(new Date(D('2026-10-01').getTime() + i * 86400000));
       if (/\d{10,}|\b\d{3}[- ]\d{1,3}[- ]\d{4,5}(?:[- ]\d)?\b/.test(t)) { fail.push('bank-like number in text ' + i); break; }
     }
+    // open one-off debt (Jerky): not before `since`, in every message from `since`, gone once paid: true
+    var jerky = function (d) { return PAY.payDue_(D(d)).filter(function (x) { return x.entry.kind === 'open'; }).length; };
+    var jx = PAY.PAY_SCHEDULE.filter(function (e) { return e.name === 'Долг Chicken JERKY'; })[0];
+    if (!jx || jerky('2026-10-04') || !jerky('2026-10-05') || !jerky('2026-10-14')) fail.push('Jerky open debt');
+    if (!/❗ не оплачено — Долг Chicken JERKY, 5 160 ฿/.test(PAY.payText_(D('2026-10-14')))) fail.push('Jerky text');
+    if (jx) { jx.paid = true; try { if (jerky('2026-10-14') || PAY.payText_(D('2026-10-14'))) fail.push('Jerky paid still shown'); } finally { delete jx.paid; } }
+    if (!/Билборд, 5 000 ฿ \(George \(John\)/.test(PAY.payText_(D('2026-10-05')))) fail.push('billboard owner');
     var t27 = PAY.payText_(D('2027-02-27'));
     if (!/принтер.*после этой даты принтер наш/.test(t27)) fail.push('printer note missing: ' + t27);
     if (!/24 396 ฿ за платёж/.test(PAY.payText_(D('2027-02-01')))) fail.push('Secom wording');
