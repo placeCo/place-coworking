@@ -1,0 +1,274 @@
+{
+ "prev": {
+  "range": "21.09–27.09",
+  "tot": {
+   "zero": 164,
+   "points": 10080.0,
+   "receipts": 237,
+   "net": 61341.0,
+   "gross": 65330.0,
+   "discount": 3989.0,
+   "pay_Transfer": 35623.0,
+   "snacks": 6850.0,
+   "pay_Cash": 19128.0,
+   "passes": 7400.0,
+   "pay_Card": 6590.0,
+   "drinks": 8799.0,
+   "food": 9262.0,
+   "rentals": 18975.0,
+   "voided": 4,
+   "deposits": 10000.0,
+   "print": 55.0,
+   "customers": 66
+  },
+  "items": [
+   [
+    "deposits",
+    "Deposit",
+    1,
+    10000.0
+   ],
+   [
+    "passes",
+    "5 hours pass",
+    36,
+    5400.0
+   ],
+   [
+    "passes",
+    "1 hour pass",
+    22,
+    1100.0
+   ],
+   [
+    "passes",
+    "1 day pass 1/3 fl",
+    3,
+    900.0
+   ],
+   [
+    "rentals",
+    "Podcast",
+    16,
+    8000.0
+   ],
+   [
+    "rentals",
+    "Camera Sony FX 30",
+    2,
+    4500.0
+   ],
+   [
+    "rentals",
+    "Meeting room (1h)",
+    11,
+    2700.0
+   ],
+   [
+    "rentals",
+    "Yoga class",
+    6,
+    1425.0
+   ],
+   [
+    "rentals",
+    "Public speaking (10:00-13:00)",
+    1,
+    1000.0
+   ],
+   [
+    "rentals",
+    "Godox Softbox SB-Gue 95 cm",
+    2,
+    500.0
+   ],
+   [
+    "rentals",
+    "6th floor yoga",
+    1,
+    400.0
+   ],
+   [
+    "rentals",
+    "Rental monitor",
+    2,
+    300.0
+   ],
+   [
+    "rentals",
+    "Chess club",
+    3,
+    150.0
+   ]
+  ],
+  "daily": {
+   "2026-09-21": 6381.0,
+   "2026-09-22": 6286.0,
+   "2026-09-23": 5128.0,
+   "2026-09-24": 21867.0,
+   "2026-09-25": 10600.0,
+   "2026-09-26": 1761.0,
+   "2026-09-27": 9318.0
+  },
+  "zero_pass": {
+   "WELCOME PASS": 4
+  }
+ },
+ "cur": {
+  "range": "28.09–04.10",
+  "tot": {
+   "receipts": 287,
+   "net": 145564.0,
+   "gross": 156775.0,
+   "discount": 11211.0,
+   "points": 11502.0,
+   "pay_Transfer": 42427.0,
+   "snacks": 7127.0,
+   "pay_Cash": 97239.0,
+   "drinks": 10446.0,
+   "zero": 137,
+   "pay_Card": 5835.0,
+   "passes": 29530.0,
+   "rentals": 83025.0,
+   "food": 10406.0,
+   "print": 180.0,
+   "voided": 7,
+   "other": 350.0,
+   "deposits": 4500.0,
+   "pay_Grab": 63.0,
+   "customers": 65
+  },
+  "items": [
+   [
+    "deposits",
+    "Deposit",
+    2,
+    3000.0
+   ],
+   [
+    "deposits",
+    "Smart key lock deposit",
+    1,
+    1500.0
+   ],
+   [
+    "other",
+    "Place Pass Day",
+    1,
+    200.0
+   ],
+   [
+    "other",
+    "Place Pass Hour",
+    3,
+    150.0
+   ],
+   [
+    "passes",
+    "Monthly pass 2nd floor",
+    2,
+    15000.0
+   ],
+   [
+    "passes",
+    "10 days Flex 3rd floor",
+    2,
+    5000.0
+   ],
+   [
+    "passes",
+    "5 hours pass",
+    31,
+    4650.0
+   ],
+   [
+    "passes",
+    "1 day pass 2nd floor",
+    3,
+    2100.0
+   ],
+   [
+    "passes",
+    "1 day pass 1/3 fl",
+    5,
+    1400.0
+   ],
+   [
+    "passes",
+    "1 hour pass",
+    23,
+    1150.0
+   ],
+   [
+    "passes",
+    "Library rental",
+    2,
+    230.0
+   ],
+   [
+    "passes",
+    "WELCOME PASS",
+    2,
+    0.0
+   ],
+   [
+    "rentals",
+    "2nd floor rental (Half floor)",
+    1,
+    70000.0
+   ],
+   [
+    "rentals",
+    "Podcast",
+    11,
+    5200.0
+   ],
+   [
+    "rentals",
+    "Rental 1st floor",
+    3,
+    2500.0
+   ],
+   [
+    "rentals",
+    "Meeting room (1h)",
+    7,
+    1750.0
+   ],
+   [
+    "rentals",
+    "Yoga class",
+    5,
+    1400.0
+   ],
+   [
+    "rentals",
+    "Rental monitor",
+    7,
+    1050.0
+   ],
+   [
+    "rentals",
+    "Public speaking (10:00-13:00)",
+    1,
+    1000.0
+   ],
+   [
+    "rentals",
+    "Meeting room (0.5h)",
+    1,
+    125.0
+   ]
+  ],
+  "daily": {
+   "2026-09-28": 14884.0,
+   "2026-09-29": 12732.0,
+   "2026-09-30": 9055.0,
+   "2026-10-01": 77283.0,
+   "2026-10-02": 12386.0,
+   "2026-10-03": 15045.0,
+   "2026-10-04": 4179.0
+  },
+  "zero_pass": {}
+ }
+}
