@@ -14,7 +14,7 @@ Do not publish / Tilda go-live without written OK from George.
 Need a closed office — not a hot desk? Place has dedicated office space on **floors 2 and 5**. One showcase card: offices on 2 and 5. Details and availability via manager / tour.
 
 ### Floor 5 — private offices (public prices)
-Rooms for small teams (about up to **4 people**).  
+Rooms for small teams (up to **6 people**).  
 • **30,000฿ / month**  
 • **20,000฿ / month** on a yearly deal
 

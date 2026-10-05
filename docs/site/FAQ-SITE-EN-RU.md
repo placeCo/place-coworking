@@ -41,7 +41,7 @@ Through the manager. There is no public “filming 500฿/hour” rate.
 Across the street or alongside the building.
 
 **Do you have private offices?**  
-Yes — always. Floor **5**: private offices (about up to 4 people) — 30,000฿/month or 20,000฿/month on a yearly deal. Floor **2**: office space we lease as offices (not a public hot-desk price list). Rare upgrades from Pass to floor 2 only if space is free — ask us. Tour via WhatsApp / +66951170481.
+Yes — always. Floor **5**: private offices (up to 6 people) — 30,000฿/month or 20,000฿/month on a yearly deal. Floor **2**: office space we lease as offices (not a public hot-desk price list). Rare upgrades from Pass to floor 2 only if space is free — ask us. Tour via WhatsApp / +66951170481.
 
 **Food / café?**  
 Café is an extra, not the main product. Coworking offer is the Pass ladder above.
@@ -89,7 +89,7 @@ Place Pass — один вход на 1 и 3 этажи. Работаешь в o
 Напротив или рядом со зданием.
 
 **Есть офисы?**  
-Да — всегда. Этаж **5**: кабинеты (примерно до 4 человек) — 30 000฿/мес или 20 000฿/мес при годе. Этаж **2**: офисное пространство, сдаём как офисы (не публичное меню hot desk). Редкий апгрейд с Pass на 2-й — только если свободно, спросите нас. Тур: WhatsApp / +66951170481.
+Да — всегда. Этаж **5**: кабинеты (до 6 человек) — 30 000฿/мес или 20 000฿/мес при годе. Этаж **2**: офисное пространство, сдаём как офисы (не публичное меню hot desk). Редкий апгрейд с Pass на 2-й — только если свободно, спросите нас. Тур: WhatsApp / +66951170481.
 
 **Еда / кафе?**  
 Доп.услуга, не главный продукт. Оффер коворкинга — вилка Pass выше.

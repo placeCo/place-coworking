@@ -10,7 +10,7 @@
 Need a closed office — not a hot desk? Place has dedicated office space on **floors 2 and 5**.
 
 **Floor 5 — private offices**  
-Rooms for small teams (about up to 4 people).  
+Rooms for small teams (up to 6 people).  
 • **30,000฿ / month**  
 • **20,000฿ / month** on a yearly deal  
 
@@ -31,7 +31,7 @@ In rare cases, Pass residents may be upgraded to floor 2 if space is free — as
 Нужен закрытый офис, а не горячий стол? В Place офисы на **2 и 5 этажах**.
 
 **5 этаж — кабинеты**  
-Для небольших команд (примерно до 4 человек).  
+Для небольших команд (до 6 человек).  
 • **30 000฿ / месяц**  
 • **20 000฿ / месяц** при годовом контракте  
 

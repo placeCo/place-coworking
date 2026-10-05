@@ -34,7 +34,7 @@ PLACE is a multi-floor coworking building in Chalong (not Patong).
 
 **Offices (floors 2 + 5)**  
 - Floor 2: office floorspace (lease / private office use — not public hot desk)  
-- Floor 5: private rooms/offices, up to ~4 people — from 30,000฿/mo or 20,000฿/mo on a yearly deal  
+- Floor 5: private rooms/offices, up to 6 people — from 30,000฿/mo or 20,000฿/mo on a yearly deal  
 - Tour / ask manager via WhatsApp
 
 **Studio (floor 4)**  
