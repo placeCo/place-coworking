@@ -5,7 +5,7 @@ var CASH = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlF
  * Place Coworking — cash collection every 3 days (George 01.10.2026 12:05 + correction 12:06). DRAFT, NOT DEPLOYED (TEST only).
  *
  * Process (the safe has a DROP SLOT: the admin reports only what they put in; the script keeps the running total):
- *   - every 3 days at 22:30 the evening admin gets a short reminder (EN + TH); any amount; no cash → no collection;
+ *   - every 3 days at 22:30 the evening admin gets a short reminder (PLACE Team → ENGLISH ONLY, George 05.10); any amount; no cash → no collection;
  *   - after closing the admin writes to the bot, no photo: «в кассе X / положил в сейф Y» (also «till X / deposited Y»,
  *     «ลิ้นชัก X / ใส่เซฟ Y»); the same figures go into the act;
  *   - the script adds Y to the safe counter (Script Property CASH_SAFE, since the last pickup);
@@ -23,10 +23,9 @@ var CASH_TILL_RE = /(?:в\s*кассе|касса|in\s*till|till|ลิ้นช
 var CASH_PICKUP_RE = /(забрал|забрали|taken|picked\s*up|รับแล้ว)/i;
 var CASH_DEP_RE = /(?:положил[аи]?\s*в\s*сейф|в\s*сейф|сейф|deposited(?:\s*to\s*safe)?|to\s*safe|safe|ใส่เซฟ|ใส่ตู้เซฟ|ตู้เซฟ|เซฟ)\s*[:=-]?\s*(\d[\d\s,]*)/i;
 
-/** 22:30 reminder for the evening admin (EN + TH, short). */
+/** 22:30 reminder for the evening admin (goes to PLACE Team: English only, short — George 05.10). Replies in RU/TH still parse. */
 function cashReminderText_() {
-  return '💰 Cash collection today. After closing reply here (no photo): «в кассе X / положил в сейф Y». Same figures in the act. No cash → no collection.\n' +
-    '💰 วันนี้เก็บเงินสด หลังปิดร้านตอบที่นี่ (ไม่ต้องมีรูป): «ลิ้นชัก X / ใส่เซฟ Y» ตัวเลขเดียวกันลงใบส่งมอบ ไม่มีเงินสด = ไม่ต้องเก็บ';
+  return '💰 Cash collection today. After closing reply here (no photo): «till X / deposited Y». Same figures in the act. No cash → no collection.';
 }
 
 function cashNum_(s) { return Number(String(s).replace(/[\s,]/g, '')); }
@@ -51,7 +50,7 @@ function cashSafeSave_(o) { PropertiesService.getScriptProperties().setProperty(
 /** Admin's reply → adds Y to the counter. Returns {ok, till, deposited, total, ack, sak}; sak = '' when Y = 0 (no DM). */
 function cashReply_(text, admin, now) {
   var v = cashParse_(text);
-  if (!v) return {ok: false, ack: 'Format: «в кассе X / положил в сейф Y» · รูปแบบ: «ลิ้นชัก X / ใส่เซฟ Y»'};
+  if (!v) return {ok: false, ack: 'Format: «till X / deposited Y»'};
   var safe = cashSafe_();
   if (v.deposited > 0) {
     safe.total = (Number(safe.total) || 0) + v.deposited; safe.n = (safe.n || 0) + 1;

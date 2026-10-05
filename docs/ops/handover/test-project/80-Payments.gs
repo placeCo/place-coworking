@@ -20,10 +20,15 @@ var PAY_TZ = 'Asia/Bangkok';
 var PAY_SCHEDULE = [   // short texts (George 01.10: «кратко»)
   {name: 'Электричество (PEA)',  kind: 'monthly', day: 15, amount: '43–57 тыс. ฿', who: 'Sak',  how: 'QR / в офисе PEA'},
   {name: 'Вода',                 kind: 'monthly', day: 20, amount: '0.9–1.5 тыс. ฿', who: 'счёт Лене', how: 'QR / в офисе'},
-  {name: 'Интернет 3BB …7174',   kind: 'monthly', day: 12, amount: '1 925 ฿', who: 'Лена', how: 'по номеру абонента'},
-  {name: 'Интернет 3BB …4746',   kind: 'monthly', day: 5,  amount: '1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
-  {name: 'Интернет 3BB …4751',   kind: 'monthly', day: 5,  amount: '1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
-  {name: 'Интернет 3BB …7790',   kind: 'monthly', day: 28, amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  // 3BB internet: all 4 lines paid by George (John). Due days per the September 3BB e-bills in info@ (George 05.10.2026):
+  //   450284751 due 08.10 2 993,86 ฿ (incl. prev month) · 450284746 due 08.10 2 993,86 ฿ · 440117174 due 12.10 1 924,93 ฿ ·
+  //   450317790 due 28.10 2 484,65 ฿ (incl. 987,72 carried over). Monthly base ≈1 496,93 ฿ for the 4502… lines.
+  //   3BB customer numbers are needed to pay (not bank accounts).
+  {name: 'Интернет 3BB 450284751', kind: 'monthly', day: 8,  amount: '≈1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB 450284746', kind: 'monthly', day: 8,  amount: '≈1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB 440117174', kind: 'monthly', day: 12, amount: '≈1 925 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB 450317790', kind: 'monthly', day: 28, amount: '≈1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Проверь оплату интернета 3BB', kind: 'monthly', day: 15, offsets: [0], amount: '', who: 'George (John)', how: '', note: '4 линии: 8, 8, 12, 28 числа'},
   {name: 'Аренда принтера',      kind: 'monthly', day: 10, amount: '2 675 ฿', who: 'Лена', how: 'перевод'},
   {name: 'Билборд',              kind: 'monthly', day: 5,  amount: '5 000 ฿', who: 'George (John)', how: 'перевод'},
   {name: 'Обновить телефонный счёт Dtac', kind: 'monthly', day: 1, amount: '300–400 ฿', who: 'админ', how: 'по номеру телефона'},
@@ -31,7 +36,7 @@ var PAY_SCHEDULE = [   // short texts (George 01.10: «кратко»)
   {name: 'Вывоз мусора (Чалонг)', kind: 'yearly', month: 11, day: 1, amount: '7 200 ฿ за год', who: 'Sak, Лена', how: 'наличные / QR в муниципалитете'},
   {name: 'Конец договора: принтер', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: '', note: 'после этой даты принтер наш'},
   {name: 'Конец договора: билборд', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: 'продлить или закрыть'},
-  // George 05.10.2026: PEA → 15-го (Sak); билборд + 3BB …4746/…4751 → 5-го, платит George (John); долг Jerky.
+  // George 05.10.2026: PEA → 15-го (Sak); билборд → 5-го, платит George (John); 3BB — см. выше; долг Jerky.
   {name: 'Долг Chicken JERKY',   kind: 'open', since: '2026-10-05', amount: '5 160 ฿', how: 'перевод Krungsri, Iurii Rasskazov, № счёта в таблице поставщиков', note: 'счета 17.09 660 ฿ + 19.09 1 800 ฿ + 26.09 2 700 ฿'}
 ];
 var PAY_OFFSETS = [3, 0];

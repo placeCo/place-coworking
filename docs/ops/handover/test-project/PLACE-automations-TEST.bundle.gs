@@ -176,7 +176,7 @@ function T_realTarget_(where) {
   if (/PLACE Team/i.test(w)) return {key: 'team', name: 'PLACE Team'};
   if (/вечерний админ/i.test(w)) {
     var m = w.match(/вечерний админ\s+([^()→]+?)\s*\(ЛС\)/i);
-    return {key: 'team', name: 'PLACE Team (вечерний админ)', pre: m ? 'Вечерний админ: ' + m[1].trim() + '\n' : ''};
+    return {key: 'team', name: 'PLACE Team (вечерний админ)', pre: m ? 'Evening admin: ' + m[1].trim() + '\n' : ''};   // PLACE Team: English only (George 05.10)
   }
   if (/PAY_CHAT_ID|Payments/i.test(w)) return {key: 'pay', name: 'Payments Place'};
   if (/Тех вопросы/i.test(w)) return {key: 'tech', name: 'Тех вопросы'};
@@ -189,7 +189,7 @@ function T_sendReal_(t, text) {
   if (!id) { T_BUF.push('[real: ' + t.name + ' chat id not set → NOT sent]\n' + body); return 'not-sent(no chat id)'; }
   if (!PropertiesService.getScriptProperties().getProperty('TG_TOKEN')) { T_BUF.push('[real LOG ONLY: TG_TOKEN not set] → ' + t.name + '\n' + body); return 'log-only'; }
   var parts = [], s = body; while (s.length) { parts.push(s.slice(0, 3900)); s = s.slice(3900); }
-  var codes = parts.map(function (part, i) { try { return T_tgSend_(id, (i ? '[TEST] (продолжение)\n' : '') + part); } catch (e) { return 'ERR ' + (e && e.message); } });
+  var codes = parts.map(function (part, i) { try { return T_tgSend_(id, (i ? (t.key === 'team' ? '[TEST] (cont.)\n' : '[TEST] (продолжение)\n') : '') + part); } catch (e) { return 'ERR ' + (e && e.message); } });
   T_BUF.push('[sent → ' + t.name + ' ' + id + ': ' + codes.join(',') + ']\n' + body);
   return 'sent ' + t.name + ':' + codes.join(',');
 }
@@ -524,6 +524,13 @@ var SHEET_ID = T_IDS.inbox; // TEST: Place Inbox TEST, never the live bridge she
  * Hook (one line in poll(), after the orders hook) — edits go in too:
  *   if (ISSUES_CHAT_RE.test(chat)) try { issuesHandle_(issuesSheet_(), m, text, name, !!u.edited_message); } catch (e) { Logger.log('ISSUES_ERR ' + e); }
  *
+ * Closers (George 05.10.2026): the tech director Aleksandr K (@Solar_element, chat_id 5953708446) reports fixes in his
+ * PRIVATE chat with the bot, not in «Тех вопросы». A DM from ISSUES_CLOSER_IDS (Script Property, comma list of chat ids;
+ * default 5953708446) that reads as «done» (issuesIsDone_: «починил / подключил / … работает» …) is handled like a
+ * «починили» in «Тех вопросы» (chat = TECH_CHAT_ID); other DMs are ignored (they never open an issue). Hook:
+ *   if (m.chat.type === 'private' && issuesCloserDm_(m.chat.id) && issuesIsDone_(text)) try { issuesHandle_(issuesSheet_(),
+ *     {chat: {id: TECH_CHAT_ID}, message_id: 'dm' + m.message_id, date: m.date, from: m.from}, text, name); } catch (e) { Logger.log('ISSUES_ERR ' + e); }
+ *
  * SAFETY: ISSUES_MODE (Script Property) defaults to 'dry' = log only, no sheet writes. 'live' writes to «Issues»
  * — only after George OK. ISSUES_CONFIRMERS (optional) = comma list of names/usernames whose «ок» closes an item
  * (default: george, джордж, lena, лена).
@@ -537,8 +544,11 @@ var ISSUES_TAB = 'Issues';
 var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id', 'assignee', 'type', 'tag', 'thread_ids'];
 /** Tag for new rows. The TEST project defines a global ISSUES_TAG_FN() that returns 'fixture' inside test_*; production: ''. */
 function issuesTag_() { return typeof ISSUES_TAG_FN === 'function' ? String(ISSUES_TAG_FN() || '') : ''; }
-var DONE_RE = /(готово|сделано|сделал|починил|починен|отремонтир|исправил|исправлен|решено|закрыто|заменил|fixed|repaired|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
-var NOT_DONE_RE = /(не\s+(готово|сделал|сделано|починил|починен|исправил|решено)|not\s+(fixed|done|repaired)|ยังไม่)/i;
+var DONE_RE = /(готово|сделано|сделал|починил|починен|отремонтир|исправил|исправлен|решено|закрыт|заменил|подключил|подключен|fixed|repaired|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
+var NOT_DONE_RE = /(не\s+(готово|сделал|сделано|починил|починен|исправил|решено|закрыт|подключ|работает)|плохо\s+работает|работает\s+плохо|not\s+(fixed|done|repaired|working)|ยังไม่)/i;
+/** «… работает» at the end of a message (e.g. «Кондиционер в серой комнате … работает», Aleksandr 04.10) = fixed; «не работает» is NOT_DONE. */
+var WORKS_RE = /(работает|works(\s+now)?|working\s+now|ใช้ได้แล้ว)[\s.!)👍✅]*$/i;
+var ISSUES_CLOSER_IDS = '5953708446';   // Aleksandr K (@Solar_element), tech director — closes issues from his DM with the bot
 var CONFIRM_RE = /^\s*(ок|окей|ok|okay|принято|подтверждаю|подтверждено|confirmed|спасибо|thanks|👍|✅|\+)[\s.!👍✅]*$/i;
 var BOT_RE = /placeleadbot/i;
 var ISSUES_WINDOW_MS = 30 * 60000;
@@ -634,7 +644,12 @@ function issuesConfirmer_(name) {
   var n = String(name || '').toLowerCase();
   return v.split(',').map(function (x) { return x.trim().toLowerCase(); }).filter(Boolean).some(function (x) { return n.indexOf(x) >= 0; });
 }
-function issuesIsDone_(text) { var t = String(text || ''); return DONE_RE.test(t) && !NOT_DONE_RE.test(t); }
+function issuesIsDone_(text) { var t = String(text || ''); return (DONE_RE.test(t) || WORKS_RE.test(t)) && !NOT_DONE_RE.test(t); }
+/** true if chatId (private chat with the bot) belongs to a closer (Script Property ISSUES_CLOSER_IDS, default Aleksandr K). */
+function issuesCloserDm_(chatId) {
+  var v = PropertiesService.getScriptProperties().getProperty('ISSUES_CLOSER_IDS') || ISSUES_CLOSER_IDS;
+  return v.split(',').map(function (x) { return x.trim(); }).filter(Boolean).indexOf(String(chatId || '').trim()) >= 0;
+}
 function issuesCompatible_(a, b) {
   return (!a.floor || !b.floor || a.floor === b.floor) && (!a.room || !b.room || a.room === b.room);
 }
@@ -810,7 +825,7 @@ function dryRunIssues() {
   return log;
 }
 
-return {issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_: issuesDigest_, issuesSendDigest_: issuesSendDigest_, issuesThreads_: issuesThreads_, issuesEssence_: issuesEssence_, ISSUES_HEAD: ISSUES_HEAD, ISSUES_CHAT_RE: ISSUES_CHAT_RE};
+return {issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_: issuesDigest_, issuesSendDigest_: issuesSendDigest_, issuesThreads_: issuesThreads_, issuesEssence_: issuesEssence_, ISSUES_HEAD: ISSUES_HEAD, ISSUES_CHAT_RE: ISSUES_CHAT_RE, issuesIsDone_: issuesIsDone_, issuesCloserDm_: issuesCloserDm_};
 })(T_props_('ISS'), T_SS, T_GMAIL, T_MAIL, T_FETCH, T_SCRIPT, T_LOGGER);
 
 // ===== 30-Bookings.gs =====
@@ -818,7 +833,7 @@ return {issuesSheet_: issuesSheet_, issuesHandle_: issuesHandle_, issuesDigest_:
 var BKG = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlFetchApp, ScriptApp, Logger) {
 
 /**
- * Place Coworking — G-5 «Брони на сегодня» из Events and booking. DRAFT TEMPLATE, NOT DEPLOYED.
+ * Place Coworking — G-5 «Bookings today» from Events and booking (→ PLACE Team: ENGLISH ONLY, George 05.10.2026). DRAFT TEMPLATE, NOT DEPLOYED.
  * READ-ONLY: never writes to the sheet, never sends. Returns text for the existing 10:07 run.
  *
  * Sheet layout (checked read-only 29.09.2026): each tab = one space; row 4 = "Time" + one column
@@ -847,12 +862,12 @@ function bookingsToday_(now) {
   var lines = [], warn = [];
   tabs.forEach(function (name) {
     var sh = ss.getSheetByName(name);
-    if (!sh) { warn.push('нет вкладки ' + name); return; }
+    if (!sh) { warn.push('no tab ' + name); return; }
     var disp = sh.getDataRange().getDisplayValues();
     if (disp.length < hr) return;
     var cols = bkDateCols_(disp[hr - 1], today.getFullYear());
     var key = bkKey_(today), col = cols.map[key];
-    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': сетка до ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy'));
+    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': grid ends ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy'));
     if (col === undefined) return;
     var items = [];
     for (var r = hr; r < disp.length; r++) {
@@ -861,8 +876,8 @@ function bookingsToday_(now) {
     }
     if (items.length) lines.push(name.trim() + ': ' + items.join('; '));
   });
-  // short (George 01.10): one line per room, warnings one line each
-  return '📅 Брони ' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + (lines.length ? '\n' + lines.join('\n') : ': нет') +
+  // short (George 01.10): one line per room, warnings one line each. PLACE Team = English only (George 05.10)
+  return '📅 Bookings ' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + (lines.length ? '\n' + lines.join('\n') : ': none') +
     (warn.length ? '\n⚠️ ' + warn.join('\n⚠️ ') : '');
 }
 
@@ -1516,10 +1531,15 @@ var PAY_TZ = 'Asia/Bangkok';
 var PAY_SCHEDULE = [   // short texts (George 01.10: «кратко»)
   {name: 'Электричество (PEA)',  kind: 'monthly', day: 15, amount: '43–57 тыс. ฿', who: 'Sak',  how: 'QR / в офисе PEA'},
   {name: 'Вода',                 kind: 'monthly', day: 20, amount: '0.9–1.5 тыс. ฿', who: 'счёт Лене', how: 'QR / в офисе'},
-  {name: 'Интернет 3BB …7174',   kind: 'monthly', day: 12, amount: '1 925 ฿', who: 'Лена', how: 'по номеру абонента'},
-  {name: 'Интернет 3BB …4746',   kind: 'monthly', day: 5,  amount: '1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
-  {name: 'Интернет 3BB …4751',   kind: 'monthly', day: 5,  amount: '1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
-  {name: 'Интернет 3BB …7790',   kind: 'monthly', day: 28, amount: '1 497 ฿', who: 'Лена', how: 'по номеру абонента'},
+  // 3BB internet: all 4 lines paid by George (John). Due days per the September 3BB e-bills in info@ (George 05.10.2026):
+  //   450284751 due 08.10 2 993,86 ฿ (incl. prev month) · 450284746 due 08.10 2 993,86 ฿ · 440117174 due 12.10 1 924,93 ฿ ·
+  //   450317790 due 28.10 2 484,65 ฿ (incl. 987,72 carried over). Monthly base ≈1 496,93 ฿ for the 4502… lines.
+  //   3BB customer numbers are needed to pay (not bank accounts).
+  {name: 'Интернет 3BB 450284751', kind: 'monthly', day: 8,  amount: '≈1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB 450284746', kind: 'monthly', day: 8,  amount: '≈1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB 440117174', kind: 'monthly', day: 12, amount: '≈1 925 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Интернет 3BB 450317790', kind: 'monthly', day: 28, amount: '≈1 497 ฿', who: 'George (John)', how: 'по номеру абонента'},
+  {name: 'Проверь оплату интернета 3BB', kind: 'monthly', day: 15, offsets: [0], amount: '', who: 'George (John)', how: '', note: '4 линии: 8, 8, 12, 28 числа'},
   {name: 'Аренда принтера',      kind: 'monthly', day: 10, amount: '2 675 ฿', who: 'Лена', how: 'перевод'},
   {name: 'Билборд',              kind: 'monthly', day: 5,  amount: '5 000 ฿', who: 'George (John)', how: 'перевод'},
   {name: 'Обновить телефонный счёт Dtac', kind: 'monthly', day: 1, amount: '300–400 ฿', who: 'админ', how: 'по номеру телефона'},
@@ -1527,7 +1547,7 @@ var PAY_SCHEDULE = [   // short texts (George 01.10: «кратко»)
   {name: 'Вывоз мусора (Чалонг)', kind: 'yearly', month: 11, day: 1, amount: '7 200 ฿ за год', who: 'Sak, Лена', how: 'наличные / QR в муниципалитете'},
   {name: 'Конец договора: принтер', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: '', note: 'после этой даты принтер наш'},
   {name: 'Конец договора: билборд', kind: 'once', date: '2027-02-27', offsets: [30, 3, 0], amount: '', who: 'George, Лена', how: 'продлить или закрыть'},
-  // George 05.10.2026: PEA → 15-го (Sak); билборд + 3BB …4746/…4751 → 5-го, платит George (John); долг Jerky.
+  // George 05.10.2026: PEA → 15-го (Sak); билборд → 5-го, платит George (John); 3BB — см. выше; долг Jerky.
   {name: 'Долг Chicken JERKY',   kind: 'open', since: '2026-10-05', amount: '5 160 ฿', how: 'перевод Krungsri, Iurii Rasskazov, № счёта в таблице поставщиков', note: 'счета 17.09 660 ฿ + 19.09 1 800 ฿ + 26.09 2 700 ฿'}
 ];
 var PAY_OFFSETS = [3, 0];
@@ -1599,7 +1619,7 @@ var CASH = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlF
  * Place Coworking — cash collection every 3 days (George 01.10.2026 12:05 + correction 12:06). DRAFT, NOT DEPLOYED (TEST only).
  *
  * Process (the safe has a DROP SLOT: the admin reports only what they put in; the script keeps the running total):
- *   - every 3 days at 22:30 the evening admin gets a short reminder (EN + TH); any amount; no cash → no collection;
+ *   - every 3 days at 22:30 the evening admin gets a short reminder (PLACE Team → ENGLISH ONLY, George 05.10); any amount; no cash → no collection;
  *   - after closing the admin writes to the bot, no photo: «в кассе X / положил в сейф Y» (also «till X / deposited Y»,
  *     «ลิ้นชัก X / ใส่เซฟ Y»); the same figures go into the act;
  *   - the script adds Y to the safe counter (Script Property CASH_SAFE, since the last pickup);
@@ -1617,10 +1637,9 @@ var CASH_TILL_RE = /(?:в\s*кассе|касса|in\s*till|till|ลิ้นช
 var CASH_PICKUP_RE = /(забрал|забрали|taken|picked\s*up|รับแล้ว)/i;
 var CASH_DEP_RE = /(?:положил[аи]?\s*в\s*сейф|в\s*сейф|сейф|deposited(?:\s*to\s*safe)?|to\s*safe|safe|ใส่เซฟ|ใส่ตู้เซฟ|ตู้เซฟ|เซฟ)\s*[:=-]?\s*(\d[\d\s,]*)/i;
 
-/** 22:30 reminder for the evening admin (EN + TH, short). */
+/** 22:30 reminder for the evening admin (goes to PLACE Team: English only, short — George 05.10). Replies in RU/TH still parse. */
 function cashReminderText_() {
-  return '💰 Cash collection today. After closing reply here (no photo): «в кассе X / положил в сейф Y». Same figures in the act. No cash → no collection.\n' +
-    '💰 วันนี้เก็บเงินสด หลังปิดร้านตอบที่นี่ (ไม่ต้องมีรูป): «ลิ้นชัก X / ใส่เซฟ Y» ตัวเลขเดียวกันลงใบส่งมอบ ไม่มีเงินสด = ไม่ต้องเก็บ';
+  return '💰 Cash collection today. After closing reply here (no photo): «till X / deposited Y». Same figures in the act. No cash → no collection.';
 }
 
 function cashNum_(s) { return Number(String(s).replace(/[\s,]/g, '')); }
@@ -1645,7 +1664,7 @@ function cashSafeSave_(o) { PropertiesService.getScriptProperties().setProperty(
 /** Admin's reply → adds Y to the counter. Returns {ok, till, deposited, total, ack, sak}; sak = '' when Y = 0 (no DM). */
 function cashReply_(text, admin, now) {
   var v = cashParse_(text);
-  if (!v) return {ok: false, ack: 'Format: «в кассе X / положил в сейф Y» · รูปแบบ: «ลิ้นชัก X / ใส่เซฟ Y»'};
+  if (!v) return {ok: false, ack: 'Format: «till X / deposited Y»'};
   var safe = cashSafe_();
   if (v.deposited > 0) {
     safe.total = (Number(safe.total) || 0) + v.deposited; safe.n = (safe.n || 0) + 1;
@@ -1816,6 +1835,13 @@ function test_issuesThread() {
     var st = ISS.issuesHandle_(sh2, {chat: chat, message_id: 803, date: D('2026-10-01T12:00'), from: {username: 'lena'}, reply_to_message: {message_id: 801}}, 'ок 👍', 'Lena');
     if (sh2.values.length !== 3 || st !== 'closed') fail.push('lena confirm / 45-min split: rows ' + (sh2.values.length - 1) + ', ' + st);
     if (ISS.issuesHandle_(sh2, {chat: chat, message_id: 804, date: D('2026-10-01T12:05'), from: {username: 's'}, reply_to_message: {message_id: 802}}, 'не починили, ждём электрика', 'Som') === 'closed') fail.push('«не починили» closed it');
+    // George 05.10: Aleksandr K (tech director) closes from his DM with the bot; «… работает» = fixed, «не работает» is not
+    if (!ISS.issuesCloserDm_('5953708446') || ISS.issuesCloserDm_('8503184147')) fail.push('closer allowlist');
+    if (!ISS.issuesIsDone_('Кондиционер в серой комнате возле туалета работает') || !ISS.issuesIsDone_('Камеры на 3, 2, 1 (не все) подключил.')) fail.push('works/подключил not done');
+    if (ISS.issuesIsDone_('Не работает кондиционер на 4 этаже') || ISS.issuesIsDone_('Кондиционер на 3 этаже не работает') || ISS.issuesIsDone_('wifi плохо работает')) fail.push('«не работает» counted as done');
+    var sh3 = T_memSheet_();
+    ISS.issuesHandle_(sh3, {chat: chat, message_id: 901, date: D('2026-10-04T00:31'), from: {username: 'hey_len'}}, 'Не работает кондиционер на 4 этаже который справа ( серый зал )', 'Hey_len');
+    if (ISS.issuesHandle_(sh3, {chat: chat, message_id: 'dm902', date: D('2026-10-04T17:13'), from: {username: 'Solar_element'}}, 'Кондиционер в серой комнате возле туалета работает', 'Александр К') !== 'closed') fail.push('closer DM did not close the AC');
     if (fail.length) throw new Error('THREAD FAIL ' + fail.join(' | '));
     return {ok: 'original + edit + reply + dup + «починили» → 1 row, 0 open, closed today 1; real TEST rows → 1 item; 3 items; Lena «ок» closes; «не починили» stays open',
       sampleOpen: d2, sampleEveningClosedOnly: ev, realRows: r1};
@@ -1931,16 +1957,17 @@ function test_payments() {
     var fail = [], D = function (s) { return new Date(s + 'T09:15:00+07:00'); };
     var names = function (d) { return PAY.payDue_(D(d)).filter(function (x) { return x.entry.kind !== 'open'; }).map(function (x) { return x.entry.name + '@' + x.daysLeft; }).sort().join(' | '); };
     var cases = {
-      '2026-10-02': ['Интернет 3BB …4746@3', 'Интернет 3BB …4751@3', 'Билборд@3'],
-      '2026-10-05': ['Интернет 3BB …4746@0', 'Интернет 3BB …4751@0', 'Билборд@0'],
-      '2026-10-08': [],
-      '2026-10-12': ['Электричество (PEA)@3', 'Интернет 3BB …7174@0'],
-      '2026-10-15': ['Электричество (PEA)@0'],
+      '2026-10-02': ['Билборд@3'],
+      '2026-10-05': ['Интернет 3BB 450284746@3', 'Интернет 3BB 450284751@3', 'Билборд@0'],
+      '2026-10-08': ['Интернет 3BB 450284746@0', 'Интернет 3BB 450284751@0'],
+      '2026-10-09': ['Интернет 3BB 440117174@3'],
+      '2026-10-12': ['Электричество (PEA)@3', 'Интернет 3BB 440117174@0'],
+      '2026-10-15': ['Электричество (PEA)@0', 'Проверь оплату интернета 3BB@0'],
       '2026-10-17': ['Вода@3'],
-      '2026-10-25': ['Интернет 3BB …7790@3'],
+      '2026-10-25': ['Интернет 3BB 450317790@3'],
       '2026-10-29': ['Вывоз мусора (Чалонг)@3', 'Обновить телефонный счёт Dtac@3'],
       '2026-11-01': ['Вывоз мусора (Чалонг)@0', 'Обновить телефонный счёт Dtac@0'],
-      '2027-01-28': ['Конец договора: принтер@30', 'Конец договора: билборд@30', 'Интернет 3BB …7790@0'],
+      '2027-01-28': ['Конец договора: принтер@30', 'Конец договора: билборд@30', 'Интернет 3BB 450317790@0'],
       '2027-01-29': ['Secom (тревожная кнопка)@3', 'Обновить телефонный счёт Dtac@3'],
       '2027-02-01': ['Secom (тревожная кнопка)@0', 'Обновить телефонный счёт Dtac@0'],
       '2027-07-01': ['Secom (тревожная кнопка)@0', 'Обновить телефонный счёт Dtac@0'],
@@ -1963,6 +1990,7 @@ function test_payments() {
     if (!/❗ не оплачено — Долг Chicken JERKY, 5 160 ฿/.test(PAY.payText_(D('2026-10-14')))) fail.push('Jerky text');
     if (jx) { jx.paid = true; try { if (jerky('2026-10-14') || PAY.payText_(D('2026-10-14'))) fail.push('Jerky paid still shown'); } finally { delete jx.paid; } }
     if (!/Билборд, 5 000 ฿ \(George \(John\)/.test(PAY.payText_(D('2026-10-05')))) fail.push('billboard owner');
+    if (PAY.PAY_SCHEDULE.filter(function (e) { return /3BB/.test(e.name) && e.who !== 'George (John)'; }).length) fail.push('3BB owner must be George (John)');
     var t27 = PAY.payText_(D('2027-02-27'));
     if (!/принтер.*после этой даты принтер наш/.test(t27)) fail.push('printer note missing: ' + t27);
     if (!/24 396 ฿ за платёж/.test(PAY.payText_(D('2027-02-01')))) fail.push('Secom wording');
@@ -1981,7 +2009,7 @@ function test_payments() {
   });
 }
 
-/** Cash collection (George 01.10 12:05/12:06, safe with a drop slot): reminder asks «в кассе X / положил в сейф Y»;
+/** Cash collection (George 01.10 12:05/12:06, safe with a drop slot): reminder (PLACE Team, English only) asks «till X / deposited Y»;
  *  reply parsed; the script sums deposits since the last pickup; Sak DM «In the safe: TOTAL ฿ (+Y today, admin)» relayed to
  *  George + Lena as «Сак (ЛС)»; Y = 0 → no DM; Sak «забрал/taken/รับแล้ว» → counter reset. Fake ids + fake sender. */
 function test_cash() {
@@ -1989,7 +2017,7 @@ function test_cash() {
     var fail = [], now = new Date('2026-10-04T23:05:00+07:00');
     var saved = CASH.cashSafe_();
     var rem = CASH.cashReminderText_();
-    if (rem.split('\n').length > 3 || rem.indexOf('«в кассе X / положил в сейф Y»') < 0 || rem.indexOf('Cash collection today') < 0) fail.push('reminder: ' + rem);
+    if (rem.split('\n').length > 1 || rem.indexOf('«till X / deposited Y»') < 0 || rem.indexOf('Cash collection today') < 0 || /[а-яё]/i.test(rem)) fail.push('reminder (PLACE Team: English only): ' + rem);
     [['в кассе 2 000 / положил в сейф 12 500', 2000, 12500], ['в кассе 1500 / положила в сейф 0', 1500, 0], ['касса 800, в сейф 3000', 800, 3000],
      ['till 3,000 / deposited 9,800', 3000, 9800], ['ลิ้นชัก 2000 / ใส่เซฟ 7000', 2000, 7000]]
       .forEach(function (c) { var v = CASH.cashParse_(c[0]); if (!v || v.till !== c[1] || v.deposited !== c[2]) fail.push('parse ' + c[0] + ' → ' + JSON.stringify(v)); });
@@ -2173,7 +2201,8 @@ function T_issuesJob_(kind, channel) {
   });
 }
 /** Read-only copy of new «Тех вопросы» rows from the production queue (bridge log) into Issues of Place Inbox TEST.
- *  The live bridge is NOT changed. Queue rows have no reply link, so they only open issues (close in TEST by hand). */
+ *  The live bridge is NOT changed. Queue rows have no reply link, so they only open issues (close in TEST by hand).
+ *  George 05.10: «done» DMs to the bot from ISSUES_CLOSER_IDS (Aleksandr K, tech director) close the matching open issue. */
 function T_syncIssuesFromQueue_() {
   var p = PropertiesService.getScriptProperties(), key = 'T_ISS_QUEUE_ROW';
   var q = T_SS.openById(P_IDS.inbox).getSheetByName('queue'); if (!q) return 'no queue tab';
@@ -2181,9 +2210,10 @@ function T_syncIssuesFromQueue_() {
   var sh = ISS.issuesSheet_();
   for (var r = last; r < vals.length; r++) {
     var row = vals[r], chat = String(row[1] || '');
-    if (!ISS.ISSUES_CHAT_RE.test(chat) || !String(row[5] || '').trim()) continue;
+    var dm = /личка боту/i.test(chat) && ISS.issuesCloserDm_(row[2]) && ISS.issuesIsDone_(row[5]);   // closer's DM «починил/работает»
+    if (!(ISS.ISSUES_CHAT_RE.test(chat) || dm) || !String(row[5] || '').trim()) continue;
     var d = row[0] instanceof Date ? row[0] : new Date();
-    ISS.issuesHandle_(sh, {chat: {id: String(row[2] || 'queue'), title: chat}, message_id: 'q' + (r + 1), date: Math.floor(d.getTime() / 1000),
+    ISS.issuesHandle_(sh, {chat: {id: dm ? T_realId_('tech') : String(row[2] || 'queue'), title: chat}, message_id: 'q' + (r + 1), date: Math.floor(d.getTime() / 1000),
       from: {username: String(row[4] || '').replace(/^@/, '')}}, String(row[5]), String(row[3] || row[4] || '?'));
     n++;
   }

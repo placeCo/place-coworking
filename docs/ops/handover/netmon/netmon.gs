@@ -5,7 +5,7 @@
  * 2 minutes (see heartbeat.sh / esp32-heartbeat.ino). This Apps Script reads the
  * Healthchecks.io API (READ-ONLY key) every ~5 minutes, detects up/down changes
  * and routes the alert:
- *   10:00–21:59 ICT -> PLACE Team (admins on shift)
+ *   10:00–21:59 ICT -> PLACE Team (admins on shift) — ENGLISH ONLY (George 05.10.2026); George DM stays Russian
  *   22:00–09:59 ICT -> George only (DM to @PlaceLeadBot), and only if down >= NIGHT_MIN_DOWN
  * Lena: NOT a recipient (any Lena role is only a proposal).
  *
@@ -17,7 +17,7 @@
  *
  * Script Properties:
  *   HC_API_KEY       Healthchecks.io project READ-ONLY API key
- *   CHECK_LABELS     JSON {"floor1-wifi":"1 этаж Wi-Fi", "floor3-wifi":"3 этаж Wi-Fi", "isp-a-wired":"Линия A (кабель)"}
+ *   CHECK_LABELS     JSON {"floor1-wifi":"1st floor Wi-Fi", "floor3-wifi":"3rd floor Wi-Fi", "isp-a-wired":"Line A (wired)"} (English: shown in PLACE Team)
  *   TG_TOKEN         bot token (bridge already has it as TOKEN)
  *   ADMIN_CHAT_ID    PLACE Team chat id
  *   GEORGE_CHAT_ID   George's private chat id with @PlaceLeadBot (after /start)
@@ -55,24 +55,24 @@ function netmonProcess_(checks, now) {
       if (!s.down_since) s.down_since = (c.last_ping ? new Date(c.last_ping) : now).getTime();
       var mins = Math.round((now.getTime() - s.down_since) / 60000);
       if (!s.alerted) {
-        if (isDay) { out.push({to: 'admins', text: '🔴 Нет интернета: ' + label + ' (с ' + hm_(s.down_since) + ', ' + mins + ' мин).\n🔴 อินเทอร์เน็ตล่ม: ' + label + '\nПроверьте роутер/питание. / เช็คเราเตอร์และปลั๊กไฟ'}); s.alerted = 'admins'; }
+        if (isDay) { out.push({to: 'admins', text: '🔴 Internet down: ' + label + ' (since ' + hm_(s.down_since) + ', ' + mins + ' min). Check the router / power.'}); s.alerted = 'admins'; }
         else if (mins >= nightMin) { out.push({to: 'george', text: '🔴 Ночью нет интернета: ' + label + ' с ' + hm_(s.down_since) + ' (' + mins + ' мин).'}); s.alerted = 'george'; }
       } else if (s.alerted === 'admins' && !isDay && !s.george) {
         // outage started in the day and continues after 22:00: hand over to George once
         out.push({to: 'george', text: '🔴 Интернет всё ещё не работает после 22:00: ' + label + ' (с ' + hm_(s.down_since) + ', ' + mins + ' мин).'}); s.george = true;
       } else if (s.alerted === 'george' && isDay && !s.admins) {
         // outage started at night and continues after 10:00: tell the shift once
-        out.push({to: 'admins', text: '🔴 С ночи нет интернета: ' + label + ' (с ' + hm_(s.down_since) + '). Проверьте роутер/питание. / เช็คเราเตอร์และปลั๊กไฟ'}); s.admins = true;
+        out.push({to: 'admins', text: '🔴 Internet down since the night: ' + label + ' (since ' + hm_(s.down_since) + '). Check the router / power.'}); s.admins = true;
       }
     } else if (c.status === 'up' && s.down_since) {
       var dur = Math.round((now.getTime() - s.down_since) / 60000);
-      if (s.alerted) out.push({to: isDay ? 'admins' : 'george', text: '🟢 Интернет восстановлен: ' + label + ' (простой ' + dur + ' мин). / อินเทอร์เน็ตกลับมาแล้ว'});
+      if (s.alerted) out.push({to: isDay ? 'admins' : 'george', text: isDay ? '🟢 Internet back: ' + label + ' (down ' + dur + ' min).' : '🟢 Интернет восстановлен: ' + label + ' (простой ' + dur + ' мин).'});
       s = {};
     }
     state[id] = s;
   });
   if (downNow.length >= 2 && downNow.length === checks.filter(function (c) { return c.status !== 'paused' && c.status !== 'new'; }).length) {
-    out.forEach(function (m) { m.text += '\n⚠️ Упали ВСЕ сети сразу: вероятно, нет электричества или упал главный роутер/линия.'; });
+    out.forEach(function (m) { m.text += m.to === 'admins' ? '\n⚠️ ALL networks are down: probably a power cut or the main router/line.' : '\n⚠️ Упали ВСЕ сети сразу: вероятно, нет электричества или упал главный роутер/линия.'; });
   }
   p.setProperty('NETMON_STATE', JSON.stringify(state));
   var mode = p.getProperty('NETMON_MODE') || 'dry';

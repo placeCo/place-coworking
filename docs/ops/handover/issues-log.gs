@@ -14,6 +14,13 @@
  * Hook (one line in poll(), after the orders hook) — edits go in too:
  *   if (ISSUES_CHAT_RE.test(chat)) try { issuesHandle_(issuesSheet_(), m, text, name, !!u.edited_message); } catch (e) { Logger.log('ISSUES_ERR ' + e); }
  *
+ * Closers (George 05.10.2026): the tech director Aleksandr K (@Solar_element, chat_id 5953708446) reports fixes in his
+ * PRIVATE chat with the bot, not in «Тех вопросы». A DM from ISSUES_CLOSER_IDS (Script Property, comma list of chat ids;
+ * default 5953708446) that reads as «done» (issuesIsDone_: «починил / подключил / … работает» …) is handled like a
+ * «починили» in «Тех вопросы» (chat = TECH_CHAT_ID); other DMs are ignored (they never open an issue). Hook:
+ *   if (m.chat.type === 'private' && issuesCloserDm_(m.chat.id) && issuesIsDone_(text)) try { issuesHandle_(issuesSheet_(),
+ *     {chat: {id: TECH_CHAT_ID}, message_id: 'dm' + m.message_id, date: m.date, from: m.from}, text, name); } catch (e) { Logger.log('ISSUES_ERR ' + e); }
+ *
  * SAFETY: ISSUES_MODE (Script Property) defaults to 'dry' = log only, no sheet writes. 'live' writes to «Issues»
  * — only after George OK. ISSUES_CONFIRMERS (optional) = comma list of names/usernames whose «ок» closes an item
  * (default: george, джордж, lena, лена).
@@ -27,8 +34,11 @@ var ISSUES_TAB = 'Issues';
 var ISSUES_HEAD = ['issue_id', 'opened_at_ict', 'floor', 'reporter', 'text', 'status', 'last_note', 'last_update_ict', 'closed_at_ict', 'closed_by', 'tg_chat_id', 'tg_message_id', 'assignee', 'type', 'tag', 'thread_ids'];
 /** Tag for new rows. The TEST project defines a global ISSUES_TAG_FN() that returns 'fixture' inside test_*; production: ''. */
 function issuesTag_() { return typeof ISSUES_TAG_FN === 'function' ? String(ISSUES_TAG_FN() || '') : ''; }
-var DONE_RE = /(готово|сделано|сделал|починил|починен|отремонтир|исправил|исправлен|решено|закрыто|заменил|fixed|repaired|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
-var NOT_DONE_RE = /(не\s+(готово|сделал|сделано|починил|починен|исправил|решено)|not\s+(fixed|done|repaired)|ยังไม่)/i;
+var DONE_RE = /(готово|сделано|сделал|починил|починен|отремонтир|исправил|исправлен|решено|закрыт|заменил|подключил|подключен|fixed|repaired|done|resolved|เสร็จ|แก้แล้ว|ซ่อมแล้ว|เรียบร้อย)/i;
+var NOT_DONE_RE = /(не\s+(готово|сделал|сделано|починил|починен|исправил|решено|закрыт|подключ|работает)|плохо\s+работает|работает\s+плохо|not\s+(fixed|done|repaired|working)|ยังไม่)/i;
+/** «… работает» at the end of a message (e.g. «Кондиционер в серой комнате … работает», Aleksandr 04.10) = fixed; «не работает» is NOT_DONE. */
+var WORKS_RE = /(работает|works(\s+now)?|working\s+now|ใช้ได้แล้ว)[\s.!)👍✅]*$/i;
+var ISSUES_CLOSER_IDS = '5953708446';   // Aleksandr K (@Solar_element), tech director — closes issues from his DM with the bot
 var CONFIRM_RE = /^\s*(ок|окей|ok|okay|принято|подтверждаю|подтверждено|confirmed|спасибо|thanks|👍|✅|\+)[\s.!👍✅]*$/i;
 var BOT_RE = /placeleadbot/i;
 var ISSUES_WINDOW_MS = 30 * 60000;
@@ -124,7 +134,12 @@ function issuesConfirmer_(name) {
   var n = String(name || '').toLowerCase();
   return v.split(',').map(function (x) { return x.trim().toLowerCase(); }).filter(Boolean).some(function (x) { return n.indexOf(x) >= 0; });
 }
-function issuesIsDone_(text) { var t = String(text || ''); return DONE_RE.test(t) && !NOT_DONE_RE.test(t); }
+function issuesIsDone_(text) { var t = String(text || ''); return (DONE_RE.test(t) || WORKS_RE.test(t)) && !NOT_DONE_RE.test(t); }
+/** true if chatId (private chat with the bot) belongs to a closer (Script Property ISSUES_CLOSER_IDS, default Aleksandr K). */
+function issuesCloserDm_(chatId) {
+  var v = PropertiesService.getScriptProperties().getProperty('ISSUES_CLOSER_IDS') || ISSUES_CLOSER_IDS;
+  return v.split(',').map(function (x) { return x.trim(); }).filter(Boolean).indexOf(String(chatId || '').trim()) >= 0;
+}
 function issuesCompatible_(a, b) {
   return (!a.floor || !b.floor || a.floor === b.floor) && (!a.room || !b.room || a.room === b.room);
 }

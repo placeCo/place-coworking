@@ -132,6 +132,13 @@ function test_issuesThread() {
     var st = ISS.issuesHandle_(sh2, {chat: chat, message_id: 803, date: D('2026-10-01T12:00'), from: {username: 'lena'}, reply_to_message: {message_id: 801}}, 'ок 👍', 'Lena');
     if (sh2.values.length !== 3 || st !== 'closed') fail.push('lena confirm / 45-min split: rows ' + (sh2.values.length - 1) + ', ' + st);
     if (ISS.issuesHandle_(sh2, {chat: chat, message_id: 804, date: D('2026-10-01T12:05'), from: {username: 's'}, reply_to_message: {message_id: 802}}, 'не починили, ждём электрика', 'Som') === 'closed') fail.push('«не починили» closed it');
+    // George 05.10: Aleksandr K (tech director) closes from his DM with the bot; «… работает» = fixed, «не работает» is not
+    if (!ISS.issuesCloserDm_('5953708446') || ISS.issuesCloserDm_('8503184147')) fail.push('closer allowlist');
+    if (!ISS.issuesIsDone_('Кондиционер в серой комнате возле туалета работает') || !ISS.issuesIsDone_('Камеры на 3, 2, 1 (не все) подключил.')) fail.push('works/подключил not done');
+    if (ISS.issuesIsDone_('Не работает кондиционер на 4 этаже') || ISS.issuesIsDone_('Кондиционер на 3 этаже не работает') || ISS.issuesIsDone_('wifi плохо работает')) fail.push('«не работает» counted as done');
+    var sh3 = T_memSheet_();
+    ISS.issuesHandle_(sh3, {chat: chat, message_id: 901, date: D('2026-10-04T00:31'), from: {username: 'hey_len'}}, 'Не работает кондиционер на 4 этаже который справа ( серый зал )', 'Hey_len');
+    if (ISS.issuesHandle_(sh3, {chat: chat, message_id: 'dm902', date: D('2026-10-04T17:13'), from: {username: 'Solar_element'}}, 'Кондиционер в серой комнате возле туалета работает', 'Александр К') !== 'closed') fail.push('closer DM did not close the AC');
     if (fail.length) throw new Error('THREAD FAIL ' + fail.join(' | '));
     return {ok: 'original + edit + reply + dup + «починили» → 1 row, 0 open, closed today 1; real TEST rows → 1 item; 3 items; Lena «ок» closes; «не починили» stays open',
       sampleOpen: d2, sampleEveningClosedOnly: ev, realRows: r1};
@@ -247,16 +254,17 @@ function test_payments() {
     var fail = [], D = function (s) { return new Date(s + 'T09:15:00+07:00'); };
     var names = function (d) { return PAY.payDue_(D(d)).filter(function (x) { return x.entry.kind !== 'open'; }).map(function (x) { return x.entry.name + '@' + x.daysLeft; }).sort().join(' | '); };
     var cases = {
-      '2026-10-02': ['Интернет 3BB …4746@3', 'Интернет 3BB …4751@3', 'Билборд@3'],
-      '2026-10-05': ['Интернет 3BB …4746@0', 'Интернет 3BB …4751@0', 'Билборд@0'],
-      '2026-10-08': [],
-      '2026-10-12': ['Электричество (PEA)@3', 'Интернет 3BB …7174@0'],
-      '2026-10-15': ['Электричество (PEA)@0'],
+      '2026-10-02': ['Билборд@3'],
+      '2026-10-05': ['Интернет 3BB 450284746@3', 'Интернет 3BB 450284751@3', 'Билборд@0'],
+      '2026-10-08': ['Интернет 3BB 450284746@0', 'Интернет 3BB 450284751@0'],
+      '2026-10-09': ['Интернет 3BB 440117174@3'],
+      '2026-10-12': ['Электричество (PEA)@3', 'Интернет 3BB 440117174@0'],
+      '2026-10-15': ['Электричество (PEA)@0', 'Проверь оплату интернета 3BB@0'],
       '2026-10-17': ['Вода@3'],
-      '2026-10-25': ['Интернет 3BB …7790@3'],
+      '2026-10-25': ['Интернет 3BB 450317790@3'],
       '2026-10-29': ['Вывоз мусора (Чалонг)@3', 'Обновить телефонный счёт Dtac@3'],
       '2026-11-01': ['Вывоз мусора (Чалонг)@0', 'Обновить телефонный счёт Dtac@0'],
-      '2027-01-28': ['Конец договора: принтер@30', 'Конец договора: билборд@30', 'Интернет 3BB …7790@0'],
+      '2027-01-28': ['Конец договора: принтер@30', 'Конец договора: билборд@30', 'Интернет 3BB 450317790@0'],
       '2027-01-29': ['Secom (тревожная кнопка)@3', 'Обновить телефонный счёт Dtac@3'],
       '2027-02-01': ['Secom (тревожная кнопка)@0', 'Обновить телефонный счёт Dtac@0'],
       '2027-07-01': ['Secom (тревожная кнопка)@0', 'Обновить телефонный счёт Dtac@0'],
@@ -279,6 +287,7 @@ function test_payments() {
     if (!/❗ не оплачено — Долг Chicken JERKY, 5 160 ฿/.test(PAY.payText_(D('2026-10-14')))) fail.push('Jerky text');
     if (jx) { jx.paid = true; try { if (jerky('2026-10-14') || PAY.payText_(D('2026-10-14'))) fail.push('Jerky paid still shown'); } finally { delete jx.paid; } }
     if (!/Билборд, 5 000 ฿ \(George \(John\)/.test(PAY.payText_(D('2026-10-05')))) fail.push('billboard owner');
+    if (PAY.PAY_SCHEDULE.filter(function (e) { return /3BB/.test(e.name) && e.who !== 'George (John)'; }).length) fail.push('3BB owner must be George (John)');
     var t27 = PAY.payText_(D('2027-02-27'));
     if (!/принтер.*после этой даты принтер наш/.test(t27)) fail.push('printer note missing: ' + t27);
     if (!/24 396 ฿ за платёж/.test(PAY.payText_(D('2027-02-01')))) fail.push('Secom wording');
@@ -297,7 +306,7 @@ function test_payments() {
   });
 }
 
-/** Cash collection (George 01.10 12:05/12:06, safe with a drop slot): reminder asks «в кассе X / положил в сейф Y»;
+/** Cash collection (George 01.10 12:05/12:06, safe with a drop slot): reminder (PLACE Team, English only) asks «till X / deposited Y»;
  *  reply parsed; the script sums deposits since the last pickup; Sak DM «In the safe: TOTAL ฿ (+Y today, admin)» relayed to
  *  George + Lena as «Сак (ЛС)»; Y = 0 → no DM; Sak «забрал/taken/รับแล้ว» → counter reset. Fake ids + fake sender. */
 function test_cash() {
@@ -305,7 +314,7 @@ function test_cash() {
     var fail = [], now = new Date('2026-10-04T23:05:00+07:00');
     var saved = CASH.cashSafe_();
     var rem = CASH.cashReminderText_();
-    if (rem.split('\n').length > 3 || rem.indexOf('«в кассе X / положил в сейф Y»') < 0 || rem.indexOf('Cash collection today') < 0) fail.push('reminder: ' + rem);
+    if (rem.split('\n').length > 1 || rem.indexOf('«till X / deposited Y»') < 0 || rem.indexOf('Cash collection today') < 0 || /[а-яё]/i.test(rem)) fail.push('reminder (PLACE Team: English only): ' + rem);
     [['в кассе 2 000 / положил в сейф 12 500', 2000, 12500], ['в кассе 1500 / положила в сейф 0', 1500, 0], ['касса 800, в сейф 3000', 800, 3000],
      ['till 3,000 / deposited 9,800', 3000, 9800], ['ลิ้นชัก 2000 / ใส่เซฟ 7000', 2000, 7000]]
       .forEach(function (c) { var v = CASH.cashParse_(c[0]); if (!v || v.till !== c[1] || v.deposited !== c[2]) fail.push('parse ' + c[0] + ' → ' + JSON.stringify(v)); });

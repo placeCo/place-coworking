@@ -150,7 +150,8 @@ function T_issuesJob_(kind, channel) {
   });
 }
 /** Read-only copy of new «Тех вопросы» rows from the production queue (bridge log) into Issues of Place Inbox TEST.
- *  The live bridge is NOT changed. Queue rows have no reply link, so they only open issues (close in TEST by hand). */
+ *  The live bridge is NOT changed. Queue rows have no reply link, so they only open issues (close in TEST by hand).
+ *  George 05.10: «done» DMs to the bot from ISSUES_CLOSER_IDS (Aleksandr K, tech director) close the matching open issue. */
 function T_syncIssuesFromQueue_() {
   var p = PropertiesService.getScriptProperties(), key = 'T_ISS_QUEUE_ROW';
   var q = T_SS.openById(P_IDS.inbox).getSheetByName('queue'); if (!q) return 'no queue tab';
@@ -158,9 +159,10 @@ function T_syncIssuesFromQueue_() {
   var sh = ISS.issuesSheet_();
   for (var r = last; r < vals.length; r++) {
     var row = vals[r], chat = String(row[1] || '');
-    if (!ISS.ISSUES_CHAT_RE.test(chat) || !String(row[5] || '').trim()) continue;
+    var dm = /личка боту/i.test(chat) && ISS.issuesCloserDm_(row[2]) && ISS.issuesIsDone_(row[5]);   // closer's DM «починил/работает»
+    if (!(ISS.ISSUES_CHAT_RE.test(chat) || dm) || !String(row[5] || '').trim()) continue;
     var d = row[0] instanceof Date ? row[0] : new Date();
-    ISS.issuesHandle_(sh, {chat: {id: String(row[2] || 'queue'), title: chat}, message_id: 'q' + (r + 1), date: Math.floor(d.getTime() / 1000),
+    ISS.issuesHandle_(sh, {chat: {id: dm ? T_realId_('tech') : String(row[2] || 'queue'), title: chat}, message_id: 'q' + (r + 1), date: Math.floor(d.getTime() / 1000),
       from: {username: String(row[4] || '').replace(/^@/, '')}}, String(row[5]), String(row[3] || row[4] || '?'));
     n++;
   }

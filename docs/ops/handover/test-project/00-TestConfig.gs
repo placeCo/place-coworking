@@ -173,7 +173,7 @@ function T_realTarget_(where) {
   if (/PLACE Team/i.test(w)) return {key: 'team', name: 'PLACE Team'};
   if (/вечерний админ/i.test(w)) {
     var m = w.match(/вечерний админ\s+([^()→]+?)\s*\(ЛС\)/i);
-    return {key: 'team', name: 'PLACE Team (вечерний админ)', pre: m ? 'Вечерний админ: ' + m[1].trim() + '\n' : ''};
+    return {key: 'team', name: 'PLACE Team (вечерний админ)', pre: m ? 'Evening admin: ' + m[1].trim() + '\n' : ''};   // PLACE Team: English only (George 05.10)
   }
   if (/PAY_CHAT_ID|Payments/i.test(w)) return {key: 'pay', name: 'Payments Place'};
   if (/Тех вопросы/i.test(w)) return {key: 'tech', name: 'Тех вопросы'};
@@ -186,7 +186,7 @@ function T_sendReal_(t, text) {
   if (!id) { T_BUF.push('[real: ' + t.name + ' chat id not set → NOT sent]\n' + body); return 'not-sent(no chat id)'; }
   if (!PropertiesService.getScriptProperties().getProperty('TG_TOKEN')) { T_BUF.push('[real LOG ONLY: TG_TOKEN not set] → ' + t.name + '\n' + body); return 'log-only'; }
   var parts = [], s = body; while (s.length) { parts.push(s.slice(0, 3900)); s = s.slice(3900); }
-  var codes = parts.map(function (part, i) { try { return T_tgSend_(id, (i ? '[TEST] (продолжение)\n' : '') + part); } catch (e) { return 'ERR ' + (e && e.message); } });
+  var codes = parts.map(function (part, i) { try { return T_tgSend_(id, (i ? (t.key === 'team' ? '[TEST] (cont.)\n' : '[TEST] (продолжение)\n') : '') + part); } catch (e) { return 'ERR ' + (e && e.message); } });
   T_BUF.push('[sent → ' + t.name + ' ' + id + ': ' + codes.join(',') + ']\n' + body);
   return 'sent ' + t.name + ':' + codes.join(',');
 }

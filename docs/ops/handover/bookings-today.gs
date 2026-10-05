@@ -1,5 +1,5 @@
 /**
- * Place Coworking — G-5 «Брони на сегодня» из Events and booking. DRAFT TEMPLATE, NOT DEPLOYED.
+ * Place Coworking — G-5 «Bookings today» from Events and booking (→ PLACE Team: ENGLISH ONLY, George 05.10.2026). DRAFT TEMPLATE, NOT DEPLOYED.
  * READ-ONLY: never writes to the sheet, never sends. Returns text for the existing 10:07 run.
  *
  * Sheet layout (checked read-only 29.09.2026): each tab = one space; row 4 = "Time" + one column
@@ -28,12 +28,12 @@ function bookingsToday_(now) {
   var lines = [], warn = [];
   tabs.forEach(function (name) {
     var sh = ss.getSheetByName(name);
-    if (!sh) { warn.push('нет вкладки ' + name); return; }
+    if (!sh) { warn.push('no tab ' + name); return; }
     var disp = sh.getDataRange().getDisplayValues();
     if (disp.length < hr) return;
     var cols = bkDateCols_(disp[hr - 1], today.getFullYear());
     var key = bkKey_(today), col = cols.map[key];
-    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': сетка до ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy'));
+    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': grid ends ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy'));
     if (col === undefined) return;
     var items = [];
     for (var r = hr; r < disp.length; r++) {
@@ -42,8 +42,8 @@ function bookingsToday_(now) {
     }
     if (items.length) lines.push(name.trim() + ': ' + items.join('; '));
   });
-  // short (George 01.10): one line per room, warnings one line each
-  return '📅 Брони ' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + (lines.length ? '\n' + lines.join('\n') : ': нет') +
+  // short (George 01.10): one line per room, warnings one line each. PLACE Team = English only (George 05.10)
+  return '📅 Bookings ' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + (lines.length ? '\n' + lines.join('\n') : ': none') +
     (warn.length ? '\n⚠️ ' + warn.join('\n⚠️ ') : '');
 }
 
