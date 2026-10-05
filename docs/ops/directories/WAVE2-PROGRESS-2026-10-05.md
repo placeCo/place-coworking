@@ -8,7 +8,10 @@
 | Phuket.Net | Submitted, review ≤48 h, confirmation to info@ | https://www.phuket.net/directory/add/ · category Professional Services (no coworking) · pin ~80 m off |
 | icowork.co | NOT fixed: no claim/edit; owner panel only adds new space + agency agreement | Listing https://icowork.co/phuket/coworking/place-coworking (24/7, 700/day) · account on icowork.pro created · correction email to admin@icowork.co drafted for George |
 | Foursquare | Live (added, not claimed) | https://app.foursquare.com/v/place-coworking/6ac32e078ad0c7383682f4c4 · website + hours sent as suggested edit (pending) · map pin approximate |
-| CoworkBooking | In progress | |
+| CoworkBooking | Corrected & live (owner dashboard via manager link in info@ email, account «Victoria Skorobogatova») | https://www.coworkbooking.com/asia/thailand/phuket/place-coworking · 3-month 15 000 added, dedicated desk (700/10 days) unpublished, office up to 6 / 30 000, meeting rooms 6/13/20 at 250/h (price unverified) |
+| TripAdvisor | Blocked: info@ account exists, password unknown, reset email didn't arrive; Google login needs George's Honor approval | Owners page https://www.tripadvisor.com/Owners · listing «Place Coworking — Chalong» |
+| Wongnai | Add/claim form sent, receipt unconfirmed; type cafe; no hours/photos fields | https://www.wongnai.com/business/form · account info@ (password in secrets) |
+| Nomadwise | Free claim submitted, waiting approval email; photos after approval via https://nomadmaps.io/?owner | — |
 
 Also 05.10: LINE OA «Place co-working» (@294bqkju, free plan) logged in on the box via Lena's QR scan; friend link https://line.me/R/ti/p/@294bqkju. Pat must add the OA before we can message her.
 Accounts: logins in /home/box/secrets/directories.txt (box only).
