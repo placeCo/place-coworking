@@ -32,7 +32,7 @@
 ### Открытый фронт на 25 Sep (пока не закрыто)
 | ID | Хвост | Кто | Срок | Статус |
 |----|-------|-----|------|--------|
-| O1 | Room 3 Renat vs Igor | Lena ← lead шлёт 10:00 | 25 Sep | open |
+| O1 | ~~Room 3 Renat vs Igor~~ Room 3 (5 эт.) — **CLOSED** — не двойная бронь: Renat арендует три комнаты (George 07.10.2026) | Lena ← lead шлёт 10:00 | 25 Sep | **closed** 07.10 |
 | O2 | Контакты Surkov/Stukalov/Goldman room13 | Ресепшен | 26 Sep | open |
 | O3 | Booking plan → **архив (A)** | Place Ops + lead | 26 Sep | decide→A |
 | O4 | Apps Script renewals после fail 24 Sep | Place Ops | 25–26 | watch |
