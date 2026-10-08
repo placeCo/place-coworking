@@ -1,27 +1,29 @@
 # DRAFT — NAP / hours / price corrections for public listings
-**Date:** 2026-09-25 (Asia/Bangkok)  
-**Status: DRAFT — do not publish without George OK**  
-**Brand:** Place Coworking, Chalong (NOT Kathu)  
-**Do not:** submit forms, log into listing CMS, or change live listings from this doc.
+**Date:** 2026-09-25 (Asia/Bangkok) · **updated 2026-10-09 by Place Ops to PLACE-BRIEF-2026-10-09 (George, binding)**  
+**Status: DRAFT — do not publish or send without George OK**  
+**Brand:** Place Coworking, Chalong (never Kathu)  
+**Do not:** submit forms, log into listing CMS, or change live listings from this doc.  
+Full per-platform plan (own listings + third-party pages): `docs/ops/directories/LISTINGS-FIX-PLAN-2026-10-09.md`.
 
 ---
 
-## Canon fields (paste source of truth)
+## Brief fields (paste source of truth)
 
-| Field | Canon |
+| Field | Brief 09.10 |
 |-------|-------|
 | Name | Place Coworking (or PLACE Coworking Phuket) |
-| District / area | **Chalong**, Mueang Phuket District — **never Kathu, never Patong** |
-| Address | 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130, Thailand |
-| Phone | +66951170481 |
+| District / area | **Chalong**, Mueang Phuket — never Kathu, Patong, Bangkok |
+| Address | 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket 83130, Thailand (write 59/2, not "59, 2") |
+| Phone / WhatsApp | +66 95 117 0481 |
 | Email | info@placecoworking.com |
 | Website | https://placecoworking.com/ |
-| Public hours | **08:00–23:00 daily** (every day). NOT 24/7 by default. Night access only with **Month 24/7 = 9000฿ + key** |
-| Showcase | Pass (floors 1+3) · Offices (2+5 via manager) · Studio (floor 4 via manager) |
-| Pass prices | Trial: **1 free day, floor 3 only**; hour 50; day **400 until 31 Oct 2026, 500 from 1 Nov 2026**; week 1800; month 6000; 3 months 15000; month 24/7 **9000** |
-| Offices floor 5 | 30000฿/mo or 20000฿/mo yearly (up to 6 people). Floor 2 offices via manager — not public hot-desk menu |
-| Meeting | from 250฿/h, −20% Pass residents |
-| Studio | via manager — **no** Filming 500฿/h |
+| Hours | **08:00–23:00 every day.** No 24-hour wording at all (no exceptions, no packages) |
+| Products | Only three: **Office** (floors 5 and 2) · **Place Pass** (floors 1 and 3) · **Podcast** (one room, not a floor) |
+| Pass prices | hour 50 · day **400 until 31 Oct 2026, 500 from 1 Nov 2026** · week 1 800 · month 6 000 · 3 months 15 000 |
+| Office | 30 000 ฿/month, or 20 000 ฿/month on a 12-month contract; company registration address only on the 12-month contract. Per office. Availability: "message us on WhatsApp, we'll show what's available" |
+| Podcast | one room; booking on WhatsApp +66 95 117 0481; no price in text |
+| Free day | **None on listings** (ads and flyers only) |
+| Not the offer | café, yoga, events, photo zone/studio, visa, condo, meeting rooms, rooftop/terrace |
 
 ---
 
@@ -29,31 +31,32 @@
 
 **URL:** https://searchremotely.com/product/place-coworking-phuket/
 
-### Current vs canon
+### Current (checked 09.10.2026) vs brief
 
-| Field | Current (public) | Canon |
+| Field | Current (public) | Brief |
 |-------|------------------|-------|
-| Name | PLACE Coworking Phuket | Place Coworking / PLACE Coworking Phuket (OK) |
-| Area | Chalong (in body) | Chalong OK |
-| Address | Not clearly structured on product page | Full NAP address above |
-| Phone | Not shown in fetched body | +66951170481 |
-| Hours | «open around the clock from Monday to Friday and from 9:00 to 23:00 on weekends» | **08:00–23:00 daily**; no Mon–Fri 24h |
-| Website | (listing exists; reciprocal link asked historically) | https://placecoworking.com/ |
-| Prices / claims | Hot desk / fixed desk / rooftop / 24h weekdays; no full tariff table visible | Pass + offices + studio per canon; no default 24/7 |
+| Hours | «open around the clock from Monday to Friday and from 9:00 to 23:00 on weekends» | **08:00–23:00 daily** |
+| Size / floors | «five floors and a rooftop … 1,645 m²» | do not state |
+| Offer | affordable hot desk, fixed desk with monitor, private office, meeting rooms, event venues for up to 200, virtual-office support, photo and podcast studios, café/kitchen, showers, printing, lockers, community events | three products only; no "affordable" |
+| Address / phone | not shown | full NAP |
 
 ### Exact replacement text (EN) — ready to paste
 
-**Short description (replace body):**
+**Description (replace body):**
 
 ```
-Place Coworking is a modern coworking space in Chalong, Phuket (not Kathu). Address: 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130, Thailand. Phone: +66951170481. Email: info@placecoworking.com. Website: https://placecoworking.com/
+Place Coworking in Chalong, Phuket. Open every day 08:00–23:00.
 
-Public hours: 08:00–23:00 daily. Not open 24/7 by default — overnight access is only with the Month 24/7 pass (9000฿ + key).
+Place Pass, floors 1 and 3: 50 THB/hour · 400 THB/day until 31 Oct 2026 (500 THB/day from 1 Nov 2026) · 1,800 THB/week · 6,000 THB/month · 15,000 THB for 3 months.
 
-Showcase: Place Pass (work on floor 3; floor 1 library/entry included) · Private offices (floor 5; floor 2 via manager) · Studio (floor 4 via manager). Rooftop is leased — not a public coworking floor.
+Private offices on floors 5 and 2: 30,000 THB/month, or 20,000 THB/month on a 12-month contract. A company registration address is included only with the 12-month contract. Message us on WhatsApp and we'll show you what's available.
 
-Pass prices (THB): trial 1 free day on floor 3 only; hour 50; day 400 until 31 Oct 2026 (500 from 1 Nov 2026); week 1800; month 6000 (08:00–23:00); 3 months 15000; month 24/7 9000. Offices floor 5: 30000/mo or 20000/mo on a yearly term (up to 6 people). Meeting rooms from 250฿/h (−20% for Pass residents). Studio via manager.
+Podcast room: one room, booking on WhatsApp +66 95 117 0481. Light and camera can be rented with it.
+
+59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket 83130 · WhatsApp/phone +66 95 117 0481 · info@placecoworking.com · placecoworking.com
 ```
+
+From 01.11.2026 the Pass line: `Place Pass, floors 1 and 3: 50 THB/hour · 500 THB/day · 1,800 THB/week · 6,000 THB/month · 15,000 THB for 3 months.`
 
 **Hours field (if separate):**
 
@@ -64,7 +67,7 @@ Monday–Sunday: 08:00–23:00
 **One-liner NAP:**
 
 ```
-Place Coworking · 59/2 Chao Fah Tawan Tok Rd, Chalong, Phuket 83130 · +66951170481 · 08:00–23:00 daily · placecoworking.com
+Place Coworking · 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket 83130 · +66 95 117 0481 · 08:00–23:00 daily · placecoworking.com
 ```
 
 ---
@@ -72,19 +75,19 @@ Place Coworking · 59/2 Chao Fah Tawan Tok Rd, Chalong, Phuket 83130 · +6695117
 ## 2) Wanderlog
 
 **URL:** https://wanderlog.com/place/details/12919054/place-coworking-phuket  
-**Title currently:** «PLACE COWORKING PHUKET, **Kathu**, Thailand» ← ban
+**Title currently (09.10):** «PLACE COWORKING PHUKET, **Kathu**, Thailand» ← banned
 
-### Current vs canon
+### Current vs brief
 
-| Field | Current (public) | Canon |
+| Field | Current (public) | Brief |
 |-------|------------------|-------|
-| Name | PLACE COWORKING PHUKET | OK |
-| District | **Kathu** (page title + “Popular road trips from Kathu” / weather) | **Chalong** |
-| Address | 59, 2 Chao Fah Tawan Tok Rd, Chalong… (comma form; Chalong in street line) | Prefer **59/2** … Chalong … |
-| Phone | +66 95 117 0481 | OK (= +66951170481) |
-| Website | https://placecoworking.com/ | OK |
-| Hours | Mon–Fri **Open 24 hours**; Sat–Sun **8AM–11PM** | **08:00–23:00 daily**; no 24h weekdays |
-| Claims | Tip: «free **3-day** trial» | Trial = **1 free day, floor 3 only** |
+| District | **Kathu** (page title, road trips, weather) | **Chalong** |
+| Address | 59, 2 Chao Fah Tawan Tok Rd, Chalong… | **59/2** … Chalong … 83130 |
+| Phone / website | +66 95 117 0481 · placecoworking.com | OK |
+| Hours | Mon–Fri **Open 24 hours**; Sat–Sun 8AM–11PM | **08:00–23:00 daily** |
+| Tips / about | «free **3-day** trial»; movement classes | no free days on listings; classes are not the offer |
+
+Wanderlog is built from Google data: fix the GBP hours and address first, then ask Wanderlog.
 
 ### Exact replacement text (EN) — ready to paste
 
@@ -97,92 +100,91 @@ PLACE COWORKING PHUKET, Chalong, Phuket, Thailand
 **Address:**
 
 ```
-59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130, Thailand
+59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket 83130, Thailand
 ```
 
 **Hours:**
 
 ```
-Sunday: 08:00–23:00
-Monday: 08:00–23:00
-Tuesday: 08:00–23:00
-Wednesday: 08:00–23:00
-Thursday: 08:00–23:00
-Friday: 08:00–23:00
-Saturday: 08:00–23:00
+Monday–Sunday: 08:00–23:00
 ```
 
-**About / tip corrections (if editable):**
+**Correction note (if a form exists):**
 
 ```
-Place Coworking is in Chalong (not Kathu), Phuket. Public hours 08:00–23:00 daily. Overnight/24h access only with Month 24/7 pass (9000฿ + key). New guests: 1 free trial day on floor 3 only — not “3 free days any floor”. Pass day pass 400฿ until 31 Oct 2026 (500฿ from 1 Nov); week 1800฿; month 6000฿. Website: https://placecoworking.com/ · +66951170481 · info@placecoworking.com
-```
-
-**One-liner NAP:**
-
-```
-PLACE COWORKING PHUKET · Chalong (not Kathu) · 59/2 Chao Fah Tawan Tok Rd, Phuket 83130 · +66951170481 · 08:00–23:00 daily · fix: remove Kathu + Mon–Fri 24h
+Please update PLACE Coworking Phuket: the area is Chalong (Mueang Phuket 83130), not Kathu. Opening hours are 08:00–23:00 every day. Please remove the "free 3-day trial" tip: there is no free trial on this listing. Prices: Place Pass 50 THB/hour, 400 THB/day until 31 Oct 2026 (500 THB/day from 1 Nov 2026), 1,800 THB/week, 6,000 THB/month. Website https://placecoworking.com/ · +66 95 117 0481 · info@placecoworking.com
 ```
 
 ---
 
-## 3) Other wrong public listings found (draft corrections)
+## 3) Other wrong public listings (draft corrections)
 
 ### 3a) Thailand Stuff  
 **URL:** https://thailandstuff.com/phuket/listings/place-coworking-phuket
 
-| Field | Current | Canon |
+| Field | Current (09.10) | Brief |
 |-------|---------|-------|
-| Area | Chalong | OK |
-| Phone / web | +66 95 117 0481 · placecoworking.com | OK |
-| Hours | Mon–Fri **00:00–23:59**; Sat–Sun 09:00–23:00; UI «Open till 23:59» | **08:00–23:00 daily** |
-| Prices | Day ~**300**; month from ~**3000**; dedicated ~11000; «few free trial days» | Day **400 until 31 Oct, 500 from 1 Nov**; month **6000**; month 24/7 **9000**; trial **1 day floor 3**; no public floor-2 dedicated menu |
+| Hours | Mon–Fri **00:00–23:59**; Sat–Sun 09:00–23:00; «24 hour entry»; tag «24/7 access» | **08:00–23:00 daily** |
+| Prices | hour ~50; day ~**300**; month ~**3 000**; shared 6 000; dedicated ~11 000; meeting rooms ~250/h; event space ~1 000/h | Pass: day **400 until 31 Oct, 500 from 1 Nov**; week 1 800; month 6 000; 3 months 15 000. Office 30 000 / 20 000 on 12 months |
+| Trial | «a few free trial days» | no free days |
+| Other | five floors + rooftop, 1,645 m²; café breakfast/lunch; event space floor 4; address "59, 2" | three products; 59/2 |
 
-**Paste block:**
+**Paste block (correction request):**
 
 ```
-Opening hours: 08:00–23:00 every day (not 24/7 weekdays). Overnight only with Month 24/7 pass 9000฿ + key.
-Guide prices (confirm on site): Pass hour 50฿ · day 400฿ until 31 Oct 2026 (500฿ from 1 Nov) · week 1800฿ · month 6000฿ · 3 months 15000฿ · month 24/7 9000฿. Trial: 1 free day on floor 3 only. Offices floor 5 from 30000฿/mo or 20000฿/mo yearly. Meeting from 250฿/h (−20% Pass). Address: 59/2 Chao Fah Tawan Tok Rd, Chalong, Phuket 83130. +66951170481 · info@placecoworking.com
+Please update Place Coworking (Chalong):
+Opening hours: 08:00–23:00 every day.
+Place Pass (floors 1 and 3): 50 THB/hour · 400 THB/day until 31 Oct 2026 (500 THB/day from 1 Nov 2026) · 1,800 THB/week · 6,000 THB/month · 15,000 THB for 3 months.
+Private offices (floors 5 and 2): 30,000 THB/month, or 20,000 THB/month on a 12-month contract (company registration address only with the 12-month contract).
+Podcast room: one room, booking on WhatsApp +66 95 117 0481.
+Please remove: round-the-clock weekday hours and the 24/7 tag, day 300, month 3,000, dedicated desk 11,000, meeting-room and event-space prices, "free trial days", rooftop and café as features.
+Address: 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket 83130 · +66 95 117 0481 · info@placecoworking.com · placecoworking.com
 ```
-
-**One-liner:** `Thailand Stuff · fix hours to 08:00–23:00 daily · day 400 until 31 Oct, 500 from 1 Nov / month 6000 · drop 300/3000 + weekday 24h`
 
 ### 3b) Phuket Insider  
 **URL:** https://phuket-insider.com/en/places/place-coworking-phuket/
 
-| Field | Current | Canon |
+| Field | Current (09.10) | Brief |
 |-------|---------|-------|
-| Area | Chalong | OK |
-| Hours | Mon–Sun **09:00–23:00** | **08:00–23:00** (start 08 not 09) |
-| Prices | Not detailed in fetch | Prefer not inventing; link site |
+| Area / hours | Chalong · Mon–Sun 08:00–23:00 | OK ✓ (fixed since 25.09) |
+| Text | outdoor yoga sessions, free water/tea/coffee, café, rooftop | not the offer |
 
-**Paste hours:** `Working hours: Mon–Sun 08:00–23:00`  
-**One-liner:** `Phuket Insider · shift open from 09:00 → 08:00; keep Chalong`
+**Optional ask:** replace the text with the three products (§1 description). Low priority.
 
-### 3c) Instant Offices (brokerage)  
+### 3c) Instant Offices (syncs from Worka, we have Worka access)  
 **URL:** https://www.instantoffices.com/en/th/available-office-space/chalong/place-coworking-117870  
-Chalong address present; offer price snippets (e.g. 14000) are **broker/SEO** — not Pass canon. Treat as low priority; if claiming Place product, point to manager + floor-5 30000 / 20000 yearly.  
-**One-liner:** `Instant Offices · Chalong NAP OK; ignore/broker prices ≠ Pass menu`
+Now: «Offices – Serviced from THB30,000 **per person** / mth, 1–12 ppl»; «Coworking Desks – **Dedicated** from THB6,000»; text «Trial: 1 free day in the coworking», «up to about 4 people», «THB 400/day» without date, «Floor 4: photo and podcast studio», «Meeting rooms from 250 THB/hour».  
+Fix in Worka (see LISTINGS-FIX-PLAN §3): per office 30 000 / 20 000 on 12 months, 1–6 people, hot desk, description = §1 text.
 
 ---
 
-## Shared “hours + NAP” blurb (any channel)
+## Shared "hours + NAP" blurb (any channel)
 
 ```
 Place Coworking, Chalong, Phuket
-59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130, Thailand
-Phone: +66951170481
+59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket 83130, Thailand
+Phone / WhatsApp: +66 95 117 0481
 Email: info@placecoworking.com
 Web: https://placecoworking.com/
-Hours: 08:00–23:00 daily. Not 24/7 by default (Month 24/7 = 9000฿ + key).
+Hours: 08:00–23:00 every day.
 ```
 
-## Shared “Pass prices” blurb (any channel)
+## Shared "prices" blurb (any channel)
 
 ```
-Place Pass (floor 3): 1 free trial day (floor 3 only) · 50฿/hour · 400฿/day until 31 Oct 2026 (500฿/day from 1 Nov) · 1800฿/week · 6000฿/month · 15000฿/3 months · 9000฿/month 24/7. Offices (floor 5): 30000฿/month or 20000฿/month yearly (up to 6 people). Meeting from 250฿/hour (−20% Pass). Studio via manager.
+Place Pass (floors 1 and 3): 50 THB/hour · 400 THB/day until 31 Oct 2026 (500 THB/day from 1 Nov 2026) · 1,800 THB/week · 6,000 THB/month · 15,000 THB/3 months. Private offices (floors 5 and 2): 30,000 THB/month, or 20,000 THB/month on a 12-month contract (company registration address only with the 12-month contract). Podcast room: one room, booking on WhatsApp +66 95 117 0481.
+```
+
+## RU-блок (если площадка на русском)
+
+```
+Place Coworking, Чалонг, Пхукет. Каждый день 08:00–23:00.
+Place Pass (1 и 3 этаж): час 50 ฿ · день 400 ฿ до 31.10.2026 (с 01.11.2026 — 500 ฿) · неделя 1 800 ฿ · месяц 6 000 ฿ · 3 месяца 15 000 ฿.
+Офисы (5 и 2 этаж): 30 000 ฿ в месяц или 20 000 ฿ в месяц по договору на год; адрес для регистрации компании — только в годовом договоре. Напишите в WhatsApp — покажем, что свободно.
+Подкаст: одна комната, запись в WhatsApp +66 95 117 0481.
+59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket 83130 · info@placecoworking.com
 ```
 
 ---
 
-*Do not publish or submit without George OK. Sync copy under /home/box/place-coworking/docs/site/ as well.*
+*Do not publish or send without George OK. After 01.11.2026 use 500 THB/day only.*

@@ -1,7 +1,7 @@
 # Deskimo listing draft — PLACE Coworking Phuket
-**Status:** DRAFT ONLY — no publish without George OK  
-**Date:** 2026-09-25 · source: CANON-CORE + CANON + kb/facts/canon.md  
-**Missing for form:** photos (SMM/Nikita), Wi‑Fi details + bank (Lena), George login to complete onboarding (~7%)
+**Status:** DRAFT ONLY — the live Deskimo listing (published 29.09) is changed by hand, only after George OK  
+**Date:** 2026-09-25 · **updated 2026-10-09 by Place Ops to PLACE-BRIEF-2026-10-09 (George, binding)**  
+Live-listing fixes: `docs/ops/directories/LISTINGS-FIX-PLAN-2026-10-09.md` §3 (Deskimo rows).
 
 ---
 
@@ -9,76 +9,40 @@
 PLACE Coworking Phuket
 
 ## Address / NAP
-59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130, Thailand  
-(Chalong — not Kathu)
+59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket 83130, Thailand (Chalong, never Kathu)  
+WhatsApp / phone: +66 95 117 0481 · info@placecoworking.com
 
-## Hours (public Pass)
-08:00–23:00 daily  
-Night access only with month 24/7 package (see prices). Do **not** list as open 24/7 for all.
+## Hours
+08:00–23:00 every day (all 7 days). No 24-hour wording. Deskimo "last access" 22:00 is still with Deskimo support.
 
-## Contact
-WhatsApp / manager: +66 95 117 0481  
-Email: info@placecoworking.com
+## Description (EN, Deskimo field)
+Place Pass gives you floors 1 and 3, with the main work hall on floor 3. Open every day 08:00–23:00. Private offices are on floors 5 and 2: 30,000 THB/month, or 20,000 THB/month on a 12-month contract (company registration address only with the 12-month contract); message us on WhatsApp and we'll show you what's available. There is one podcast room, booked on WhatsApp +66 95 117 0481.
 
-## Short description (EN, ~Deskimo blurb)
-Place Coworking in Chalong, Phuket. One Pass covers floors 1+3: work hall on the 3rd, library / glazed café / meeting rooms on the 1st. Private offices on floors 2 and 5. Podcast & photo studio on floor 4 via manager. First Pass day free on floor 3.
-
-## Long description (EN)
-PLACE is a multi-floor coworking building in Chalong (not Patong).
-
-**Place Pass (floors 1 + 3, one entry)**  
-- Floor 3: open work hall — trial and day/week/month work here  
-- Floor 1: library, glazed café zone, large meeting rooms (~20) + another room — amenities inside Pass, not a separate desk SKU  
-- Hours: 08:00–23:00  
-- Trial: **1 free day on floor 3 only**
-
-**Offices (floors 2 + 5)**  
-- Floor 2: office floorspace (lease / private office use — not public hot desk)  
-- Floor 5: private rooms/offices, up to 6 people — from 30,000฿/mo or 20,000฿/mo on a yearly deal  
-- Tour / ask manager via WhatsApp
-
-**Studio (floor 4)**  
-Podcast and photo studio — book through the manager (not a self-serve public menu).
-
-**Meeting rooms**  
-From 250฿/h; Pass residents −20%. Book through us.
-
-Quiet work floors, on-site amenities, and three clear product lines in one building.
-
-## Prices to enter (canon only — public)
+## Prices to enter (public)
 | Product | Price (THB) |
 |---------|-------------|
-| Trial | 1 free day, floor 3 only |
-| Hour | 50 |
-| Day | 400 until 31 Oct 2026 · 500 from 1 Nov 2026 |
-| Week | 1,800 |
-| Month (08:00–23:00) | 6,000 |
-| 3 months | 15,000 |
-| Month 24/7 (+ key deposit) | 9,000 |
-| Meeting | from 250/h (−20% Pass residents) |
-| Floor 5 office | 30,000/mo · 20,000/mo yearly |
+| Day (Place Pass, floors 1 and 3) | **400 until 31 Oct 2026 → 500 from 1 Nov 2026** (change the field on 01.11) |
+| Hour / week / month / 3 months (if the form has them) | 50 / 1,800 / 6,000 / 15,000 |
+| Office (floors 5 and 2) | 30,000/mo · 20,000/mo on 12 months (address only on 12 months) — not a Deskimo day product |
+| Podcast room | no price; WhatsApp |
 
-**Do not list:** 5h@150, day 300, month from 3000, 10-day packs (reception only, George 01.10 — never list), floor-1 desk column, filming 500/h as current studio price, “24/7 for everyone”, Wi‑Fi Mbps (no George measurement).
+**Do not list:** any free day / trial, meeting rooms, 9 000 month, 5 h, day 250/300, month 3 000/3 500, 10-day packs, filming, café, rooftop/terrace, photo studio, floor 4, Wi‑Fi Mbps.
 
-## Amenities (safe claims — no invented Mbps)
-- Open work hall (floor 3)  
-- Library + café zone (floor 1)  
-- Meeting rooms  
-- Private offices (floors 2 & 5)  
-- Studio via manager (floor 4)  
-- Hours 08:00–23:00  
+## Amenities (Deskimo checkboxes)
+Keep: Quiet Room (Free), High Speed WiFi (Free, no Mbps), Podcast Studio → **Paid** (never Free).  
+Untick: Rooftop/Terrace, Barista Coffee, Coffee & Tea, Meeting Rooms.
 
-Wi‑Fi speed / SSID / bank fields: **BLOCKED — Lena** (do not invent).
-
-## Photos needed (from SMM / Nikita)
-- Exterior / entrance Chalong  
-- Floor 3 open hall (with & without people if possible)  
-- Floor 1 library / café / meeting  
-- Offices 2 and/or 5  
-- Avoid roof-as-coworking; showcase Pass 1+3 + Offices 2+5 + Studio 4
+## House rules (paste)
+```
+- Your day pass covers floor 1 and floor 3 (coworking hall). Offices and the podcast room are private.
+- Keep work areas quiet; please take calls outside the coworking hall.
+- No smoking indoors.
+- Please keep your desk tidy and take your belongings when you leave.
+- Wi-Fi details are available at reception.
+```
 
 ## RU short (optional caption)
-Place в Чалонге: Pass на 1+3 (зал на 3-м), офисы на 2 и 5, студия на 4 через менеджера. Первый день Pass бесплатно на 3-м. День 400 (до 31.10; с 01.11 — 500) · неделя 1800 · месяц 6000 · с ночами 9000. Часы 08:00–23:00.
+Place в Чалонге: Place Pass на 1 и 3 этаже (зал на 3-м), офисы на 5 и 2 этаже, одна подкаст-комната (запись в WhatsApp +66 95 117 0481). Каждый день 08:00–23:00. День 400 ฿ до 31.10.2026, с 01.11.2026 — 500 ฿ · неделя 1 800 · месяц 6 000 · 3 месяца 15 000. Офис 30 000 ฿/мес или 20 000 ฿/мес при договоре на год (адрес компании только в годовом).
 
 ---
-Publish / submit onboarding: **only after OK George**.
+Publish / change the live listing: **only after OK George**.

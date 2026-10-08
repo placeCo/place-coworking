@@ -1,6 +1,6 @@
 # ТЗ на фотографии — Place Coworking (Phuket)
 
-**Версия:** 05.10.2026 v2 (вечер)  
+**Версия:** 05.10.2026 v2 (вечер) · 09.10 правка под PLACE-BRIEF (пятёрка: офис вместо переговорки; подкаст = одна комната)  
 **Для кого:** George (отбор с Drive сегодня) · Лена / фотограф (досъём)  
 **Зачем сейчас:** coworker.com (5 фото) → Nomads.com · Office Hub Private Offices · каталоги / SMM  
 **Статус:** Coworking Desk на Office Hub уже заведён (CW1). Офисы 5 этажа — Лена вечером + фото. Пятёрка coworker.com — **главный блокер**.
@@ -19,7 +19,7 @@
 | 2 | Фасад или вход | facade / entrance / N33A2808 | [`01_facade_1`](https://drive.google.com/file/d/17qK60s2dWTqVZHQAZa4DELm8kS3FQiRZ/view) |
 | 3 | Зал 3 этажа, ближе | desks / floor 3 | [`02_floor3_2`](https://drive.google.com/file/d/1-8uG_4eMwNXQ5A0VMpQUGztxwM-ydp-9/view) |
 | 4 | Библиотека **или** кафе-ресепшен 1 эт. | library / café counter | [`03_floor1_1`](https://drive.google.com/file/d/1MG72hj9pTwkxwx7n6_Ry5XitFerumDF9/view) |
-| 5 | Переговорка + стол | meeting room | [`03_floor1_4`](https://drive.google.com/file/d/1ToKNRWJEvjVv-FrIIgqnxe19mLe7_gsg/view) |
+| 5 | Кабинет 5 этажа (офис) | private office | [`04_offices_1`](https://drive.google.com/file/d/1FpuGZvsOGu3ZhmnmJCPJ9N0BVE_F6z2G/view) |
 
 Папка отобранных на боте: `deskimo-photos/selected/` · манифест со всеми Drive-ссылками: `selected_manifest.tsv`.  
 Папка Алёны (офисы 1–4): [Drive folder](https://drive.google.com/drive/folders/1aZukTOvFGzrjVvepS417JmooYefy9NL8).
@@ -67,12 +67,12 @@
 | Зона | Сколько | Заметки |
 |---|---|---|
 | Floor 3 Pass | 3–4 | широкий + средний + деталь |
-| Floor 1 кафе / lounge | 2 | стойка = ресепшен |
+| Floor 1 lounge / ресепшен | 1 | без кафе как оффера |
 | Floor 1 библиотека | 1–2 | |
-| Floor 1 meeting | 2 | большая + меньшая, экран 85″ |
+| Floor 1 meeting | 0–1 | не как оффер: переговорки не продукт (бриф 09.10) |
 | Floor 5 offices | 1 на кабинет | см. §2 |
-| Floor 5 terrace | 1–2 | только терраса 5, **не крыша** (`06_common_1` — не использовать) |
-| Floor 4 studio | 1–2 | после подтверждения этажа (`05_floor4_1_VERIFY`) |
+| Floor 5 terrace | 0 | не оффер (бриф 09.10); крышу (`06_common_1`) не использовать |
+| Подкаст-комната | 1–2 | одна комната; подпись «Podcast room», без «4 этаж» и без «фотостудии» |
 | Атриум / лестница | 1 | без отеля |
 
 Эталоны terrace/атриум: [`06_common_2`](https://drive.google.com/file/d/1pLpNE_gj8Etz6-P_JOxzqFhWLz5SiU7-/view), offices: [`04_offices_1`](https://drive.google.com/file/d/1FpuGZvsOGu3ZhmnmJCPJ9N0BVE_F6z2G/view), [`04_offices_3`](https://drive.google.com/file/d/1eFp2SLmVU5or3YVJj9mX1e-U7H5IdYsK/view).
@@ -81,7 +81,7 @@
 
 ## 4. Запреты в кадре и текстах
 
-PLACE HOTEL · Farang · 24/7 · крыша-coworking · «10 дней» · цены floor 2 по столам · «до 4 чел.» → **до 6** · офис не за 15 000.
+PLACE HOTEL · Farang · 24/7 · бесплатный день · кафе/йога/ивенты/фотозона как оффер · 4 этаж · крыша-coworking · «10 дней» · цены floor 2 по столам · «до 4 чел.» → **до 6** · офис не за 15 000.
 
 ---
 
