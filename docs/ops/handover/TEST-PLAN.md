@@ -254,7 +254,7 @@ Common rules for every item:
 - record the date and the OK in STATUS.md.
 
 **1. Stage 6 offices + electricity**
-- [ ] Place Ops fills the real registry «Office rent» (it is empty in production): Room 3 Renat/Igor, Igor's deposit.
+- [ ] Place Ops fills the real registry «Office rent» (it is empty in production): ~~Room 3 Renat/Igor~~ (CLOSED: not a double booking, Renat rents three rooms — George 07.10.2026), Igor's deposit.
 - [ ] Config: `RESIDENT_SHEET_ID`=production, `ISSUES_SHEET_ID`=production Place Inbox (after the Issues tab exists there), `MODE=draft`, `ELEC_TASK_MODE=issues`, no `TODAY_OVERRIDE`.
 - [ ] One `dryRun` on production. George reviews the list.
 - [ ] Daily trigger 09:00. Tenant emails stay as Gmail **drafts**; `MODE=send` only with a separate OK.

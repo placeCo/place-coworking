@@ -12,7 +12,7 @@
 ### Inventory mismatches to remember (do not “fix” without approve)
 - Resident history still has floor-1/2 as Pass desks + “10 days flex”
 - Прайс incomplete for Pass — reception must use **CANON**, not Прайс, for Pass
-- Possible double-book Office room 3 (Renat vs Igor) — ops risk
+- ~~Possible double-book Office room 3 (Renat vs Igor) — ops risk~~ **CLOSED** — not a double booking: Renat rents three rooms (George 07.10.2026)
 - Meeting cells sometimes <250 without “resident −20%” label
 
 ## Canon short-tail sales (old prices)
