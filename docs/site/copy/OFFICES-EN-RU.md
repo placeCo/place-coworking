@@ -43,7 +43,7 @@ Book an office tour · WhatsApp / call **+66951170481** · info@placecoworking.c
 Нужен закрытый офис, а не горячий стол? В Place офисное пространство на **2 и 5 этажах**. Одна карточка витрины: офисы на 2 и 5. Детали и свободность — у менеджера / на туре.
 
 ### 5 этаж — кабинеты (публичные цены)
-Для небольших команд (примерно до **4 человек**).  
+Для небольших команд (до **6 человек**).  
 • **30 000฿ / месяц**  
 • **20 000฿ / месяц** при годовом контракте
 
@@ -66,7 +66,7 @@ Book an office tour · WhatsApp / call **+66951170481** · info@placecoworking.c
 ## 中文 (ZH stub)
 
 **TODO translate — same Offices facts as EN/RU.**  
-Do not invent ZH. Keep: offices floors **2 and 5** · floor 5 **30,000฿/mo** or **20,000฿/mo** yearly · ~up to 4 pax · entire floor 2 for lease ฿140,000/month (public) · no floor-2 hot-desk menu · CTA manager / tour · Chalong.
+Do not invent ZH. Keep: offices floors **2 and 5** · floor 5 **30,000฿/mo** or **20,000฿/mo** yearly · up to 6 people · entire floor 2 for lease ฿140,000/month (public) · no floor-2 hot-desk menu · CTA manager / tour · Chalong.
 
 ---
 

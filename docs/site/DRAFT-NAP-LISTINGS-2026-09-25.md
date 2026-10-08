@@ -19,7 +19,7 @@
 | Public hours | **08:00–23:00 daily** (every day). NOT 24/7 by default. Night access only with **Month 24/7 = 9000฿ + key** |
 | Showcase | Pass (floors 1+3) · Offices (2+5 via manager) · Studio (floor 4 via manager) |
 | Pass prices | Trial: **1 free day, floor 3 only**; hour 50; day **400 until 31 Oct 2026, 500 from 1 Nov 2026**; week 1800; month 6000; 3 months 15000; month 24/7 **9000** |
-| Offices floor 5 | 30000฿/mo or 20000฿/mo yearly (~4 pax). Floor 2 offices via manager — not public hot-desk menu |
+| Offices floor 5 | 30000฿/mo or 20000฿/mo yearly (up to 6 people). Floor 2 offices via manager — not public hot-desk menu |
 | Meeting | from 250฿/h, −20% Pass residents |
 | Studio | via manager — **no** Filming 500฿/h |
 
@@ -52,7 +52,7 @@ Public hours: 08:00–23:00 daily. Not open 24/7 by default — overnight access
 
 Showcase: Place Pass (work on floor 3; floor 1 library/entry included) · Private offices (floor 5; floor 2 via manager) · Studio (floor 4 via manager). Rooftop is leased — not a public coworking floor.
 
-Pass prices (THB): trial 1 free day on floor 3 only; hour 50; day 400 until 31 Oct 2026 (500 from 1 Nov 2026); week 1800; month 6000 (08:00–23:00); 3 months 15000; month 24/7 9000. Offices floor 5: 30000/mo or 20000/mo on a yearly term (~4 pax). Meeting rooms from 250฿/h (−20% for Pass residents). Studio via manager.
+Pass prices (THB): trial 1 free day on floor 3 only; hour 50; day 400 until 31 Oct 2026 (500 from 1 Nov 2026); week 1800; month 6000 (08:00–23:00); 3 months 15000; month 24/7 9000. Offices floor 5: 30000/mo or 20000/mo on a yearly term (up to 6 people). Meeting rooms from 250฿/h (−20% for Pass residents). Studio via manager.
 ```
 
 **Hours field (if separate):**
@@ -180,7 +180,7 @@ Hours: 08:00–23:00 daily. Not 24/7 by default (Month 24/7 = 9000฿ + key).
 ## Shared “Pass prices” blurb (any channel)
 
 ```
-Place Pass (floor 3): 1 free trial day (floor 3 only) · 50฿/hour · 400฿/day until 31 Oct 2026 (500฿/day from 1 Nov) · 1800฿/week · 6000฿/month · 15000฿/3 months · 9000฿/month 24/7. Offices (floor 5): 30000฿/month or 20000฿/month yearly (~4 pax). Meeting from 250฿/hour (−20% Pass). Studio via manager.
+Place Pass (floor 3): 1 free trial day (floor 3 only) · 50฿/hour · 400฿/day until 31 Oct 2026 (500฿/day from 1 Nov) · 1800฿/week · 6000฿/month · 15000฿/3 months · 9000฿/month 24/7. Offices (floor 5): 30000฿/month or 20000฿/month yearly (up to 6 people). Meeting from 250฿/hour (−20% Pass). Studio via manager.
 ```
 
 ---

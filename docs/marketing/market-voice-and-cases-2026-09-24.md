@@ -264,7 +264,7 @@ Spend ~11.5k฿ · «Подкасты» ~1.2k฿ / **0 conv** / 120k impr · Off
 ### Рекомендация 2 — Починить и накормить Office Search
 - Campaign «Search \| Office for Rent \| Phuket \| EN» — Enabled **Limited (missing keywords)**, мало impr (1.5k), высокий CPC (~16฿), только 9 conv  
 - GA4: страница Office ~134 views vs home ~4.8k — витрина офисов недокормлена  
-- **Действие:** расширить KW (private/dedicated/serviced/office Chalong/Phuket + RU зеркало); отдельный LP с каноном 30k/20k + CTA tour; RSA с «floor 5 · teams up to 4 · yearly deal»
+- **Действие:** расширить KW (private/dedicated/serviced/office Chalong/Phuket + RU зеркало); отдельный LP с каноном 30k/20k + CTA tour; RSA с «floor 5 · teams up to 6 · yearly deal»
 
 ### Рекомендация 3 — Развести Pass vs Office vs не смешивать Events как «конверсии офиса»
 - Сейчас «Коворкинг и Юр адреса» + «Эвенты» дают основную массу «conv» — риск, что micro-conversions ≠ офисный revenue  

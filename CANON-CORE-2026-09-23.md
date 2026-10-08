@@ -50,7 +50,7 @@ Place в Чалонге: рабочий Pass на 1+3 (зал на 3-м), офи
 Показывать всегда:
 • Floor 2 — Entire floor 2 for lease: ฿140,000/month (public, George 30.09.2026). Not hot-desk menu. Size / capacity / deposit / inclusions — уточнить.
 • Весь 2 этаж в аренду: 140 000฿/мес (публично, George 30.09.2026)
-• Floor 5 — private rooms/offices: 30 000฿/mo · 20 000฿/mo yearly deal (до ~4 pax)
+• Floor 5 — private rooms/offices: 30 000฿/mo · 20 000฿/mo yearly deal (до 6 чел. / up to 6 people)
 CTA: Tour offices · Ask manager · WhatsApp +66951170481
 
 Редкий апгрейд Pass → 2 этаж — только если свободно, не публичный оффер «купи стол на 2».

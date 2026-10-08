@@ -7,7 +7,7 @@ Source: MEETING-2026-09-24.md §6. Publish only after George OK.
 | 1 | Pass ladder 50/500/1800/6000/15k/9000 unchanged? | **OK** — no changes | 24 Sep |
 | 2 | Remove 5h@150 from showcase + reception scripts finally? | **OK** — remove finally; no return to 150; upsell day 500 / week 1800 / month 6000 | 24 Sep |
 | 3 | Meeting rooms 250 / −20% residents? | **OK** — from 250฿/h, Pass residents −20%, book via us | 24 Sep |
-| 4 | Office floor 5: 30k / 20k yearly on site? | **OK** — 30k/mo or 20k/mo yearly (~4 pax) on site | 24 Sep |
+| 4 | Office floor 5: 30k / 20k yearly on site? | **OK** — 30k/mo or 20k/mo yearly (capacity: up to 6 people — George 08.10.2026; was ~4 pax) on site | 24 Sep |
 | 5 | Floor 2 Offices wording on site | **OK C** — Offices card only «floors 2 and 5»; no separate floor-2 paragraph; details via manager | 24 Sep |
 | 6 | Studio: CTA to manager only until menu? | **OK** — CTA only now; short package menu needs separate OK later; remove Filming 500฿/h | 24 Sep |
 | 7 | Site first-wave deadline | **OK** — no hard deadline; first wave when draft ready for George OK | 24 Sep |
