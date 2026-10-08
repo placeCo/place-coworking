@@ -14,11 +14,20 @@ Updated ~19:30 ICT. Verify against live systems, not earlier plans.
 | TripAdvisor Place Hotel | Permanently closed → Processing |
 | TripAdvisor Farang | Unverified — skipped |
 | Photo TZ | docs/ops/TZ-PHOTOS-PLACE-2026-10-05.md |
-| Floor 3 hall | **≈ 300 m²** (Lena 05.10; not 350) |
+| Floor 3 hall | **≈ 300 m²** (Lena confirmed 05.10.2026; not 350) |
 | Lena | Monthly 6000; floor 3 = 40 seats; offices 1–4 specs |
 | Payments Place | @place_coworking_admin already added; Nov: no salary sheets |
 | Deskimo last access | Support email sent to partner@deskimo.com |
 | Repo placeCo/place-coworking | Public |
+
+## Floor 3 hall: 350 m² → 300 m² (Ревизор, approved George 08.10.2026)
+Correct figure: **≈ 300 m²** (Lena confirmed 05.10.2026). Earlier on 05.10 George's estimate of ≈ 350 m² went into directory forms. These directories got 350 m² and **need fix to 300**:
+| Directory | Status |
+|---|---|
+| coworker.com | 350 m² entered → **needs fix to 300** |
+| Office Hub (Coworking Desk CW1) | 350 m² hall used for form validation at 10 m²/desk → **check; needs fix to 300** if shown |
+
+No other 350 m² found in the repo docs (searched 08.10.2026). Fix it on the platforms by hand; this note does not change them.
 
 ## Blocked / waiting
 | Item | Wait |
