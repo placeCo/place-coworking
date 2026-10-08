@@ -73,3 +73,22 @@ Details and paste texts: `LISTINGS-FIX-PLAN-2026-10-09.md`. Free day and old pri
 | thaiholidayguide.com | "24 hours Mon–Fri", day **300**, rooftop | Their report form — George OK | No |
 | Phuket Insider | Hours OK; yoga, free coffee, café, rooftop | Optional request | No |
 | nomad-magazine.com / NewOfficeAsia | 24h Mon–Fri / "24 hour access"; 1,645 m², events, studios; "59" (no /2), 14 000 per person | Requests — George OK | No |
+
+## Correction requests sent 09.10 (2026-10-09, ~03:44 ICT)
+George OK 09.10.2026 03:41 ICT. Sent from info@placecoworking.com, EN, signed "Georgii Sergeev, Place Coworking". Facts per PLACE-BRIEF 2026-10-09 / fix plan §1, §2.3, §2.5, §3.D. One email per recipient; no free day offered in any email (only asked to remove trials/free blocks).
+| # | Recipient | Address | How | Asked for |
+|---|---|---|---|---|
+| 1 | Thailand Stuff | info@thailandstuff.com | Reply in 08.10 thread "Edit suggestion: Place Coworking" | Full list: 59/2, 08:00–23:00 daily, Pass prices, offices 30 000 / 20 000 (12 mo, address only on 12 mo, up to 6), podcast; remove free trial days, 24h wording/tag, 300 / 3 000, 11 000, events 1 000/h, meeting rooms 250, events, rooftop, café. **Delivery risk:** thailandstuff.com mail server refuses connections; our 05.10 mail failed permanently 08.10 22:51 ICT. Watch for bounce |
+| 2 | rawai.com | — | **Not sent: form only** https://www.rawai.com/contact/ (Formspree). No earlier thread in info@ | Needs browser: Pass prices, offices, 08–23, remove best value/cheapest, 300/3 000, 24h |
+| 3 | thaiholidayguide.com | hello@thaiholidayguide.com (listed on /contact/) | Reply in 08.10 thread "Correction request: Place Coworking…" | 08–23 daily, Pass, offices, podcast, 59/2; remove 24h weekday, 300, rooftop; no trial offer (08.10 mail was out of date) |
+| 4 | nomad-magazine.com | hey@nomadgossip.com (site "Contact" mailto) | New email | Replace blurb with §2.3; remove 24h, rooftop, events, café, virtual office, photo studio |
+| 5 | NewOfficeAsia | help@newofficeasia.com (/get-listed) | New email | 59/2, 08–23, offices 30 000 / 20 000 per office (not "14 000 per person"), Pass, podcast; remove 24h, events, mail handling |
+| 6 | SearchRemotely | info@searchremotely.com | Reply in "Re: New Coworking Space Registration, Must Upload Product" | Replace description with §2.3; hours every day 08:00–23:00 |
+| 7 | icowork | admin@icowork.co | Reply in 08.10 thread "Correction request: Place Coworking Phuket listing" | Attach listing to owner account info@ (Geo San) on icowork.pro, or: 08–23 daily, remove round-the-clock hours/amenity, 59/2, delete both 250 meeting-room tariffs, add Pass + office prices, RU text §2.5 |
+| 8 | Worka support | help@worka.com (worka.com mailto) | New email | Listing 242cfaf1-…: office price per office not per person; remove "from THB 200 pp/day" and "THB 1,000 pp/day"; remove cheap/affordable FAQ line |
+| 9 | Croissant | partners@getcroissant.com | Reply in 08.10 thread "Place Coworking: please move our listing from Bangkok to Phuket" | Chase region Bangkok → Phuket; remove Coffee & tea, Conference room, Kitchen & microwave, "Free coffee"; text §2.3 |
+| 10 | CoworkBooking | hello@coworkbooking.com | Reply in 05.10 thread "Claim + update listing" | Remove "Arrange a free visit — FREE" block; visits by arrangement on WhatsApp. **Delivery risk:** this address hard-bounced 05.10 (5.1.1 no such user) and is still the only email on their site. Fallback form: https://www.coworkbooking.com/contact |
+| — | Wanderlog | — | Skipped | They replied: data syncs from Google (fix GBP) |
+
+Access: icowork.pro owner login is now in the Access sheet, row 37 (no credentials in this repo).
+Next: watch info@ for bounces (Thailand Stuff, CoworkBooking) and replies; rawai.com form needs a browser.
