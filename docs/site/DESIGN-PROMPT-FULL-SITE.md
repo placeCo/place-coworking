@@ -14,7 +14,7 @@ BUSINESS FACTS (use exactly, do not invent anything else)
   - Floor 1: Place Pass coworking hall
 - THREE products only, always in this order: 1) Office 2) Place Pass 3) Podcast room.
 - OFFICE: floors 5 and 2, up to 6 people. 30 000 ฿/month, or 20 000 ฿/month on a 1-year contract (company registration address included only with the 1-year contract). Included: bathroom, shower, CCTV, furniture, air conditioning, maintenance and cleaning, café next door, night access to your own office. Never show which offices are free — always "Write on WhatsApp, we'll show you what's free".
-- PLACE PASS (floors 1 and 3): 1 hour 50 ฿ · 1 day 400 ฿ (until 31.10.2026, then 500 ฿) · 1 week 1 800 ฿ · 10 days 2 500 ฿ (highlight as "Popular") · 1 month 6 000 ฿ · 3 months 15 000 ฿.
+- PLACE PASS (floors 1 and 3): 1 hour 50 ฿ · 1 day 400 ฿ · 1 week 1 800 ฿ · 10 days 2 500 ฿ · 1 month 6 000 ฿ · 3 months 15 000 ฿.
 - PODCAST ROOM: one room with light and camera. No price shown — "Book via WhatsApp".
 - MEETING ROOMS: 250 ฿/hour. Table with 85″ screen for 13 people, rooms for 20 and for 6. Place Pass members get −20% on meeting rooms.
 - EQUIPMENT RENTAL: extra monitor 200 ฿/10 hours or 1 500 ฿/month · VR headset 200 ฿/hour or 1 500 ฿/day · laptop 150 ฿/hour or 750 ฿/8 hours · photo/video gear on request.
@@ -24,21 +24,21 @@ BUSINESS FACTS (use exactly, do not invent anything else)
 NEVER SHOW: 24/7, free days, "cheapest", "best value", "affordable", café/yoga/events as products, rooftop as a product, floor 4 offices, Dedicated desks, visa services, discounts other than −20% on meeting rooms, any availability numbers.
 
 VISUAL STYLE
-- Background: deep forest green #0F2A1E; secondary green #1F4D3A; accent lime-yellow #C6F24E for CTAs and highlights; ivory #F5F1E6 for text and light sections (long texts and price tables on ivory).
+- Background: deep forest green #0A2208; secondary green #203D2B; ivory #F4EEE0 for text, buttons and light sections (long texts and price tables on ivory). No neon colours.
 - Typography: bold modern sans (Inter / Manrope style), large confident headlines, generous spacing.
 - Photos: bright real interior photos of a modern tropical coworking (wooden desks, plants, big windows, daylight). No stock-looking people posing.
 - Feel: premium, calm, airy, fast. Inspired by rideradian.com (short hero, bright CTA), jeskojets.com (sticky bottom CTA pill), shopify.supply (price next to product). No heavy 3D, no preloader.
 - Rounded corners 16–24px, thin ivory lines, subtle grain on green.
 
 HOME PAGE — sections top to bottom
-1. HEADER (sticky): wordmark "PLACE" left · nav: Office · Place Pass · Podcast · Meeting rooms · Prices · Contacts · language switch EN/RU/TH/ZH · lime pill button "WhatsApp" right.
-2. HERO: headline "PLACE Coworking Space — Phuket, Chalong"; subline "Private offices, coworking passes and a podcast room. Open daily 08:00–23:00."; buttons "Write on WhatsApp" (lime, filled) and "See offices" (outline); right side a large daylight photo of the coworking hall with a small "Watch the tour" video thumbnail.
+1. HEADER (sticky): wordmark "PLACE" left · nav: Office · Place Pass · Podcast · Meeting rooms · Prices · Contacts · language switch EN/RU/TH/ZH · ivory pill button "WhatsApp" right.
+2. HERO: headline "PLACE Coworking Space — Phuket, Chalong"; subline "Private offices, coworking passes and a podcast room. Open daily 08:00–23:00."; buttons "Write on WhatsApp" (ivory, filled) and "See offices" (outline); right side a large daylight photo of the coworking hall with a small "Watch the tour" video thumbnail.
 3. QUICK FACTS STRIP (4 items with icons): "5 floors in Chalong" · "Open 08:00–23:00 daily" · "Offices up to 6 people" · "Place Pass from 50 ฿/hour".
 4. THREE PRODUCT CARDS (in order): Office — "Floors 5 & 2 · up to 6 people · from 20 000 ฿/month" · Place Pass — "Floors 1 & 3 · from 50 ฿/hour" · Podcast room — "Light and camera · book via WhatsApp". Each card has a photo and a button.
-5. INTERACTIVE BUILDING MAP "Find your floor": isometric flat stack of 5 floor slabs, all labeled (5 Offices · 4 Podcast room · 3 Place Pass · 2 Offices · 1 Place Pass); floor 2 selected in lime. Left: list Floor 5 / 4 / 3 / 2 / 1. Right: card for the selected floor with photo thumbnail, what's there, price, and "Write on WhatsApp — we'll show you what's free".
-6. OFFICE BLOCK: big photo of an office; two price tiles side by side: "30 000 ฿ / month" and "20 000 ฿ / month · 1-year contract · company address included" (second one marked "Best for companies"); included-list with 8 icons (bathroom, shower, CCTV, furniture, A/C, cleaning & maintenance, café next door, night access to your office); CTA "Book an office tour".
-7. PLACE PASS PRICE TABLE (ivory card): rows 1 hour / 1 day / 1 week / 10 days ("Popular" lime tag) / 1 month / 3 months with prices on the right; small line "Day: 400 ฿ until 31.10.2026, 500 ฿ from 01.11.2026"; under the table "Floors 1 & 3 · Wi-Fi · A/C · 08:00–23:00"; CTA "Get a Pass on WhatsApp".
-8. PODCAST ROOM: wide photo of a small studio with microphones, light and camera; text "One room. Light and camera ready. Book via WhatsApp."; button.
+5. INTERACTIVE BUILDING MAP "Find your floor": isometric flat stack of 5 floor slabs, all labeled (5 Offices · 4 Podcast room · 3 Place Pass · 2 Offices · 1 Place Pass); floor 2 selected (highlighted ivory). Left: list Floor 5 / 4 / 3 / 2 / 1. Right: card for the selected floor with photo thumbnail, what's there, price, and "Write on WhatsApp — we'll show you what's free".
+6. OFFICE BLOCK: big photo of an office; two price tiles side by side: "30 000 ฿ / month" and "20 000 ฿ / month · 1-year contract · company address included"; included-list with 8 icons (bathroom, shower, CCTV, furniture, A/C, cleaning & maintenance, café next door, night access to your office); CTA "Book an office tour".
+7. PLACE PASS PRICE TABLE (ivory card): rows 1 hour / 1 day / 1 week / 10 days / 1 month / 3 months with prices on the right; under the table "Floors 1 & 3 · Wi-Fi · A/C · 08:00–23:00"; CTA "Get a Pass on WhatsApp".
+8. PODCAST ROOM: wide photo of the podcast room with microphones, light and camera; text "One room. Light and camera ready. Book via WhatsApp."; button.
 9. MEETING ROOMS: three cards — "Big room · 20 people", "Table with 85″ screen · 13 people", "Small room · 6 people"; price "250 ฿ / hour"; badge "Place Pass members −20%"; link "All meeting rooms".
 10. EQUIPMENT RENTAL: compact 4-column list — Monitor, VR headset, Laptop, Photo/video gear — with prices as above.
 11. PHOTO GALLERY: masonry of 6–8 real interior photos with hotspot dots on one photo ("Place Pass · 50 ฿/hour").
