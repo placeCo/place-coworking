@@ -1,6 +1,6 @@
 # Directories wave 2 — progress 05.10.2026 (ICT)
 
-Updated ~19:30 ICT. Verify against live systems, not earlier plans.
+Updated 05.10 ~19:30 ICT; follow-up check **09.10.2026 ~11:30 ICT**. Verify against live systems, not earlier plans.
 
 ## Done today
 | Item | Status |
@@ -38,8 +38,30 @@ No other 350 m² found in the repo docs (searched 08.10.2026). Fix it on the pla
 | Deskimo last access 22:00 | Awaiting support reply |
 | Apple Business Connect / Yandex | George phone |
 | Google Ads debt | Later |
-| Pat LINE ID | Lena (already in LINE OA morning; ID still pending) |
+| Pat LINE OA @294bqkju | **Done 08–09.10** — Pat added OA; userId in Place Inbox «LINE» tab (not stored here). Webhook live since 09.10 10:53 |
 | October sign rent 5 000฿ | Unpaid — see docs/ops/OPEN-PAYMENTS.md |
+
+
+
+## Follow-up check 09.10.2026 ~11:30 ICT (wave 2 submissions from 05.10)
+
+Public + info@ only. Box browser was **not** signed in to Bing / Foursquare / Coworkies / Wongnai; no dashboard edits made. No reply to yogi@phuketcommunity.com (magic link expired).
+
+| Item | Status | Notes |
+|---|---|---|
+| **Phuket Community** | **Live** | https://phuketcommunity.com/partners/place-coworking — hours 08–23 OK. About still wrong: free first day, **24/7 month 9,000**, meeting rooms from 250, floor 2 at 140,000. Dashboard not logged in (08.10 yogi nudge unread; link expired). **Needs George login** to rewrite About + photos |
+| **Phuket.Net** | **Pending / not found** | No approval mail in info@. Profile URL 404; not in directory search / Chalong browse |
+| **Wongnai** | **Not listed** | Activate mail 05.10 only; no public Place Coworking Phuket. Merchant login needed to finish claim/add |
+| **Foursquare** | **Pending / not found** | Signup codes 05.10 only; no public venue found. Suggested website/hours/pin status unknown without business login |
+| **Coworkies** | **Live** | https://www.coworkies.com/cities/phuket/place-coworking-633 — hours 08–23 OK; phone/email/site OK. Address shows locality Phuket only (no **59/2**). Text still has «Try 1 free day» + meeting rooms from 250. No separate staff-admin mail after 05.10 (listing is public anyway) |
+| **Bing Places** | **Pending publish** | Verified ~06.10; no publish/status mail; no public Maps card with 59/2/hours/site yet. ETA from 06.10 was 7–12 days (~13–18.10). Dashboard needs Microsoft sign-in on box |
+| **Pat LINE OA @294bqkju** | **Done** | Pat messaging OA 09.10 11:25–11:29 ICT (Inbox «LINE» tab). Webhook live |
+
+### Still need (Ops, after logins)
+1. Phuket Community dashboard — rewrite About to PLACE-BRIEF 09.10 (no free day, no 24/7, no meeting-room price as Pass offer); add photos.
+2. Coworkies — remove free-day / meeting 250 from text; add house number **59/2** if editable.
+3. Wongnai / Phuket.Net / Foursquare — chase listing or re-submit; fill hours 08–23 + **59/2** + photos when open.
+4. Bing Places — wait for publish, then verify hours/NAP/website.
 
 ## Emails sent
 Croissant follow-up · icowork · Wezoo (letter only) · Deskimo support
