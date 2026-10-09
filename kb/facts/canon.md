@@ -29,7 +29,7 @@ Aligned with PLACE-BRIEF-2026-10-09 (binding).
 
 **Not in the offer:** café, yoga, events, photo zone, visa, condo. Café exists as amenity — not a reason to come.
 
-**Not-for-sale:** entire floor-2 lease at 140 000฿/mo; meeting rooms from 250฿/h; floor-4 venue rental; «five new offices on floor 4»; month 24/7 9000; 10-day pack as a product.
+**Not-for-sale:** entire floor-2 lease at 140 000฿/mo; meeting rooms from 250฿/h; floor-4 venue rental; «five new offices on floor 4»; month 24/7 9000.
 
 ## Floors
 | Floor | Role |
@@ -43,7 +43,11 @@ Aligned with PLACE-BRIEF-2026-10-09 (binding).
 
 ## Hours
 - Guest: **08:00–23:00 daily**
-- Building is **not** 24/7. No night access. No «month 24/7 = 9000» tier.
+- Publicly: never «24/7», «open 24h», «night access». No «month 24/7 = 9000» tier.
+- Night access — internal rule (George 09.10.2026):
+  - Office owners (residents with an office) can always get into their own office at night.
+  - A guest at night only as an exception on request, decided case by case — never a rule, product or promise.
+  - Public answer stays «08:00–23:00»; if asked about night: «message us on WhatsApp +66 95 117 0481 and we'll see» — no promise.
 - Forbidden: “Mon–Fri 24/7”, “open 24 hours”, “круглосуточно”, night access
 
 ## Place Pass prices
@@ -54,6 +58,7 @@ Aligned with PLACE-BRIEF-2026-10-09 (binding).
 | 1 week | **1 800฿** | |
 | 1 month | **6 000฿** | 08:00–23:00 |
 | 3 months | **15 000฿** | |
+| 10 days | **2 500฿** until 31 Oct 2026 · **3 500฿** from 1 Nov 2026 | (George 09.10.2026) |
 
 Do **not** call cheap or compare with café coworkings.
 
@@ -71,7 +76,7 @@ Do **not** call cheap or compare with café coworkings.
 - Light and camera: add-on rental, no price stated
 
 ## Ban list
-- 24/7, open 24h, night access (incl. month 9000)
+- 24/7, open 24h, night access (incl. month 9000) — never public, despite internal night rule (George 09.10.2026)
 - 3 free days
 - day 250 / 300; month 3 000 / 3 500
 - cheapest / best value / lowest price
@@ -80,7 +85,7 @@ Do **not** call cheap or compare with café coworkings.
 - five offices on floor 4
 
 ## Ops note (not a product)
-- Floor 2 half leased to Max ~70 000฿/mo incl. electricity (internal). Do not sell «entire floor 140k» publicly.
+- Floor 2 half leased to Max ~70 000฿/mo incl. electricity. Priced simply as half a hall; not advertised, internal only (George 09.10.2026). Do not sell «entire floor 140k» publicly.
 
 ## ASSUMPTION / not in brief
 - Wifi Mbps — need George measurement
