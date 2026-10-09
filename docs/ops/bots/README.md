@@ -6,9 +6,10 @@ Nothing here is deployed. These are drafts for George's OK. Canon: `/workspace/p
 | --- | --- |
 | `help-bot/HelpBot.gs` | NEW client Telegram bot (separate Apps Script project «Place Help Bot», doPost webhook). Asks EN/RU/TH, shows a menu, answers keywords, and logs anything unmatched or «Talk to a human» to Place Inbox tab `help-bot` |
 | `help-bot/INSTALL.md` | install steps |
-| `staff-bot/StaffCommands.gs` | /help /prices /renewals /bookings /light /ac for @PlaceLeadBot, answered without waking Ops |
+| `staff-bot/StaffCommands.gs` | v2: staff phrases without a slash (RU/EN/TH: цены, цена офиса, кто продлевается, брони завтра, адрес, помощь) + slash commands + «бронь …» → tab «Брони бот»; light/AC words left to Tuya.gs |
 | `staff-bot/HOOK.md` | one line to add to `poll()` in the live Code.gs |
-| `staff-bot/STAFF-COMMANDS.md` | design, Tuya device list, `TUYA_GROUPS` template |
+| `staff-bot/STAFF-COMMANDS.md` | phrase list for staff (Russian) |
+| `staff-bot/test_staff.js` | offline node tests with mocks (`TZ=Asia/Bangkok node test_staff.js`) |
 | `instagram/AUTOREPLIES.md` | Meta Business Suite instant reply, 4 FAQ questions, 6 saved replies EN/RU/TH |
 
 No secrets are in any file. Tokens and keys go only in Script Properties.

@@ -1,65 +1,60 @@
-# @PlaceLeadBot: staff commands without waking Ops
+# @PlaceLeadBot: быстрые ответы для команды (без слэша, без AI)
 
-09.10.2026 ICT. Design plus code (`StaffCommands.gs`) for the existing project «Place TG Bridge». Nothing is deployed. Installation is one line in `poll()`, see `HOOK.md`.
+v2, 09.10.2026 ICT. Файл `StaffCommands.gs` в проекте «Place TG Bridge». Не задеплоено: вставляет человек (см. `HOOK.md`).
+Бот отвечает сразу готовым текстом. AI не участвует, Ops не будится. Lead раз в 30 минут просматривает лист **`staff-cmd`** в Place Inbox.
 
-## Why
-Every DM to the bot, and every message from TEAM, currently wakes Ops (batched every 15 min). Routine questions such as "what's the price", "who renews today", "what's booked" or "turn off the light" don't need the AI. The script answers them in seconds at zero cost. Everything else goes to Ops as before.
+## Кто может
+Только команда: Tangmo, Leena, George (по Telegram id), TEAM из Code.gs (`yasozidayu`, `rufasstyle`, `dftnsss`) и id из Script Property `STAFF_IDS`.
+Если пишет кто-то другой, бот молчит, и сообщение идёт по обычному пути: почта, очередь, Ops.
 
-## Who can use them
-Tangmo `7486466296`, Leena `8944262207`, George `8503184147` (user ids), and the TEAM usernames from Code.gs (`yasozidayu`, `rufasstyle`, `dftnsss`). Script Property `STAFF_IDS` adds more. `DEVICE_IDS` (optional) limits `/light` and `/ac` to those ids only.
-A command from anyone else isn't answered by the script. It goes to the queue / Ops like a normal message.
-The commands work in a DM and in groups (`/prices` or `/prices@PlaceLeadBot`). A command addressed to another bot (`@otherbot`) is ignored.
+## Где работает
+- **В личке боту** фразы срабатывают сразу.
+- **В группе** бот отвечает, только если вы отметили **@PlaceLeadBot** или ответили (reply) на сообщение бота. Слэш-команды (`/prices` и т. п.) в группе работают и без отметки, как раньше.
+- Фраза должна быть **короткой (до ~60 символов) и про одно**. Если бот не уверен, он молчит, и сообщение уходит Ops как обычно.
 
-## Commands
-| Command | Answer | Source | Writes |
-| --- | --- | --- | --- |
-| `/help` | command list | in code | log row only |
-| `/prices` | canon prices: Place Pass (50 / day 400 until 31.10, then 500 / week 1 800 / 10 days 2 500 → 3 500 / month 6 000 / 3 months 15 000), Office 30 000 or 20 000 on a year (address only on the annual), floors 5 and 2, up to 6 people, monitor 200 / 10 h or 1 500 / month, residents −20% meeting rooms, partner promo (code only), banned phrases. The day and 10-day prices switch automatically on 01.11.2026 | PLACE-BRIEF 09.10 + DECISIONS-LOG 09.10 | log row only |
-| `/renewals` · `/renewals 2026-10-11` | today's (or that date's) renewal list, the same text admins get at 10:15: −3 days / tomorrow / today / −7 days without H, offices as an internal note | `rnBuild_()` from **Renewals.gs** (reads Resident info «Лист1») | **nothing**: doesn't write outbox and doesn't touch `RN_LAST_SENT_DATE`, so the 10:15 run is unaffected |
-| `/bookings` · `/bookings tomorrow` · `/bookings 2026-10-12` | bookings for the day, one line per room, plus a warning when a grid ends | `bookingsToday_()` from **docs/ops/handover/bookings-today.gs** (Events and booking `1BSwm4sY-…`). If that file isn't in the project: "not installed yet" (TODO stub) | nothing |
-| `/light` | list of light groups | `TUYA_GROUPS.light` | — |
-| `/light on <group>` · `/light off <group>` | switches every device in the group, then "✅ 3/3 done" or names the failed device | Tuya Cloud `POST /v1.0/iot-03/devices/{id}/commands` | device state + log row |
-| `/light status [group]` | ON/off per device (last 4 characters of the id), watts for plugs | Tuya `GET …/status` | — |
-| `/ac`, `/ac on <group>`, `/ac off <group>`, `/ac status` | same, for `TUYA_GROUPS.ac` | Tuya | device state + log row |
+## Что писать
 
-A group name is **required** for on/off: there's no "everything at once" by default. If George wants one, add a group `all` to the JSON.
-Errors (Tuya not configured, network, sheet unavailable) reply "⚠️ failed, passed to Ops" and the message goes into the normal queue / Ops wake.
-Every handled command adds a row to Place Inbox → **`staff-cmd`**: `ts | chat | chat_id | from | command | result`. Handled commands are **not** emailed to info@ and **don't** get a `queue` row. That's the point: no Ops wake.
+| Что нужно | Пишите (любой вариант) | Что ответит |
+| --- | --- | --- |
+| Все цены | `цены` · `прайс` · `какие цены` · `сколько стоит` · `prices` · `how much` · `ราคา` · `ราคาเท่าไหร่` | цены по канону: Place Pass, Office, монитор, переговорки, подкаст, промокод, бан-лист. С 01.11 день 500 и 10 дней 3 500 подставляются сами |
+| Цена офиса | `цена офиса` · `сколько стоит офис` · `офис с адресом цена` · `office price` · `ราคาออฟฟิศ` | Office 30 000 / 20 000 за год (адрес только в годовом), этажи 5 и 2, свободность только через WhatsApp |
+| Продления | `кто продлевается` · `кто продлевается завтра` · `истекают` · `renewals` · `ใครหมดอายุ` · `หมดอายุพรุ่งนี้` | список продлений на день (тот же, что админы получают в 10:15). Ничего не отправляет и не трогает рассылку |
+| Брони на день | `брони сегодня` · `брони завтра` · `брони 12.10` · `bookings` · `bookings tomorrow` · `การจองวันนี้` · `จองพรุ่งนี้` | брони по комнатам из «Events and booking» плюс строки из листа «Брони бот» |
+| Часы и адрес | `часы` · `часы работы` · `адрес` · `во сколько открываемся` · `hours` · `address` · `เปิดกี่โมง` · `ที่อยู่` | 08:00–23:00 каждый день, правило про ночь, адрес 59/2 Chao Fah Tawan Tok Rd, WhatsApp |
+| Что умеет бот | `помощь` · `что умеешь` · `команды` · `help` · `ช่วยเหลือ` | этот список коротко |
+| **Записать бронь** | `бронь <комната> [сегодня/завтра/дд.мм] <чч:мм>[-<чч:мм>] <имя/контакт>` | запись в лист «Брони бот» и подтверждение, или «⛔ пересечение» |
 
-## Tuya
-- Signing is ported from `~/.config/place/tuya.py`: `sign = HMAC-SHA256(secret, client_id + access_token + t + METHOD\nsha256(body)\n\npath).hex().upper()` via `Utilities.computeHmacSha256Signature`. The token is cached in `CacheService` (~2 h).
-- Checked 09.10.2026 ~16:20 ICT: the JS port gives the same signature as the Python on test vectors. A **read-only** live run of the port (token + status of 3 devices, GET only, no commands) succeeded.
-- On/off code: bulbs (category `dj`) use `switch_led`, plugs and the switch (`cz`, `kg`) use `switch_1`. It's detected automatically from the status and cached for 6 h.
-- Keys live only in Script Properties `TUYA_ACCESS_ID` / `TUYA_ACCESS_SECRET` / `TUYA_ENDPOINT`.
+Wi‑Fi: в каноне и репозитории пароля нет, поэтому бот на «wifi» не отвечает, вопрос уходит Ops.
 
-### Devices in the Tuya project (read-only listing, 09.10.2026 ~16:15 ICT, all online)
-| Name in Smart Life | id | type | state at check |
-| --- | --- | --- | --- |
-| WiFi Smart Bulb | `a3cb8e865539ec7920ukga` | bulb (dj) | off |
-| WiFi Smart Bulb 2 | `a31502349b34bf10d2qz2d` | bulb (dj) | off |
-| WiFi Smart Bulb 3 | `a3e22777badf41554cscny` | bulb (dj) | off |
-| СВЕТОДИОДНАЯ ЛАМПОЧКА | `a34a3c8e126c71411fxrdl` | bulb (dj) | off |
-| СВЕТОДИОДНАЯ ЛАМПОЧКА 3 | `a36bfbc7007a71cf07tcwm` | bulb (dj) | off |
-| СВЕТОДИОДНАЯ ЛАМПОЧКА 4 | `a3600dbb053126b99d0mis` | bulb (dj) | off |
-| Wifi smart1CH switch | `a3c50bdac37641e287q2a7` | 1-channel relay (kg) | off |
-| Умный переключатель | `a3966222681457f2a3hk5k` | metered plug (cz) | on, 0 W |
-| Умный переключатель 2 | `a3f30c23c8f1fcae05azsp` | metered plug (cz) | on, 0 W |
-| Умный переключатель 3 | `a35e589185a83526ea7nty` | metered plug (cz) | off |
-| Умный переключатель 4 | `a3c63ed123e402907dbuyh` | metered plug (cz) | on, 0 W |
-| Умный переключатель 5 | `a332db454cf710cfd2bsw3` | metered plug (cz) | on, 0 W |
-| Умный переключатель 6 | `a3ee973359939fa990papv` | metered plug (cz) | **on, ~1 250 W** (AC-sized load) |
+### Бронь: примеры
+- `бронь переговорка 15:00-16:00 Иван +66 81 234 5678`
+- `бронь подкаст завтра 18:00 Олег` (без конца = 1 час)
+- `бронь библиотека 12.10 10:00-12:00 Анна`
+- `бронь переговорка с 11:00 до 12:30 Мария`
+- EN: `book meeting room 15:00 Ivan` · `book podcast tomorrow 18:00-20:00 Oleg`
+- TH: `จอง ห้องประชุม พรุ่งนี้ 19:00-20:00 Somchai 0812345678`
 
-There's **no** device called AC / air conditioner / IR remote. Neither the repo nor the box says which room each device is in, so `TUYA_GROUPS` can't be filled in honestly without George or Sasha.
+**Комнаты** (названия листов «Events and booking»): переговорка / meeting room / ห้องประชุม → *Meeting room*; подкаст / podcast → *Podcast* (своей сетки нет); библиотека / library → *Library*; арт / art room → *ART Room*; воркшоп / workshop → *Workshop room*; green / грин → *Office room-4 (GREEN)*; 1 этаж / 4 этаж / 6 этаж → *1 floor / 4 floor / 6 floor*.
+**Дата:** без даты = сегодня; `завтра`, `послезавтра`, `12.10`, `12.10.2026`, `2026-10-12`. Если указать прошедшую дату, бот откажет.
+**Время:** лучше через двоеточие: `15:00`, `15:00-16:00`, `с 15:00 до 16:00`. Через точку бот понимает только `15.00`, `14.30` и подобное: `10.10` он прочитает как дату.
 
-### `TUYA_GROUPS` template (fill in rooms and ids, paste as one line into the Script Property)
-```json
-{"light":{"<room>":["<bulb id>","<bulb id>"],"<room2>":["a3c50bdac37641e287q2a7"]},
- "ac":{"<room>":["<plug id>"]}}
-```
-Example (assumption only, **not** confirmed): `{"light":{"bulbs":["a3cb8e865539ec7920ukga","a31502349b34bf10d2qz2d","a3e22777badf41554cscny","a34a3c8e126c71411fxrdl","a36bfbc7007a71cf07tcwm","a3600dbb053126b99d0mis"]},"ac":{"plug6":["a3ee973359939fa990papv"]}}`
+Как бот работает с бронью:
+1. Проверяет пересечения: с другими строками «Брони бот» для той же комнаты и даты (отменённые не считаются: статус «отмена», «cancel», «ยกเลิก») и с основной сеткой комнаты (нужен файл BookingsToday в проекте).
+2. Если есть пересечение, отвечает «⛔ Не записал — пересечение: …» и **ничего не пишет**.
+3. Если пересечения нет, добавляет строку в **«Events and booking» → лист «Брони бот»**. Если листа нет, бот его создаёт с заголовком `created_ict | date | start | end | room | name_contact | by | raw_text | status`, где status = `new`. Затем отвечает «✅ Бронь записана».
+4. **В основные сетки бот не пишет никогда.** Бронь в сетку переносит админ. Lead видит новые строки при проверке каждые 30 минут.
+5. Если бот не разобрал сообщение (нет комнаты, времени или имени, конец раньше начала), он отвечает примером формата. В этом случае тоже ничего не записывается.
 
-⚠️ If an AC is wired through a plug, `/ac off` cuts its power at the socket instead of using the remote. For some inverter units that's a bad way to switch off. George decides whether to allow it. A proper alternative is an IR blaster (Tuya category `infrared_ac`), which needs a different API (`/v2.0/infrareds/...`) and isn't in this design.
+## Что бот НЕ трогает
+- **Свет, кондиционеры, лампы, душ** (`свет 4 вкл`, `кондиционер 2 выкл`, `лампа 3 красный`, `статус`, `/light`, `/ac`, `ไฟ`, `แอร์` …) этот модуль пропускает **всегда**. Их обрабатывает следующий модуль Tuya.gs: только в личке боту и только для тех, кому разрешено управление устройствами.
+- Обычные вопросы и разговоры («цены поменялись?», «кто сегодня закрывает», «офис свободен?», «help!», «помогите») бот пропускает, и они уходят Ops как обычно.
+- Отредактированное сообщение повторно не выполняется: бронь второй раз не запишется.
 
-## Not done (on purpose)
-- Nothing is deployed, the live project isn't touched, no messages were sent, and no device was switched.
-- `/bookings` works only after `bookings-today.gs` is added to the project.
+## Лог для Lead
+Place Inbox → лист **`staff-cmd`**: `ts | chat | chat_id | from | command (что написали) | result (статус + начало ответа) | intent | mode (plain/slash + язык)`.
+Если в старом листе нет колонок G–H, бот сам дописывает в них заголовки `intent | mode`.
+Статусы: `ok`, `booked row N`, `conflict`, `usage <причина>`, `edit ignored`, `ERROR …`. При ошибке бот пишет «⚠️ Не получилось, передал Ops», и сообщение идёт по обычному пути.
+
+## Проверка
+- В редакторе: `staffDryRun` прогоняет 91 фразу (55 должны срабатывать, 36 нет, включая слова про свет и кондиционер) и печатает `STAFF_DRYRUN 91/91 ok, failures=0`. В Telegram ничего не отправляет и ничего не записывает.
+- На боксе: `TZ=Asia/Bangkok node test_staff.js` → `tests: 187, passed: 187, failures: 0` (с моками; вместе загружаются BookingsToday и Tuya.gs).
