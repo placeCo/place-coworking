@@ -1,10 +1,20 @@
 # Pitch template — Place Coworking × partner
 
-**Status: draft. Nothing sent.** Send only after George approves the specific letter. Do not invent visitor counts, follower counts, square metres, seats, wifi speed, occupancy, nationality mix, or the brand of equipment already in the building.
+**Status: draft. Nothing sent** unless a card in `TARGETS.md` says the thread already exists. Send a new letter only after George approves that brand.
 
-Public trial line, and the only one: **1 free day in the coworking**. Russian channels, if George wants Russian: «1 бесплатный день в коворкинге». Not three days. Not any floor. Studio, offices, and the roof are not included.
+Binding offer, owner brief 09.10.2026. Three products only:
 
-Reply-to is Place’s own canon contact, not a made-up partner address: info@placecoworking.com · WhatsApp +66 95 117 0481 · https://placecoworking.com · Instagram @place_coworking_phuket · Telegram @coworking_place_phuket.
+1. **Office** — floors 5 and 2, up to 6 people. 30,000฿/month, no company address. 20,000฿/month on a 12-month contract, and the company address is included only on that annual contract.
+2. **Place Pass** — floors 1 and 3, 08:00–23:00. Hour 50฿ · day 400฿ until 31 Oct 2026, 500฿ from 1 Nov 2026 · week 1,800฿ · month 6,000฿ · 3 months 15,000฿.
+3. **Podcast room** — one room, not a floor. No public price. Booking: WhatsApp +66 95 117 0481. Light and camera can be mentioned only as an add-on to that room, with no price.
+
+Floor 3, the work hall inside Place Pass: **40 seats, about 300 m²**.
+
+The visit we offer a partner is a **20-minute tour**. No complimentary day and no trial pass.
+
+Do not confirm that any office, seat, or room is free. The line is: write to us on WhatsApp and we will show what is free.
+
+Reply-to is Place’s own contact: info@placecoworking.com · WhatsApp +66 95 117 0481 · https://placecoworking.com · Instagram @place_coworking_phuket · Telegram @coworking_place_phuket.
 
 ---
 
@@ -13,12 +23,12 @@ Reply-to is Place’s own canon contact, not a made-up partner address: info@pla
 | Token | Fill with |
 |---|---|
 | `[BRAND]` | Company name from `TARGETS.md` |
-| `[ASK]` | The concrete thing: loan of screens, fibre, chairs, coffee supply, QR terminal, member workshop |
+| `[ASK]` | The concrete thing: loan of screens, fibre, chairs, coffee supply, a projector, a QR terminal |
 | `[GIVE]` | Rows you actually offer from the menu below |
 | `[TERM]` | Proposed length, e.g. 6 or 12 months. Not agreed until George says so |
 | `[TBD: …]` | Leave the bracket in the draft until George fills it. Do not guess |
 
-One hard traffic fact you may use, with this wording only: from 20 July to 20 September 2026 Place recorded **484 drop-in receipts**. That is not monthly visitors, not occupancy, and not a follower count.
+Traffic line, this wording only: **115–263 paying customers a month** (Loyverse, October 2025 to September 2026). Do not add revenue, an average ticket, or a follower count.
 
 ---
 
@@ -30,77 +40,80 @@ Hello `[BRAND]` team,
 
 I am George, director of Place Coworking in Chalong, Phuket.
 
-We are at 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130. The building is open **08:00–23:00** every day. Site: https://placecoworking.com (English, Russian, Chinese). Instagram @place_coworking_phuket · Telegram @coworking_place_phuket.
+We are at 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket, 83130. Open **08:00–23:00** every day. Site: https://placecoworking.com (English, Russian, Chinese). Instagram @place_coworking_phuket · Telegram @coworking_place_phuket.
 
-Place is a work building, not a café-first brand. Guests work in the open space on floor 3. Floor 1 is the library, a glazed café zone, and meeting rooms (the large ones seat about 20). Floor 4 is a podcast and photo studio, booked through our manager. Private offices are on floor 5. The whole of floor 2 is a separate lease.
+Three products. Place Pass is floors 1 and 3: the work hall is on floor 3, 40 seats, about 300 m². Offices are on floors 2 and 5, up to 6 people: 30,000฿/month, or 20,000฿/month on a 12-month contract (company address only on the annual contract). There is one podcast room. A café is in the building; it is not why people come.
 
-People here are remote workers and small teams who stay in south Phuket (Chalong, Rawai, Nai Harn). Share by nationality: [TBD: nationality mix]. Monthly visitors: [TBD: monthly visitors]. Seats: [TBD: seats]. Followers: [TBD: IG followers] / [TBD: TG followers]. From 20 July to 20 September 2026 we had 484 drop-in receipts.
+Paying customers: 115–263 a month (Loyverse, October 2025 to September 2026). Nationality mix: [TBD: nationality mix]. Followers: [TBD: IG followers] / [TBD: TG followers].
 
 **Ask:** `[ASK]` for `[TERM]`.
 **In return:** `[GIVE]`.
 
 On-site marks stay small and sit in our green brand (`#0A2208` and ivory `#F4EEE0`): a plate next to the equipment, not a repaint of the hall.
 
-If useful, we can offer your team **1 free day in the coworking** so you can see the floor before you decide. That day is the open space only.
+If you want to see it first, we can do a **20-minute tour**. Write on WhatsApp and we will show what is free. We do not confirm a specific room in this letter.
 
-Happy to walk the building this month. Reply to this email or WhatsApp +66 95 117 0481.
+WhatsApp +66 95 117 0481 · info@placecoworking.com
 
 George
 Director, Place Coworking
-info@placecoworking.com
 
 ---
 
 ## Short DM (English)
 
-Hi `[BRAND]` — George at Place Coworking, Chalong (59/2 Chao Fah Tawan Tok Rd, Phuket 83130). Open 08:00–23:00. Work hall on floor 3, café counter and meeting rooms on floor 1, studio on floor 4.
+Hi `[BRAND]` — George at Place Coworking, Chalong (59/2 Chao Fah Tawan Tok Rd, Mueang Phuket, 83130). Open 08:00–23:00. Work hall on floor 3: 40 seats, about 300 m². Offices on floors 2 and 5, up to 6 people. One podcast room.
 
-We want `[ASK]` for `[TERM]`. You get `[GIVE]`: a small plate by the equipment, plus posts on @place_coworking_phuket and @coworking_place_phuket after we approve the creative. Visitors and follower counts are not public yet.
+We want `[ASK]` for `[TERM]`. You get `[GIVE]`: a small plate by the equipment, plus posts on @place_coworking_phuket and @coworking_place_phuket after we approve the creative.
 
-Come and see it: **1 free day in the coworking**. WhatsApp +66 95 117 0481 · info@placecoworking.com
+Paying customers: 115–263 a month (Oct 2025–Sep 2026). Come for a **20-minute tour**. WhatsApp +66 95 117 0481.
 
 ---
 
 ## Thai-friendly version
 
-Short on purpose. Same facts. Trial line stays in English so it does not drift.
+Same facts. Short on purpose.
 
 สวัสดีครับ/ค่ะ ทีม `[BRAND]`
 
 ผม George จาก Place Coworking ฉลอง ภูเก็ต
-ที่อยู่ 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket, Phuket 83130
+ที่อยู่ 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket, 83130
 เปิดทุกวัน 08:00–23:00
 เว็บ https://placecoworking.com
 IG @place_coworking_phuket · TG @coworking_place_phuket
 
-พื้นที่ทำงานอยู่ชั้น 3 ชั้น 1 มีห้องสมุด คาเฟ่ และห้องประชุม ชั้น 4 เป็นสตูดิโอ
+มี 3 อย่าง: ออฟฟิศชั้น 2 และ 5 (ไม่เกิน 6 คน, 30,000฿/เดือน หรือ 20,000฿/เดือน สัญญา 12 เดือน ที่อยู่บริษัทเฉพาะสัญญารายปี), Place Pass ชั้น 1 และ 3 (ห้องทำงานชั้น 3 — 40 ที่นั่ง, ประมาณ 300 ตร.ม.), ห้องพอดคาสต์ 1 ห้อง
 
 เราขอ `[ASK]` เป็นเวลา `[TERM]`
 แลกกับ `[GIVE]` — ป้ายเล็กข้างอุปกรณ์ และโพสต์ในโซเชียลหลังเราอนุมัติ
 
-ตัวเลขผู้มาใช้และผู้ติดตาม: ยังไม่ระบุ
-เชิญมาดูพื้นที่: **1 free day in the coworking**
+ลูกค้าที่จ่ายเงิน 115–263 คนต่อเดือน (ต.ค. 2025 – ก.ย. 2026)
+ชวนดูพื้นที่: **ทัวร์ 20 นาที** ไม่ยืนยันว่าห้องไหนว่าง เขียน WhatsApp แล้วเราจะพาไปดู
 
 ติดต่อ info@placecoworking.com หรือ WhatsApp +66 95 117 0481
 
 ---
 
-## Lease variant (floor 2 or floor 5 only)
+## Lease variant (office on floor 2 or floor 5)
 
-Use this instead of the barter letter when the target would **rent**, not donate.
+Use this instead of the barter letter when the target would **rent**, not donate. Do not confirm a room is free.
 
-**Subject:** Office space at Place Coworking, Chalong
+**Subject:** Office at Place Coworking, Chalong
 
 Hello,
 
-Place Coworking, 59/2 Chao Fah Tawan Tok Rd, Chalong, Phuket 83130. Open 08:00–23:00.
+Place Coworking, 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket, 83130. Open 08:00–23:00 every day.
 
-- **Whole of floor 2:** 140,000฿ per month. Own entrance, closed door. Not desks by the day. Size, capacity, deposit, and what is included: [TBD: floor 2 size / capacity / deposit / inclusions].
-- **Floor 5 private office:** up to about 4 people. 30,000฿ per month, or 20,000฿ per month on a yearly deal.
+Offices are on **floors 2 and 5**, up to **6 people**.
 
-Tour with the manager. A look at the work hall is **1 free day in the coworking** (floor 3 only) and does not include the office.
+- 30,000฿ per month. No company address.
+- 20,000฿ per month on a 12-month contract. The company address is included only on that annual contract.
 
-WhatsApp +66 95 117 0481 · info@placecoworking.com
+Place Pass (floors 1 and 3) and the one podcast room are separate. The podcast room has no public price.
+
+We do not confirm which room is free in writing. A **20-minute tour**: WhatsApp +66 95 117 0481, and we will show what is free.
+
+info@placecoworking.com
 
 George, director, Place Coworking
 
@@ -108,30 +121,37 @@ George, director, Place Coworking
 
 ## Visibility menu
 
-Offer only rows George has ticked for that brand. One category, one brand (one coffee, one fibre, one chair line) unless George says otherwise.
+Offer only rows George has ticked for that brand. One category, one brand (one coffee, one fibre, one chair line, one screen) unless George says otherwise.
+
+What we do **not** put in a partner letter: a complimentary day, yoga, an event programme, a photo zone, visa help, a condo, or floor 4 as anything except the one podcast room.
 
 | # | What Place can put in the letter | Notes |
 |---|---|---|
-| 1 | Small brand plate next to the equipment (screen, chair, machine, router) | Green brand. Background `#0A2208` or ivory `#F4EEE0`. Logo small. Not a hall takeover |
-| 2 | Same plate in the floor-1 café zone or by the reception counter, if the product lives there | Reception is the café counter. Café is an extra, not the main product. Do not call Place a restaurant |
+| 1 | Small brand plate next to the equipment (screen, chair, machine, router, projector) | Green brand. Background `#0A2208` or ivory `#F4EEE0`. Logo small. Not a hall takeover |
+| 2 | A plate at the existing café counter, only if the product is coffee or a cold drink | The café is there. It is not a reason to visit and not a product we sell. Do not call Place a restaurant. No cup price |
 | 3 | One Instagram post and one Telegram post per month on @place_coworking_phuket and @coworking_place_phuket | Draft only until George approves. Followers: [TBD: IG followers] [TBD: TG followers] |
 | 4 | A line in a Story while the product is in use | Same approval rule. No people in frame unless George allows that photo |
-| 5 | Sampling or a short info hour in the floor-1 library or a meeting room | Meeting rooms from 250฿/hour, Pass residents −20%. Date [TBD: event date]. Do not promise the roof |
-| 6 | A QR or one-page flyer at the café counter and on the floor-3 hall board | Counter space is small. One partner at a time per category |
-| 7 | Wi-Fi splash / captive portal with the partner for `[TERM]` | **[TBD: Wi-Fi splash exists?]** Not in the canon. Do not promise until George confirms the routers can show it. Do not state a Mbps figure |
-| 8 | Mention at a resident event, if one is already on the calendar | Do not invent a calendar. Events are not the main product |
-| 9 | **1 free day in the coworking** for the partner’s local team (open space only) | So they can see the floor. Not a public giveaway of extra days |
-| 10 | For a lease conversation only: tour of floor 2 and/or floor 5 | Prices in the lease variant above. Studio (floor 4) stays with the manager |
+| 5 | A QR or one-page flyer on the floor-3 board, or at the counter if the product is drinks or payments | One partner at a time per category. Floor 3 is 40 seats, about 300 m² |
+| 6 | Wi-Fi splash / captive portal with the partner for `[TERM]` | **[TBD: Wi-Fi splash exists?]** Do not promise until George confirms the routers can show it. Do not state a Mbps figure |
+| 7 | A **20-minute tour** for the partner’s local team | The only visit we offer. Not a day pass. Does not include an office unless the letter is the lease variant, and even then we do not confirm a room is free in advance |
+| 8 | For a screen or projector partner: the plate in the work hall and, if George agrees, in the one podcast room | Floor 4 is not a venue. The podcast room is one room. Light and camera are an add-on to that room, with no price. Booking stays on WhatsApp |
 
-Do not offer: a renamed building, gold or off-brand plates, “largest coworking on the island”, Patong as our location, a district other than Chalong / Mueang Phuket, food as a restaurant, or wifi in Mbps. Public hours in the letter stay **08:00–23:00**. Overnight access exists only with the 9,000฿ monthly pass, and this letter does not sell that pass.
+Do not offer: a renamed building, gold or off-brand plates, “largest coworking”, Patong as our location, a district other than Chalong / Mueang Phuket, food as a restaurant, wifi in Mbps, or a price for the podcast room. Hours in the letter stay **08:00–23:00**.
 
 ---
 
 ## Do not write
 
-- Any hotel brand for this building
-- A free trial longer than one day, or a trial that includes studio, offices, or the roof
-- Retired public prices, or packs that are off the public board
-- Open-all-night wording. Hours in the letter are 08:00–23:00
+- Any hotel name for this building
+- A complimentary day or a trial pass. The only visit is a 20-minute tour
+- Visa help, a condo, or any scheme that ties a stay to a visa
+- Calling Place cheap, lowest price, or best value, and any comparison with café-coworking on price
+- A district other than Chalong / Mueang Phuket, a postcode other than 83130, or a street number other than 59/2
+- Locating Place outside Phuket
+- Retired day or month prices. Public Pass prices are only: hour 50฿, day 400฿ until 31 Oct 2026 and 500฿ from 1 Nov 2026, week 1,800฿, month 6,000฿, 3 months 15,000฿
+- An all-night or overnight offer. Hours are 08:00–23:00 for guests and residents
+- Floor 4 as offices, a photo zone, or a hall. The only exception is the one podcast room
+- A podcast price, a café price, or revenue
+- A statement that a specific office, seat, or room is available. Use: write on WhatsApp, we will show what is free
 - A person’s name or a private email at the partner company
-- Seat counts, square metres, occupancy, nationality percentages, follower counts, or the brand of gear already in the building until those fields are filled
+- Follower counts, nationality mix, wifi speed, occupancy, or the brand of gear already in the building until those fields are filled
