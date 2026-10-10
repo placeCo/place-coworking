@@ -129,7 +129,7 @@ function job_coverage() {
 }
 function job_bookings() {
   return T_job_('bookings', 'job_bookings (prod Events and booking read-only)', null, function () {
-    var t = BKG.bookingsToday_(new Date());
+    var t = BKG.bookingsJob_(new Date());   // grids + «Брони бот»; unreadable source → «⚠️ не смог прочитать …», never «none» (10.10.2026)
     T_relay_('PLACE Team, 10:07', t);
     return t;
   });

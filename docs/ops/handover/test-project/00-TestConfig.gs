@@ -37,6 +37,7 @@ var P_IDS = {  // PRODUCTION (read-only through T_SS)
 var T_PROD_IDS = Object.keys(P_IDS).map(function (k) { return P_IDS[k]; });
 var T_LOG_TAB = 'Log';
 var T_BOOKING_TABS = JSON.stringify(['Meeting room', '1 floor', '4 floor', 'ART Room ', '6 floor']);
+var T_BOOKING_TABS_SCHED = JSON.stringify(['Meeting room', '1 floor', '4 floor', 'ART Room ', '6 floor', 'Library']);  // scheduled job (production, read-only); Library added 10.10.2026
 /** Known Telegram chats -> human label for the «would be sent to» line. */
 /** Known production Telegram chats -> «Куда ушло бы» label (used when a module calls sendMessage itself). */
 var T_CHAT_LABELS = {'-1003641241156': 'PLACE Team', '626363253': 'Лена (ЛС)'};
@@ -58,7 +59,7 @@ var T_PROFILES = {
     ST6: {RESIDENT_SHEET_ID: P_IDS.resident, TAB_NAME: 'Office rent', MODE: 'draft', ELEC_TASK_MODE: 'issues',
           ISSUES_SHEET_ID: T_IDS.inbox, DIGEST_TO: 'info@placecoworking.com'},
     ISS: {ISSUES_MODE: 'live'},
-    BKG: {EVENTS_SHEET_ID: P_IDS.events, BOOKING_TABS: T_BOOKING_TABS},
+    BKG: {EVENTS_SHEET_ID: P_IDS.events, BOOKING_TABS: T_BOOKING_TABS_SCHED},
     ST5: {SCHEDULE_SHEET_ID: P_IDS.schedule, SHEET_YEAR: '2026', DRAFT_ENABLED: 'true', EXCLUDE_NAMES: '',
           ACCOUNTANT_TO: 'new accountant Pat (address not known yet; not configured in TEST)'},
     KH:  {RESIDENT_SHEET_ID: P_IDS.resident, KEY_TAB: 'Лист1'},

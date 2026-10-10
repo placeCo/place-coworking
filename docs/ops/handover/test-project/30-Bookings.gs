@@ -12,42 +12,89 @@ var BKG = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlFe
  * no columns for October yet.
  *
  * Script Properties (optional): EVENTS_SHEET_ID, BOOKING_TABS (JSON list), HEADER_ROW=4, LOOKAHEAD_DAYS=14
+ * 10.10.2026: unreadable sheet/tab/date column → «⚠️ не смог прочитать <tab>: <reason>», never «none»; job adds «Брони бот» rows.
  */
 var BK_TZ = 'Asia/Bangkok';
 var BK_ID = '1BSwm4sY-ksXjFNEEsAdyiWmUDzgbQlJpL_dh9JIdZAc';
-var BK_TABS = ['Meeting room', '1 floor', '4 floor', 'ART Room ', 'Workshop room', 'Office room-4 (GREEN)', '6 floor'];
+var BK_TABS = ['Meeting room', '1 floor', '4 floor', 'ART Room ', 'Workshop room', 'Office room-4 (GREEN)', '6 floor', 'Library'];  // Library added 10.10.2026 (bot «бронь библиотека»)
 var BK_MONTHS = {jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11};
 
 function dryRunBookings() { var t = bookingsToday_(new Date()); Logger.log(t); return t; }
 
-function bookingsToday_(now) {
+/** Text for one day from the grid tabs (also used by StaffCommands /bookings, which appends «Брони бот» rows itself). */
+function bookingsToday_(now) { return bkFormat_(bkCollect_(now, false)); }
+
+/** Text for the 10:07 job: grid tabs + «Брони бот» rows (bookings made with the bot command «бронь …», not in the grid yet). */
+function bookingsJob_(now) { return bkFormat_(bkCollect_(now, true)); }
+
+/** FIX 10.10.2026: every source is either read OK (empty or with bookings) or listed in `failed` with a reason.
+ *  «none» is printed only when nothing failed (sheet opened, every tab found, today's column found) and all were empty. */
+function bkCollect_(now, withBot) {
   var p = PropertiesService.getScriptProperties();
-  var ss = SpreadsheetApp.openById(p.getProperty('EVENTS_SHEET_ID') || BK_ID);
   var tabs = JSON.parse(p.getProperty('BOOKING_TABS') || JSON.stringify(BK_TABS));
   var hr = Number(p.getProperty('HEADER_ROW') || 4), look = Number(p.getProperty('LOOKAHEAD_DAYS') || 14);
-  var s = Utilities.formatDate(now, BK_TZ, 'yyyy-MM-dd').split('-');
+  var ymd = Utilities.formatDate(now, BK_TZ, 'yyyy-MM-dd'), s = ymd.split('-');
   var today = new Date(+s[0], +s[1] - 1, +s[2]);
   var horizon = new Date(today.getFullYear(), today.getMonth(), today.getDate() + look);
-  var lines = [], warn = [];
+  var c = {dd: s[2] + '.' + s[1], lines: [], failed: [], empty: [], warn: []};
+  var ss = null;
+  try { ss = SpreadsheetApp.openById(p.getProperty('EVENTS_SHEET_ID') || BK_ID); if (!ss) throw new Error('openById returned nothing'); }
+  catch (e) { c.failed.push({tab: 'Events and booking', why: bkErr_(e)}); return c; }
   tabs.forEach(function (name) {
-    var sh = ss.getSheetByName(name);
-    if (!sh) { warn.push('no tab ' + name); return; }
-    var disp = sh.getDataRange().getDisplayValues();
-    if (disp.length < hr) return;
-    var cols = bkDateCols_(disp[hr - 1], today.getFullYear());
-    var key = bkKey_(today), col = cols.map[key];
-    if (cols.last && cols.last < horizon) warn.push(name.trim() + ': grid ends ' + Utilities.formatDate(cols.last, BK_TZ, 'dd.MM.yyyy'));
-    if (col === undefined) return;
-    var items = [];
-    for (var r = hr; r < disp.length; r++) {
-      var v = String(disp[r][col] || '').trim();
-      if (v) items.push((String(disp[r][0] || '').trim() || '?') + ' ' + v.replace(/\s+/g, ' ').slice(0, 60));
-    }
-    if (items.length) lines.push(name.trim() + ': ' + items.join('; '));
+    var label = String(name).trim();
+    try {
+      var sh = ss.getSheetByName(name);
+      if (!sh) { c.failed.push({tab: label, why: 'вкладка не найдена'}); return; }
+      var disp = sh.getDataRange().getDisplayValues();
+      if (!disp || disp.length < hr) { c.failed.push({tab: label, why: 'нет строки заголовка ' + hr}); return; }
+      var cols = bkDateCols_(disp[hr - 1], today.getFullYear());
+      var col = cols.map[bkKey_(today)];
+      if (col === undefined) {
+        c.failed.push({tab: label, why: 'нет колонки для ' + c.dd + (cols.last ? ' (сетка до ' + bkDmy_(cols.last) + ')' : ' (в строке ' + hr + ' нет дат)')});
+        return;
+      }
+      if (cols.last && cols.last < horizon) c.warn.push(label + ': grid ends ' + bkDmy_(cols.last));
+      var items = [];
+      for (var r = hr; r < disp.length; r++) {
+        var v = String(disp[r][col] || '').trim();
+        if (v) items.push((String(disp[r][0] || '').trim() || '?') + ' ' + v.replace(/\s+/g, ' ').slice(0, 60));
+      }
+      if (items.length) c.lines.push(label + ': ' + items.join('; ')); else c.empty.push(label);
+    } catch (e) { c.failed.push({tab: label, why: bkErr_(e)}); }
   });
-  // short (George 01.10): one line per room, warnings one line each. PLACE Team = English only (George 05.10)
-  return '📅 Bookings ' + Utilities.formatDate(today, BK_TZ, 'dd.MM') + (lines.length ? '\n' + lines.join('\n') : ': none') +
-    (warn.length ? '\n⚠️ ' + warn.join('\n⚠️ ') : '');
+  if (withBot) {
+    try {
+      var bt = ss.getSheetByName(BK_BOT_TAB);   // missing tab = nobody used «бронь …» yet → no bot rows, not a failure
+      var rows = bt && bt.getLastRow() >= 2 ? bt.getRange(2, 1, bt.getLastRow() - 1, 9).getDisplayValues() : [];
+      var bot = rows.filter(function (r) { return bkYmd_(r[1]) === ymd && !BK_CANCELLED.test(String(r[8])); })
+        .map(function (r) { return String(r[2]).trim() + '–' + String(r[3]).trim() + ' ' + String(r[4]).trim() + ' — ' + String(r[5]).trim().slice(0, 40) + ' (' + (String(r[8]).trim() || 'new') + ')'; })
+        .sort();
+      if (bot.length) c.lines.push('🤖 ' + BK_BOT_TAB + ' (not in the grid yet): ' + bot.join('; ')); else c.empty.push(BK_BOT_TAB);
+    } catch (e) { c.failed.push({tab: BK_BOT_TAB, why: bkErr_(e)}); }
+  }
+  return c;
+}
+
+/** short (George 01.10): one line per room, warnings one line each. PLACE Team = English only (George 05.10);
+ *  the «не смог прочитать» wording was requested explicitly (10.10.2026). */
+function bkFormat_(c) {
+  var head = '📅 Bookings ' + c.dd;
+  var body = c.lines.length ? '\n' + c.lines.join('\n') : (c.failed.length ? '' : ': none');
+  var fail = c.failed.map(function (f) { return '\n⚠️ не смог прочитать ' + f.tab + ': ' + f.why; }).join('');
+  var empty = c.failed.length && c.empty.length ? '\nread OK, empty: ' + c.empty.join(', ') : '';
+  return head + body + fail + empty + (c.warn.length ? '\n⚠️ ' + c.warn.join('\n⚠️ ') : '');
+}
+
+var BK_BOT_TAB = 'Брони бот';   // written by StaffCommands «бронь …»: created_ict, date, start, end, room, name_contact, by, raw_text, status
+var BK_CANCELLED = /cancel|отмен|ยกเลิก|reject|отказ|delete|удал/i;   // = scCancelled_ in StaffCommands
+function bkErr_(e) { return 'ошибка: ' + String(e && e.message || e).replace(/\s+/g, ' ').slice(0, 100); }
+function bkDmy_(d) { return Utilities.formatDate(d, BK_TZ, 'dd.MM.yyyy'); }
+function bkYmd_(v) {
+  v = String(v || '').trim();
+  var m = v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (m) return m[1] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[3]).slice(-2);
+  m = v.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})$/);
+  return m ? m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2) : '';
 }
 
 /** Header row -> {map: {yyyy-mm-dd: colIndex}, last: Date}. Year from month markers; rollover Dec->Jan. */
@@ -56,7 +103,7 @@ function bkDateCols_(row, fallbackYear) {
   for (var j = 1; j < row.length; j++) {
     var c = String(row[j] || '').trim();
     var mk = c.match(/^([A-Za-z]+)\s*\n?\s*(\d{4})$/);
-    if (mk) { year = +mk[2]; continue; }
+    if (mk) { year = +mk[2]; lastMonth = null; continue; } // FIX 10.10.2026: marker already sets the year; no extra Dec->Jan +1 after «January 2026»
     var m = c.match(/(\d{1,2})[\/.](\d{1,2})$/);
     if (!m) continue;
     var d = +m[1], mo = +m[2] - 1;
@@ -70,5 +117,5 @@ function bkDateCols_(row, fallbackYear) {
 }
 function bkKey_(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
 
-return {bookingsToday_: bookingsToday_, dryRunBookings: dryRunBookings};
+return {bookingsToday_: bookingsToday_, bookingsJob_: bookingsJob_, dryRunBookings: dryRunBookings};
 })(T_props_('BKG'), T_SS, T_GMAIL, T_MAIL, T_FETCH, T_SCRIPT, T_LOGGER);
