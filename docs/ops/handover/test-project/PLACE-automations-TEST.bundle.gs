@@ -917,13 +917,13 @@ function bkCollect_(now, withBot) {
     var label = String(name).trim();
     try {
       var sh = ss.getSheetByName(name);
-      if (!sh) { c.failed.push({tab: label, why: 'вкладка не найдена'}); return; }
+      if (!sh) { c.failed.push({tab: label, why: 'tab not found'}); return; }
       var disp = sh.getDataRange().getDisplayValues();
-      if (!disp || disp.length < hr) { c.failed.push({tab: label, why: 'нет строки заголовка ' + hr}); return; }
+      if (!disp || disp.length < hr) { c.failed.push({tab: label, why: 'no header row ' + hr}); return; }
       var cols = bkDateCols_(disp[hr - 1], today.getFullYear());
       var col = cols.map[bkKey_(today)];
       if (col === undefined) {
-        c.failed.push({tab: label, why: 'нет колонки для ' + c.dd + (cols.last ? ' (сетка до ' + bkDmy_(cols.last) + ')' : ' (в строке ' + hr + ' нет дат)')});
+        c.failed.push({tab: label, why: 'no column for ' + c.dd + (cols.last ? ' (grid ends ' + bkDmy_(cols.last) + ')' : ' (no dates in row ' + hr + ')')});
         return;
       }
       if (cols.last && cols.last < horizon) c.warn.push(label + ': grid ends ' + bkDmy_(cols.last));
@@ -953,14 +953,14 @@ function bkCollect_(now, withBot) {
 function bkFormat_(c) {
   var head = '📅 Bookings ' + c.dd;
   var body = c.lines.length ? '\n' + c.lines.join('\n') : (c.failed.length ? '' : ': none');
-  var fail = c.failed.map(function (f) { return '\n⚠️ не смог прочитать ' + f.tab + ': ' + f.why; }).join('');
+  var fail = c.failed.map(function (f) { return '\n⚠️ could not read ' + f.tab + ': ' + f.why; }).join('');
   var empty = c.failed.length && c.empty.length ? '\nread OK, empty: ' + c.empty.join(', ') : '';
   return head + body + fail + empty + (c.warn.length ? '\n⚠️ ' + c.warn.join('\n⚠️ ') : '');
 }
 
 var BK_BOT_TAB = 'Брони бот';   // written by StaffCommands «бронь …»: created_ict, date, start, end, room, name_contact, by, raw_text, status
 var BK_CANCELLED = /cancel|отмен|ยกเลิก|reject|отказ|delete|удал/i;   // = scCancelled_ in StaffCommands
-function bkErr_(e) { return 'ошибка: ' + String(e && e.message || e).replace(/\s+/g, ' ').slice(0, 100); }
+function bkErr_(e) { return 'error: ' + String(e && e.message || e).replace(/\s+/g, ' ').slice(0, 100); }
 function bkDmy_(d) { return Utilities.formatDate(d, BK_TZ, 'dd.MM.yyyy'); }
 function bkYmd_(v) {
   v = String(v || '').trim();
