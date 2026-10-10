@@ -114,3 +114,19 @@ George OK 09.10.2026 03:41 ICT. Sent from info@placecoworking.com, EN, signed "G
 
 Access: icowork.pro owner login is now in the Access sheet, row 37 (no credentials in this repo).
 Next: watch info@ for bounces (Thailand Stuff, CoworkBooking) and replies; rawai.com form needs a browser.
+
+## Check 10.10.2026 ~10:30 ICT (Place Marketing; info@ + public pages)
+| Item | Status | Next |
+|---|---|---|
+| Office Hub | 09.10 Lijesh: account description updated; coworking must be per seat, offered one listing for the whole hall via shared sheet "Place Coworking (189528)" | **Replied 10.10**: one hall listing, floor 3, 40 seats, ~300 m², 6 000 THB/seat/month, 08–23; asked to confirm PO1–4 12-mo = exactly 20 000. Wait |
+| Coworkies | Dimitar 09.10: listing managed by info@, slug → /place-coworking-phuket, fixing "/" address bug. Our 10.10 10:14 reply: dashboard shows no space, old URL 404 | Wait for Dimitar |
+| Croissant | Viktoria 09.10: checking placement (Bangkok → Phuket) with the team | Wait |
+| NewOfficeAsia | Michael 09.10: listing updated; prices come from Instant Offices feed and may overwrite; no direct contacts (policy) | Fix prices at source: Worka/Instant Offices |
+| Worka | Support 09.10: displayed price = range from min cost per desk × desk capacities (not editable by them) | In Worka portal set office capacity 6 / price per office so "per person" disappears (needs login) |
+| Phuket Expat Guide | info@phuketexpatguide.com bounced 09.10 (address not found) | Find another contact / form |
+| Thailand Stuff | Still "delay" bounces (last 09.10 22:22 ICT+7 05:22) — mail server unreachable | Use site form, not email |
+| Phuket Community, coworker.com, denzphuket, SearchRemotely, icowork, nomad, thaiholidayguide | No reply yet | Wait |
+| Bing Places | 09.10 live: PLACE COWORKING PHUKET, but also **FARANG ICE CREAM** (deleted 05.10 — live again), **PLACE PHOTOSTUDIO**, PLACE COLLAB PODCAST ROOM | George/Microsoft login: remove Farang + Photostudio (off canon) |
+| TripAdvisor d32717086 | Still **Restaurant** (Cafe, International, $), now **Claimed**; address 59/2 83130 and hours 08–23 daily OK; About still "coworking space and cafe… five floors… rooftop" | Owner login: change category to coworking (likely via TA support) + About §2.3 |
+
+Next open from plan: SearchRemotely (replace text), icowork (24/7, 250 tariffs), Thailand Stuff (form), Worka (office capacity 6), GBP — delete 9 Merchant Center products.
