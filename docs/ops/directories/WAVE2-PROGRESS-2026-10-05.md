@@ -124,7 +124,7 @@ Next: watch info@ for bounces (Thailand Stuff, CoworkBooking) and replies; rawai
 | NewOfficeAsia | Michael 09.10: listing updated; prices come from Instant Offices feed and may overwrite; no direct contacts (policy) | Fix prices at source: Worka/Instant Offices |
 | Worka | Support 09.10: displayed price = range from min cost per desk × desk capacities (not editable by them) | In Worka portal set office capacity 6 / price per office so "per person" disappears (needs login) |
 | Phuket Expat Guide | info@phuketexpatguide.com bounced 09.10 (address not found) | Find another contact / form |
-| Thailand Stuff | Still "delay" bounces (last 09.10 22:22 ICT+7 05:22) — mail server unreachable | Use site form, not email |
+| Thailand Stuff | Still "delay" bounces (last 10.10 05:22 ICT) — mail server unreachable | Use site form, not email |
 | Phuket Community, coworker.com, denzphuket, SearchRemotely, icowork, nomad, thaiholidayguide | No reply yet | Wait |
 | Bing Places | 09.10 live: PLACE COWORKING PHUKET, but also **FARANG ICE CREAM** (deleted 05.10 — live again), **PLACE PHOTOSTUDIO**, PLACE COLLAB PODCAST ROOM | George/Microsoft login: remove Farang + Photostudio (off canon) |
 | TripAdvisor d32717086 | Still **Restaurant** (Cafe, International, $), now **Claimed**; address 59/2 83130 and hours 08–23 daily OK; About still "coworking space and cafe… five floors… rooftop" | Owner login: change category to coworking (likely via TA support) + About §2.3 |
