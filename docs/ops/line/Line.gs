@@ -57,10 +57,12 @@ function lineHandleEvent_(ev, sh, cache) {
   }
   var srcLabel = src.type === 'group' ? 'group:' + src.groupId : src.type === 'room' ? 'room:' + src.roomId : 'user';
   var ts = Utilities.formatDate(new Date(ev.timestamp || Date.now()), 'Asia/Bangkok', 'yyyy-MM-dd HH:mm:ss');
-  sh.appendRow([ts, uid, name, srcLabel, ev.type, m.type || '', text, m.id || '', id, JSON.stringify(ev).slice(0, 2000)]);
+  sh.appendRow([ts, uid, name, srcLabel, ev.type, m.type || '', text, m.id || '', id, JSON.stringify(ev).slice(0, 45000)]);
   if (ev.type === 'message' || ev.type === 'follow' || ev.type === 'postback') {
-    var notice = 'LINE от ' + (name || uid || '?') + ': ' + (text.length > 600 ? text.slice(0, 600) + '…' : text);
-    lineTg_(notice);
+    var head = 'LINE от ' + (name || uid || '?') + ': ';
+    for (var i = 0, n = 0; i < text.length || n === 0; i += 3500, n++) {
+      lineTg_((n === 0 ? head : '(cont.) ') + text.slice(i, i + 3500));
+    }
   }
 }
 
