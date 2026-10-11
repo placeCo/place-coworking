@@ -163,8 +163,21 @@ function T_tgSend_(chatId, text) {
  *  Admins have no private chats with @PlaceLeadBot (only the shared @place_coworking_admin), so admin messages go to PLACE Team.
  *  Alena (fired 02.10) is not a recipient. Tenants and the accountant get nothing: office/e-mail/timesheet items go to Lena. */
 var T_REAL = {team: '-1003641241156', tech: '-5341674959', pay: '-1003702681187', lena: '626363253', sak: ''};
-/** Script Property T_ROUTING: 'real' (default since 03.10) | 'relay' (old mode: George + Lena DMs with «Куда ушло бы»). */
-function T_routing_() { return String(PropertiesService.getScriptProperties().getProperty('T_ROUTING') || 'real').toLowerCase(); }
+/** Script Property T_ROUTING — THE live/test switch:
+ *   'live'  (default since 11.10.2026, George 18:54): real recipients, NO «[TEST]» / «🧪 ТЕСТ» / «Куда ушло бы», quiet hours 10:00–22:00 ICT;
+ *   'real'  (03.10 mode): real recipients with «[TEST] »;
+ *   'relay' (old mode): George + Lena DMs with «🧪 ТЕСТ · Куда ушло бы». Any other value → relay (safe). Rollback = set 'real' or 'relay', no redeploy. */
+function T_routing_() { return String(PropertiesService.getScriptProperties().getProperty('T_ROUTING') || 'live').toLowerCase().trim(); }
+function T_isLive_() { return T_routing_() === 'live'; }
+/** LIVE quiet hours (Thai staff, PLACE Team, Lena: only 10:00–22:00 ICT). Outside → NOT sent, logged as HELD.
+ *  Script Property LIVE_QUIET_EXEMPT = comma list of job items allowed outside the window (e.g. 'cash'), default none. */
+var T_LIVE_FROM = 10, T_LIVE_TO = 22;
+function T_inLiveWindow_() {
+  var h = Number(Utilities.formatDate(new Date(), 'Asia/Bangkok', 'H'));
+  if (h >= T_LIVE_FROM && h < T_LIVE_TO) return true;
+  var ex = String(PropertiesService.getScriptProperties().getProperty('LIVE_QUIET_EXEMPT') || '').split(/\s*,\s*/);
+  return !!(T_CTX.item && ex.indexOf(T_CTX.item) >= 0);
+}
 function T_realId_(k) {
   var map = {team: 'TEAM_CHAT_ID', tech: 'TECH_CHAT_ID', pay: 'PAY_CHAT_ID', lena: 'LENA_CHAT_ID', sak: 'SAK_CHAT_ID'};
   return String(PropertiesService.getScriptProperties().getProperty(map[k]) || T_REAL[k] || '').trim();
@@ -175,10 +188,12 @@ function T_realTarget_(where) {
   if (!w) return {key: 'tech', name: 'Тех вопросы'};                                   // issues digests (label-less)
   if (/никуда|проверка связи/i.test(w)) return null;                                   // sendTestPing
   if (/PLACE Team/i.test(w)) return {key: 'team', name: 'PLACE Team'};
-  if (/вечерний админ/i.test(w)) {
-    var m = w.match(/вечерний админ\s+([^()→]+?)\s*\(ЛС\)/i);
-    return {key: 'team', name: 'PLACE Team (вечерний админ)', pre: m ? 'Evening admin: ' + m[1].trim() + '\n' : ''};   // PLACE Team: English only (George 05.10)
+  if (/(утренний|вечерний) админ/i.test(w)) {
+    var m = w.match(/(утренний|вечерний) админ\s+([^()→]+?)\s*\(ЛС\)/i), ev = /вечерний/i.test(w);
+    return {key: 'team', name: 'PLACE Team (' + (ev ? 'вечерний' : 'утренний') + ' админ)', pre: m ? (ev ? 'Evening' : 'Morning') + ' admin: ' + m[2].trim() + '\n' : ''};   // PLACE Team: English only (George 05.10)
   }
+  // George 11.10.2026 18:54: everything for the admin on shift (questions, reminders, shift checklists) → PLACE Team, never admins' DMs
+  if (/админ|admin|смен[аеуы]|shift|чек-?лист|checklist/i.test(w)) return {key: 'team', name: 'PLACE Team (админ на смене)'};
   if (/PAY_CHAT_ID|Payments/i.test(w)) return {key: 'pay', name: 'Payments Place'};
   if (/Тех вопросы/i.test(w)) return {key: 'tech', name: 'Тех вопросы'};
   if (/Сак/i.test(w)) return {key: 'sak', name: 'Сак (ЛС)'};
@@ -186,18 +201,20 @@ function T_realTarget_(where) {
 }
 /** Real send: «[TEST] » + text to the real chat. Empty chat id / no TG_TOKEN → log only. */
 function T_sendReal_(t, text) {
-  var id = T_realId_(t.key), body = '[TEST] ' + (t.pre || '') + String(text == null ? '' : text);
+  var live = T_isLive_(), tag = live ? '' : '[TEST] ';
+  var id = T_realId_(t.key), body = tag + (t.pre || '') + String(text == null ? '' : text);
   if (!id) { T_BUF.push('[real: ' + t.name + ' chat id not set → NOT sent]\n' + body); return 'not-sent(no chat id)'; }
+  if (live && !T_inLiveWindow_()) { T_BUF.push('[live HELD: outside ' + T_LIVE_FROM + ':00–' + T_LIVE_TO + ':00 ICT → ' + t.name + ' NOT sent]\n' + body); return 'held(quiet hours)'; }
   if (!PropertiesService.getScriptProperties().getProperty('TG_TOKEN')) { T_BUF.push('[real LOG ONLY: TG_TOKEN not set] → ' + t.name + '\n' + body); return 'log-only'; }
   var parts = [], s = body; while (s.length) { parts.push(s.slice(0, 3900)); s = s.slice(3900); }
-  var codes = parts.map(function (part, i) { try { return T_tgSend_(id, (i ? (t.key === 'team' ? '[TEST] (cont.)\n' : '[TEST] (продолжение)\n') : '') + part); } catch (e) { return 'ERR ' + (e && e.message); } });
+  var codes = parts.map(function (part, i) { try { return T_tgSend_(id, (i ? tag + (t.key === 'team' ? '(cont.)\n' : '(продолжение)\n') : '') + part); } catch (e) { return 'ERR ' + (e && e.message); } });
   T_BUF.push('[sent → ' + t.name + ' ' + id + ': ' + codes.join(',') + ']\n' + body);
   return 'sent ' + t.name + ':' + codes.join(',');
 }
 
 /** where = the real recipient + channel in plain Russian, e.g. «PLACE Team (TG группа)», «Лена в личку». */
 function T_relay_(where, text) {
-  if (T_CTX.relay && !T_CTX.send && T_routing_() === 'real') { var rt = T_realTarget_(where); if (rt) return T_sendReal_(rt, text); }
+  if (T_CTX.relay && !T_CTX.send && !T_CTX.sim && (T_routing_() === 'real' || T_isLive_())) { var rt = T_realTarget_(where); if (rt) return T_sendReal_(rt, text); }
   var full = T_relayText_(where, text);
   if (!T_CTX.relay) { T_BUF.push('[relay off: fixture test]\n' + full); return 'log-only(fixture)'; }
   var send = T_CTX.send || T_tgSend_;
@@ -220,8 +237,19 @@ function T_relay_(where, text) {
 }
 /** T_CTX.mail(to) returns the «Куда ушло бы» label for an email/draft; default: «email <to> (черновик на info@)». */
 function T_mailTarget_(to) { return T_CTX.mail ? T_CTX.mail(to) : to + ' (email-черновик)'; }
+/** LIVE + Script Property LIVE_MAIL=draft: a REAL Gmail draft (never sent) in the script owner's mailbox, only for a valid
+ *  e-mail address. Needs the scope https://www.googleapis.com/auth/gmail.compose in appsscript.json (+ re-authorize).
+ *  Default (LIVE_MAIL unset/'tg') or any failure → null → the text goes to Lena's DM as before («Для: …»). */
+function T_liveDraft_(to, subject, body, opts) {
+  if (!T_CTX.relay || T_CTX.send || T_CTX.sim || !T_isLive_()) return null;
+  if (String(PropertiesService.getScriptProperties().getProperty('LIVE_MAIL') || 'tg').toLowerCase() !== 'draft') return null;
+  if (!/^[^\s@,]+@[^\s@,]+\.[a-z]{2,}$/i.test(String(to || '').trim())) { T_BUF.push('[live draft: «' + to + '» is not an e-mail → Lena TG]'); return null; }
+  try { var d = GmailApp.createDraft(to, subject, body, opts || {}); T_BUF.push('[live Gmail DRAFT for ' + to + ': ' + subject + ']'); return d; }
+  catch (e) { T_BUF.push('[live draft FAILED (' + (e && e.message) + ') → Lena TG]'); return null; }
+}
 var T_GMAIL = {
   createDraft: function (to, subject, body, opts) {
+    var d = T_liveDraft_(to, subject, body, opts); if (d) return d;
     T_relay_(T_mailTarget_(to), 'Тема: ' + subject + (opts && opts.attachments ? ' · вложение: ' + opts.attachments.length : '') + '\n' + body);
     return { getId: function () { return 'TEST-RELAYED'; } };
   },
@@ -259,7 +287,7 @@ function T_run_(item, fnName, fn) {
 /** Scheduled job: production read-only, relay on. */
 function T_job_(item, fnName, mail, fn) {
   var prev = [T_PROFILE, T_CTX];
-  T_PROFILE = 'sched'; T_CTX = {relay: true, mail: mail || null};
+  T_PROFILE = 'sched'; T_CTX = {relay: true, mail: mail || null, item: item, sim: /^simulate/.test(fnName)};   // simulate* never reach real recipients
   try { return T_run_(item, fnName, fn); } finally { T_PROFILE = prev[0]; T_CTX = prev[1]; }
 }
 /** Fixture test: TEST copies, relay off. */
@@ -2207,14 +2235,15 @@ function test_cash() {
  */
 var T_JOBS = [
   // handler,            kind,     when (Asia/Bangkok; Apps Script runs within ~±15 min of nearMinute)
-  ['job_stage6',         'daily',  9, 5,  'stage6 office reminders + electricity tasks'],
-  ['job_coverage',       'daily',  9, 10, 'schedule-coverage'],
-  ['job_bookings',       'daily',  10, 7, 'bookings-today (10:07 summary)'],
-  ['job_issuesMorning',  'daily',  10, 7, 'issues summary morning → TG group «Тех вопросы» (TECH_CHAT_ID)'],
-  ['job_issuesEvening',  'daily',  23, 10, 'issues summary evening → TG group «Тех вопросы» (TECH_CHAT_ID)'],
-  ['job_timesheet',      'month28', 9, 30, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
-  ['job_cashReminder',   'every3', 22, 30, 'cash collection reminder for the evening admin (every 3 days, 22:30)'],
-  ['job_paymentReminders', 'daily', 9, 15, 'recurring payments: 3 days before + on the day (contracts: 30/3/0) → PAY_CHAT_ID']
+  // LIVE 11.10.2026: every job inside 10:00–22:00 ICT incl. the ±15 min jitter (was 09:05/09:10/09:15/09:30/10:07/22:30/23:10)
+  ['job_stage6',         'daily',  10, 30, 'stage6 office reminders + electricity tasks'],
+  ['job_coverage',       'daily',  10, 45, 'schedule-coverage'],
+  ['job_bookings',       'daily',  10, 15, 'bookings-today (10:15 summary)'],
+  ['job_issuesMorning',  'daily',  10, 20, 'issues summary morning → TG group «Тех вопросы» (TECH_CHAT_ID)'],
+  ['job_issuesEvening',  'daily',  21, 30, 'issues summary evening → TG group «Тех вопросы» (TECH_CHAT_ID)'],
+  ['job_timesheet',      'month28', 11, 0, 'timesheet draft for the accountant (28th; period = current month, 29..end = next month adjustments)'],
+  ['job_cashReminder',   'every3', 21, 30, 'cash collection reminder for the evening admin (every 3 days, 21:30) → PLACE Team'],
+  ['job_paymentReminders', 'daily', 10, 25, 'recurring payments: 3 days before + on the day (contracts: 30/3/0) → PAY_CHAT_ID']
 ];
 
 // ---------- setup ----------
@@ -2240,6 +2269,8 @@ function setupTestProperties() {
     out.push('LENA_CHAT_ID: ' + (lena ? lena : 'NOT SET → test messages go to George only (warning in Log). Set Script Property LENA_CHAT_ID by hand.'));
     if (!p.getProperty('CASH_ANCHOR_DATE')) { p.setProperty('CASH_ANCHOR_DATE', Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd')); }
     out.push('CASH_ANCHOR_DATE: ' + p.getProperty('CASH_ANCHOR_DATE'));
+    out.push('T_ROUTING: ' + T_routing_() + (T_isLive_() ? ' (LIVE: real recipients, no TEST label, quiet hours 10–22)' : ''));
+    out.push('Live chats: team ' + T_realId_('team') + ' · tech ' + T_realId_('tech') + ' · pay ' + T_realId_('pay') + ' · lena ' + T_realId_('lena') + ' · LIVE_MAIL ' + (p.getProperty('LIVE_MAIL') || 'tg'));
     out.push('Triggers now: ' + ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction(); }).join(', '));
     return out.join('\n');
   });
@@ -2410,6 +2441,7 @@ function T_eveningAdmins_(d) {
 
 /** Dry check of all jobs right now (relay ON: George gets the messages if TG_TOKEN + GEORGE_CHAT_ID are set). */
 function runAllJobsOnce() {
+  if (T_isLive_()) throw new Error('LIVE: runAllJobsOnce would post every job to the real chats at once. Set T_ROUTING=relay first.');
   var fns = {job_stage6: job_stage6, job_coverage: job_coverage, job_bookings: job_bookings, job_issuesMorning: job_issuesMorning,
     job_issuesEvening: job_issuesEvening, job_timesheet: job_timesheet, job_cashReminder: job_cashReminder, job_paymentReminders: job_paymentReminders};
   return T_JOBS.map(function (j) { return j[0] + ': ' + fns[j[0]]().status; });
