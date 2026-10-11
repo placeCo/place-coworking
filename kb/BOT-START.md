@@ -1,35 +1,34 @@
 # BOT-START — entry point for bots
 
-**Read this first.** Then immediately `kb/CONTEXT-ROUTER.md`.
+**Read this first.** Then `kb/CONTEXT-ROUTER.md`.
 
-## Loading order (strict)
+## Default load (most tasks)
 
-1. **`kb/CONTEXT-ROUTER.md`** — main loading rules
-2. **`kb/contexts/MINIMAL.en.md`** — for general tasks (absolute minimum, English preferred)
-3. Specific `.en.md` files from `kb/contexts/` according to the router table
-4. `canon.json` — only if structure is needed
-5. `CANON.md` — only if everything above is not enough
+1. `kb/CONTEXT-ROUTER.md`
+2. **`kb/contexts/CORE.en.md`** ← start here for almost everything
+3. Add one specific `.en.md` only if needed
+4. `canon.json` — only for structure
+5. `CANON.md` — last resort
 
 ## Truth hierarchy
 
-1. `CANON.md` — binding source of truth
-2. `canon.json` and `kb/contexts/*` — extracts. Contradiction → CANON.md wins
-3. Everything else — supporting
+1. `CANON.md` — binding
+2. `canon.json` + `kb/contexts/*` — extracts
+3. Everything else — supporting only
 
 ## Quick links
 
 - Router: `kb/CONTEXT-ROUTER.md`
-- Minimum: `kb/contexts/MINIMAL.en.md`
-- Lightweight: `kb/contexts/*.en.md`
+- Default context: `kb/contexts/CORE.en.md`
+- Other light: `kb/contexts/*.en.md`
 - JSON: `canon.json`
 - Full: `CANON.md`
 
 ## Checklist
 
-- [ ] Read the router
-- [ ] Loaded only the minimum needed (prefer `.en.md`)
-- [ ] Did not violate the ban-list
-- [ ] Did not invent facts
+- [ ] Loaded `CORE.en.md` first
+- [ ] Did not load extra files without need
+- [ ] Did not violate ban-list
 - [ ] New files = DRAFT
 
 If in doubt — ask George or mark ASSUMPTION.
