@@ -1,34 +1,26 @@
 # BOT-START — entry point for bots
 
-**Read this first.** Then `kb/CONTEXT-ROUTER.md`.
+**Read `kb/BOT-LOAD.md` first.** Then stop searching.
 
-## Default load (most tasks)
+## Zero-search start
 
-1. `kb/CONTEXT-ROUTER.md`
-2. **`kb/contexts/CORE.en.md`** ← start here for almost everything
-3. Add one specific `.en.md` only if needed
-4. `canon.json` — only for structure
-5. `CANON.md` — last resort
+1. `kb/BOT-LOAD.md`
+2. `kb/contexts/CORE.en.md`
+3. Your `docs/bots/<role>/ROLE-CORE.md`
+
+Everything else is optional and only if the task clearly needs it.
 
 ## Truth hierarchy
 
-1. `CANON.md` — binding
-2. `canon.json` + `kb/contexts/*` — extracts
-3. Everything else — supporting only
-
-## Quick links
-
-- Router: `kb/CONTEXT-ROUTER.md`
-- Default context: `kb/contexts/CORE.en.md`
-- Other light: `kb/contexts/*.en.md`
-- JSON: `canon.json`
-- Full: `CANON.md`
+1. `CANON.md` — binding (load only when CORE is not enough or there is contradiction)
+2. `kb/contexts/*` + `canon.json` — extracts
+3. Full ROLE.md / MEMORY.md — only for complex tasks
 
 ## Checklist
 
-- [ ] Loaded `CORE.en.md` first
-- [ ] Did not load extra files without need
-- [ ] Did not violate ban-list
+- [ ] Loaded CORE.en.md + my ROLE-CORE.md
+- [ ] Did not search the repo for prices/rules
+- [ ] Did not load full MEMORY without need
 - [ ] New files = DRAFT
 
 If in doubt — ask George or mark ASSUMPTION.
