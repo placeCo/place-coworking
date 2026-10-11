@@ -14,6 +14,15 @@
 - Full `ROLE.md` or `MEMORY.md` of your role
 - `CANON.md`
 
+## Heavy / high-token tasks
+
+If the task is complex and will clearly burn a lot of limits (long multi-step work, big content plan, deep audit, large accounting pack, major site change, etc.):
+
+- Do **not** try to finish everything in one run.
+- Write a detailed TZ to `docs/drafts/tz/` (see README there).
+- Mark it `DRAFT · needs George + Grok`.
+- Stop and wait. George will ask Grok to pick it up.
+
 ## Never do
 
 - Do not search the whole repo for prices or rules
@@ -25,4 +34,4 @@
 
 If you are a scheduled bot and this file is in the repo, start every run with CORE.en.md + your ROLE-CORE.md. Everything else is optional.
 
-Updated: 11.10.2026
+Updated: 12.10.2026
