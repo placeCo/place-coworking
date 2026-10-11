@@ -1,10 +1,25 @@
 # Place Coworking — work base / рабочая база
 
-**EN:** Private operational knowledge base for Place Coworking (Chalong, Phuket). Used by George and Grok Bot for canon, drafts, site TZ, events, and marketing prep.
+**EN:** Operational knowledge base for Place Coworking (Chalong, Phuket). Used by George and bots (Grok, Cursor, etc.).
 
-**RU:** Приватная операционная база Place Coworking (Чалонг, Пхукет). Для George и Grok-бота: канон, черновики, ТЗ сайта, ивенты, маркетинг.
+**RU:** Операционная база Place Coworking (Чалонг, Пхукет). Для George и ботов.
 
 Account: [placeCo](https://github.com/placeCo) · Repo: `place-coworking`
+
+---
+
+## FOR BOTS / ДЛЯ БОТОВ
+
+**Старт здесь:** [`kb/BOT-START.md`](kb/BOT-START.md)  
+Затем обязательно `CANON.md`.
+
+- Пиши **только черновики**. Не публикуй без явного OK George.
+- `CANON.md` — единственная правда по ценам, часам, продуктам, ban-list.
+- Нет факта → `ASSUMPTION` или спроси George.
+- Язык ответов George: русский, конкретно.
+
+**Текущий канон (кратко):**  
+Часы 08:00–23:00 daily. Place Pass: 50/ч · день 400 до 31.10 → 500 с 01.11 · нед 1800 · мес 6000 · 3мес 15000. Office 30k/мес или 20k на год. Podcast → WhatsApp. Нет 24/7 публично.
 
 ---
 
@@ -12,8 +27,7 @@ Account: [placeCo](https://github.com/placeCo) · Repo: `place-coworking`
 
 - **Drafts only.** Бот пишет черновики; **не** публикует цены, посты, правки сайта, Ads, GBP без явного OK от George.
 - **`CANON.md`** — единственная операционная правда по этажам/ценам/контактам, пока George явно не изменит канон.
-- Язык ответов George: русский, конкретно. Документы RU/EN — ок.
-- Публичные контакты Place: `info@placecoworking.com`, сайт placecoworking.com, IG `@place_coworking_phuket`, TG `@coworking_place_phuket`.
+- Публичные контакты: `info@placecoworking.com`, placecoworking.com, IG `@place_coworking_phuket`, TG `@coworking_place_phuket`.
 
 ---
 
@@ -23,62 +37,50 @@ Full-time маркетолога **нет** — работа через роли
 
 | Doc | Зачем |
 |-----|--------|
-| [`docs/ops/ROLES.md`](docs/ops/ROLES.md) | Кто что делает (George, SMM @dftnsss, Bot, ресепшен, Nikita, John, Lena) |
-| [`docs/ops/WORKFLOW-MARKETING.md`](docs/ops/WORKFLOW-MARKETING.md) | idea → календарь → Готово → OK → Postiz draft → OK → publish |
-| [`docs/ops/SOURCES.md`](docs/ops/SOURCES.md) | Карта ссылок (sheet, каналы, Deskimo, Best Lap, Teamly) |
-| [`docs/ops/TG-OUTBOUND.md`](docs/ops/TG-OUTBOUND.md) | Канон исходящих Telegram |
-| [`templates/`](templates/) | BRIEF-SMM, POST-SLOT, HANDOFF, WEEKLY-MARKETING-CHECK |
+| [`kb/BOT-START.md`](kb/BOT-START.md) | **Старт для ботов** |
+| [`CANON.md`](CANON.md) | Полный канон (истина) |
+| [`docs/ops/ROLES.md`](docs/ops/ROLES.md) | Кто что делает |
+| [`docs/ops/bots/README.md`](docs/ops/bots/README.md) | Скрипты ботов (drafts) |
+| [`docs/ops/WORKFLOW-MARKETING.md`](docs/ops/WORKFLOW-MARKETING.md) | idea → календарь → Готово → OK → publish |
+| [`templates/`](templates/) | BRIEF-SMM, POST-SLOT, HANDOFF |
 
-SMM calendar: https://docs.google.com/spreadsheets/d/1YjIN-j7jw_i-rCRdF_Xfpq2AD-ZIxKV1qAobmQH8ds8/  
-Postiz/Meta на паузе, пока календарь не «Готово» и Meta login не сделан. Ops mode выше — без изменений.
-
+---
 
 ## Layout
 
 ```
 README.md                 — этот файл
-.gitignore
 CANON.md                  — полный канон (истина)
-CANON-CORE-2026-09-23.md  — короткий core Pass / Offices / Studio
+kb/BOT-START.md           — точка входа для ботов
 docs/
   reception/              — скрипт ресепшена
-  site/                   — FAQ, TZ сайта, offices/meeting rooms, meeting notes, redesign TZ
-  events/                 — Garmin Best Lap, Strava, QR png, best-lap pack
-  marketing/              — IG draft, Teamly coordinator, SMM calendars, playbooks
-  ops/                    — roles, workflow, sources, TG outbound, sheets inventory, audits
-templates/                — BRIEF-SMM, POST-SLOT, HANDOFF, WEEKLY-MARKETING-CHECK
+  site/                   — FAQ, TZ сайта
+  marketing/              — черновики, календари
+  ops/                    — roles, bots, workflow, sources
+  canon/                  — decisions log
+templates/
 kb/
-  README.md · INDEX.md · PRIORITY-CONNECTORS.md
-  facts/                  — condensed canon, marketing, ops-sources, MCP status
-  inbox/                  — SEO snapshots, SaaS inventory; see README-MOVED
-teamly/
-  EXTRACT-2026-09-24.md   — content pack + 6 red site fixes (non-secret)
 ```
 
 ---
 
 ## Source hierarchy
 
-1. `CANON.md` + `CANON-CORE-2026-09-23.md` — sole truth for floors/prices  
-2. Teamly extract, Sheets inventory, FAQ/TZ — supporting (may lag)  
-3. Inbox snapshots / SaaS inventory — evidence only; not permission to publish  
+1. `CANON.md` — sole truth for floors/prices/hours/products  
+2. `docs/canon/DECISIONS-LOG.md` — история решений  
+3. Всё остальное — supporting (может лаг)  
 4. Missing fact → mark `ASSUMPTION` or ask George  
+
+---
+
+## Status (11.10.2026)
+
+- Боты в `docs/ops/bots/` — drafts, не deployed.
+- Открытые draft-PR #7–9 (SEO) — требуют решения George (устарели после брифа 09.10).
+- Сайт-макет: приватный репо `place-coworking-site`.
 
 ---
 
 ## What was excluded from the seed
 
-- `*.bak` and `_archived-*` edit scrap / fonts / large intermediates  
-- Files with **member personal emails** (`ops-followup`, apps-script membership notes)  
-- Large PDF flyer, chat screenshots, analytics overview PNGs (markdown snapshots kept)  
-- Secrets, `.env`, tokens, cookies  
-
----
-
-## Next (suggested)
-
-- SMM: октябрьские слоты → «Готово» (см. issues `smm` / `marketing`)  
-- Meta/IG login `info@` + Postiz drafts only после календаря  
-- Branch for site redesign from `docs/site/SITE-REDESIGN-TZ-2026-09-24.md`  
-- Deskimo: добрать поля → OK George перед publish  
-- Connect priority connectors (see `kb/PRIORITY-CONNECTORS.md`) via George screen login  
+- Secrets, `.env`, tokens, personal emails, large binaries.
