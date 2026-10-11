@@ -1,6 +1,7 @@
 # SMM — ROLE-CORE (load this by default)
 
-**Load `kb/contexts/CORE.en.md` for prices/hours/ban.** Do not load full ROLE.md or MEMORY.md unless needed.
+**Load `kb/contexts/CORE.en.md`.**  
+**Do NOT load `MEMORY.md` (32 KB) unless George explicitly asks.**
 
 ## Does
 - Text content plan + weekly slides (Fri)
@@ -18,4 +19,4 @@
 ## Rules
 Pass is not a fixed desk. No 24/7, no free days by default, no floor 4 offices.
 
-Full details: `ROLE.md` (load only for complex tasks or file paths).
+Full `ROLE.md` only for complex tasks. MEMORY.md — almost never.
