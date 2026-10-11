@@ -1,18 +1,17 @@
 # Lightweight contexts
 
-**First read `kb/CONTEXT-ROUTER.md`.**
+**Start with `kb/contexts/CORE.en.md` for most tasks.**
 
-English versions (`.en.md`) are preferred by bots for token efficiency.  
-Russian versions remain the human-readable source of truth.
+| File | When |
+|---|---|
+| `CORE.en.md` | **Default. Most tasks.** |
+| `MINIMAL.en.md` | Slightly fuller minimum |
+| `prices-hours.en.md` | Detailed prices & hours |
+| `products-ban.en.md` | Products + full ban-list |
+| `contacts.en.md` | Contacts only |
+| `bot-rules.en.md` | Bot behavior rules |
+| `reception-short.en.md` | Short reception answers |
 
-| File | When to load | English version |
-|---|---|---|
-| `MINIMAL.md` | General task, absolute minimum | `MINIMAL.en.md` |
-| `prices-hours.md` | Prices and hours | `prices-hours.en.md` |
-| `products-ban.md` | Products + ban-list | `products-ban.en.md` |
-| `contacts.md` | Contacts and address | `contacts.en.md` |
-| `bot-rules.md` | Bot rules | `bot-rules.en.md` |
-| `reception-short.md` | Short reception answers | `reception-short.en.md` |
+English versions preferred. Russian versions exist as human-readable source.
 
-All files are extracts from the canon as of 11.10.2026.  
-If they contradict `CANON.md` — the canon wins.
+If any file contradicts `CANON.md` — the canon wins.
