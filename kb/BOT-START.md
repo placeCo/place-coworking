@@ -1,35 +1,35 @@
-# BOT-START — точка входа для ботов
+# BOT-START — entry point for bots
 
-**Читай это первым.** Затем сразу `kb/CONTEXT-ROUTER.md`.
+**Read this first.** Then immediately `kb/CONTEXT-ROUTER.md`.
 
-## Порядок загрузки (строгий)
+## Loading order (strict)
 
-1. **`kb/CONTEXT-ROUTER.md`** — главные правила порядка
-2. **`kb/contexts/MINIMAL.md`** — если задача общая (абсолютный минимум)
-3. Конкретные файлы из `kb/contexts/` по таблице в роутере
-4. `canon.json` — только если нужна структура
-5. `CANON.md` — только если всего выше не хватило
+1. **`kb/CONTEXT-ROUTER.md`** — main loading rules
+2. **`kb/contexts/MINIMAL.en.md`** — for general tasks (absolute minimum, English preferred)
+3. Specific `.en.md` files from `kb/contexts/` according to the router table
+4. `canon.json` — only if structure is needed
+5. `CANON.md` — only if everything above is not enough
 
-## Иерархия истины
+## Truth hierarchy
 
-1. `CANON.md` — binding источник правды
-2. `canon.json` и `kb/contexts/*` — выжимки. Противоречие → побеждает CANON.md
-3. Всё остальное — supporting
+1. `CANON.md` — binding source of truth
+2. `canon.json` and `kb/contexts/*` — extracts. Contradiction → CANON.md wins
+3. Everything else — supporting
 
-## Быстрые ссылки
+## Quick links
 
-- Роутер: `kb/CONTEXT-ROUTER.md`
-- Минимум: `kb/contexts/MINIMAL.md`
-- Лёгкие: `kb/contexts/`
+- Router: `kb/CONTEXT-ROUTER.md`
+- Minimum: `kb/contexts/MINIMAL.en.md`
+- Lightweight: `kb/contexts/*.en.md`
 - JSON: `canon.json`
-- Полный: `CANON.md`
+- Full: `CANON.md`
 
-## Чеклист
+## Checklist
 
-- [ ] Прочитал роутер
-- [ ] Загрузил только минимум нужного
-- [ ] Не нарушил ban-list
-- [ ] Не выдумал факты
-- [ ] Новые файлы = DRAFT
+- [ ] Read the router
+- [ ] Loaded only the minimum needed (prefer `.en.md`)
+- [ ] Did not violate the ban-list
+- [ ] Did not invent facts
+- [ ] New files = DRAFT
 
-Если сомневаешься — спроси George или пометь ASSUMPTION.
+If in doubt — ask George or mark ASSUMPTION.
