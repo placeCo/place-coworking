@@ -1,0 +1,16 @@
+# Place Marketing — открытое (11.10.2026)
+- TripAdvisor: смена категории ресторан → коворкинг; нужен вход владельца — ждём George (кто управляет листингом).
+- Bing Places: удалить FARANG ICE CREAM и PLACE PHOTOSTUDIO — нужен вход George в Microsoft.
+- Instagram bio/закрепы: проверить — ждём текст от SMM (сессия просит пароль).
+- Coworkies: удалить старую запись «Place Coworking» — ждём поддержку (Dimitar); добавить фото (логотип ≥400×400, обложка ≥1500×340) — файлы /workspace/baanlyy-photos/final/.
+- Croissant: перенос Bangkok → Phuket — ждём Viktoria.
+- Baanlyy: исправления отправлены 10.10 — ждём Кирби.
+- Office Hub: подтвердить годовую цену ровно 20 000 и листинг зала 40 мест — ждём Lijesh.
+- Worka / NewOfficeAsia: вместимость офиса 6 в кабинете Worka — нужен вход.
+- Phuket Expat Guide, Thailand Stuff: почта не работает — найти форму на сайте.
+- mayak.app: сайт лежит — написать, когда откроется. Geronimo-ai: сайт лежит.
+- Ещё по плану: SearchRemotely, icowork, удалить 9 товаров Merchant Center в GBP.
+- Партнёрская листовка с промокодом: ждём первого согласившегося партнёра от Partners.
+- Особые абонементы (Iurii, Sophia, Pavel): ждём ответ Лены через Lead.
+- Второй офисный текст в Пхукет Объявления — не раньше 16.10 (Ops/Lead публикует).
+- Новый сайт: 7 вопросов к George в сводном ТЗ у Place Site.
