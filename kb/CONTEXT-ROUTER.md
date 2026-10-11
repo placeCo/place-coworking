@@ -1,37 +1,38 @@
-# CONTEXT-ROUTER — порядок загрузки контекста
+# CONTEXT-ROUTER — context loading order
 
-**Единственный источник правил для ботов.** Читай это перед любой задачей.
+**Single source of rules for bots.** Read this before any task.
 
-## Приоритет загрузки (от лёгкого к тяжёлому)
+## Loading priority (light to heavy)
 
-1. **`kb/contexts/`** — только нужные файлы (см. таблицу ниже)
-2. **`canon.json`** — если нужна структура / машинный парсинг
-3. **`CANON.md`** — только если предыдущих не хватило или есть противоречие
-4. Всё остальное (`docs/`, inbox, старые drafts) — только как supporting, никогда как источник правды
+1. **`kb/contexts/*.en.md`** — prefer English versions (lower token cost)
+2. **`kb/contexts/`** (Russian) — only if English version is missing
+3. **`canon.json`** — if structure / machine parsing is needed
+4. **`CANON.md`** — only if the above is not enough or there is a contradiction
+5. Everything else (`docs/`, inbox, old drafts) — supporting only, never as source of truth
 
-## Таблица загрузки по задачам
+## Loading table by task
 
-| Задача | Минимальный набор | Дополнительно если нужно |
+| Task | Minimal set (prefer .en.md) | Extra if needed |
 |---|---|---|
-| Цены, часы, Pass/Office | `kb/contexts/prices-hours.md` | `canon.json` |
-| Что можно/нельзя, ban-list | `kb/contexts/products-ban.md` | `kb/contexts/bot-rules.md` |
-| Контакты, адрес, CTA | `kb/contexts/contacts.md` | — |
-| Ответ гостю / ресепшен | `kb/contexts/reception-short.md` + `prices-hours.md` | `bot-rules.md` |
-| Пост / текст / ТЗ | `prices-hours.md` + `products-ban.md` + `bot-rules.md` | `CANON.md` только если сложно |
-| Любая новая задача | `kb/contexts/bot-rules.md` + нужные из таблицы | — |
+| Prices, hours, Pass/Office | `kb/contexts/prices-hours.en.md` | `canon.json` |
+| What is allowed/forbidden, ban-list | `kb/contexts/products-ban.en.md` | `bot-rules.en.md` |
+| Contacts, address, CTA | `kb/contexts/contacts.en.md` | — |
+| Guest / reception answer | `reception-short.en.md` + `prices-hours.en.md` | `bot-rules.en.md` |
+| Post / text / spec | `prices-hours.en.md` + `products-ban.en.md` + `bot-rules.en.md` | `CANON.md` only if complex |
+| Any new task | `kb/contexts/bot-rules.en.md` + needed from table | — |
 
-## Жёсткие правила
+## Hard rules
 
-- Никогда не грузи старые drafts (PR #7–9, файлы до 09.10) как источник.
-- Если файл в `kb/contexts/` противоречит `CANON.md` — побеждает `CANON.md`, и нужно обновить лёгкий файл.
-- Нет факта → `ASSUMPTION` или спроси George. Не выдумывай.
-- Все новые тексты — только черновики, пока нет явного OK.
+- Never load old drafts (PR #7–9, files before 09.10) as a source.
+- If a file in `kb/contexts/` contradicts `CANON.md` — `CANON.md` wins and the lightweight file must be updated.
+- No fact → `ASSUMPTION` or ask George. Do not invent.
+- All new texts are drafts only until explicit OK.
 
-## Быстрый старт для новой сессии
+## Quick start for a new session
 
-1. Прочитай этот файл
-2. Определи задачу
-3. Грузи только указанные файлы из таблицы
-4. Работай
+1. Read this file
+2. Identify the task
+3. Load only the indicated `.en.md` files
+4. Work
 
-Обновлено: 11.10.2026
+Updated: 11.10.2026
