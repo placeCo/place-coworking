@@ -5,9 +5,10 @@
 ## 1. Источник правды (иерархия)
 
 1. **`CANON.md`** — единственная операционная правда (цены, часы, продукты, ban-list). Binding.
-2. `docs/canon/DECISIONS-LOG.md` + PLACE-BRIEF-2026-10-09 — история решений.
-3. Всё остальное (FAQ, TZ, marketing drafts, inbox) — может отставать. Если противоречит канону — канон побеждает.
-4. Нет факта → пиши `ASSUMPTION` или спроси George.
+2. `canon.json` — machine-readable выжимка того же канона (для быстрого парсинга). Если противоречит `CANON.md` — побеждает `CANON.md`.
+3. `docs/canon/DECISIONS-LOG.md` + PLACE-BRIEF-2026-10-09 — история решений.
+4. Всё остальное (FAQ, TZ, marketing drafts, inbox) — может отставать. Если противоречит канону — канон побеждает.
+5. Нет факта → пиши `ASSUMPTION` или спроси George.
 
 ## 2. Текущий канон (кратко, 11.10.2026)
 
@@ -17,6 +18,8 @@
 - **Podcast:** одна комната, запись только через WhatsApp. Цену не выдумывать.
 - **Контакты:** WhatsApp +66 95 117 0481 · info@placecoworking.com · placecoworking.com · IG @place_coworking_phuket · TG @coworking_place_phuket
 - **Адрес:** 59/2 Chao Fah Tawan Tok Rd, Chalong, 83130. Нельзя: Kathu, 83000, 592, Бангкок.
+
+Полная machine-readable версия: `canon.json`.
 
 ## 3. Что бот делает / не делает
 
@@ -36,16 +39,25 @@
 | Что нужно | Куда |
 |---|---|
 | Полный канон | `CANON.md` |
+| Machine-readable | `canon.json` |
 | Решения | `docs/canon/DECISIONS-LOG.md` |
 | Скрипт ресепшена | `docs/reception/RECEPTION-SCRIPT.md` |
 | Боты (черновики) | `docs/ops/bots/README.md` |
 | Роли | `docs/ops/ROLES.md` |
 | Сайт-ТЗ | см. репо `place-coworking-site` |
 
-## 5. Статус на 11.10.2026
+## 5. Чеклист перед коммитом / пушем (для ботов)
+
+- [ ] Прочитал `CANON.md` и `canon.json`
+- [ ] Не нарушил ban-list
+- [ ] Не выдумал цены / загрузку / свободность офиса
+- [ ] Все новые файлы помечены как DRAFT, если это не канон
+- [ ] Не добавил секретов, персональных данных, токенов
+
+## 6. Статус на 11.10.2026
 
 - Все скрипты в `docs/ops/bots/` — **drafts, не deployed**.
-- Draft-PR #7–9 (SEO) — устарели после 09.10, требуют решения George.
+- Draft-PR #7–9 (SEO) — устарели после 09.10, комментарии добавлены. Требуют решения George.
 - Сайт-макет в приватном репо `place-coworking-site`.
 
 Если сомневаешься — спроси George или пометь ASSUMPTION.
