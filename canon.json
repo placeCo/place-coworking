@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "source": "CANON.md + DECISIONS-LOG + PLACE-BRIEF-2026-10-09",
+    "updated": "2026-10-11",
+    "binding": true,
+    "note": "If this conflicts with CANON.md, CANON.md wins. Bots should prefer CANON.md for full text."
+  },
+  "hours": {
+    "public": "08:00–23:00 daily",
+    "public_24_7": false,
+    "night_access_public": false,
+    "night_access_internal": "Office tenants can enter their office at night. Guests only by exception via WhatsApp request. Never promise publicly."
+  },
+  "products": {
+    "place_pass": {
+      "floors": [1, 3],
+      "prices": {
+        "hour": 50,
+        "day_until_2026_10_31": 400,
+        "day_from_2026_11_01": 500,
+        "week": 1800,
+        "month": 6000,
+        "three_months": 15000,
+        "ten_days_until_2026_10_31": 2500,
+        "ten_days_from_2026_11_01": 3500
+      },
+      "currency": "THB",
+      "free_day": "Only in ads/flyers. Not on site, Google, IG bio, or default reception answer."
+    },
+    "office": {
+      "floors": [5, 2],
+      "prices": {
+        "month_no_address": 30000,
+        "month_yearly_with_company_address": 20000
+      },
+      "currency": "THB",
+      "max_people_floor5": 6,
+      "availability_response": "Message us on WhatsApp and we'll show you what's free"
+    },
+    "podcast": {
+      "type": "single_room",
+      "booking": "WhatsApp only",
+      "price": null,
+      "note": "Do not invent price. Light and camera can be rented with the room (no separate public price)."
+    }
+  },
+  "contacts": {
+    "whatsapp": "+66 95 117 0481",
+    "email": "info@placecoworking.com",
+    "website": "https://placecoworking.com",
+    "instagram": "@place_coworking_phuket",
+    "telegram": "@coworking_place_phuket",
+    "address": "59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket, 83130",
+    "banned_address_terms": ["Kathu", "83000", "592", "Bangkok"]
+  },
+  "ban_list": [
+    "24/7",
+    "open 24h",
+    "night access (public)",
+    "3 free days / 3 free days",
+    "day 250",
+    "day 300",
+    "month 3000",
+    "month 3500",
+    "cheapest / best value / дешёвый",
+    "comparison with cafe coworkings",
+    "Kathu",
+    "83000",
+    "592",
+    "Bangkok",
+    "visa via condo",
+    "five offices on floor 4",
+    "confirming office availability without WhatsApp phrase"
+  ],
+  "not_for_sale": [
+    "whole floor 2 for 140000 THB/month",
+    "meeting rooms from 250 THB/h as public offer",
+    "floor 4 as venue",
+    "five new offices on floor 4",
+    "month 24/7 9000"
+  ]
+}
