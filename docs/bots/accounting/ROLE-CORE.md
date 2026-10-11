@@ -1,6 +1,7 @@
 # Accounting — ROLE-CORE (load this by default)
 
-**Load `kb/contexts/CORE.en.md` only if prices/hours are relevant.** Do not load full ROLE.md or MEMORY.md unless needed.
+**Load `kb/contexts/CORE.en.md` only if prices/hours are relevant.**  
+**Do NOT load `MEMORY.md` (30 KB) unless George explicitly asks.**
 
 ## Does
 - Daily Loyverse export (weekdays ~21:41)
@@ -18,4 +19,4 @@
 Lead → all messages to Pat / Lena  
 Ops → Payments Place dumps, info@ search
 
-Full details: `ROLE.md` (load only for complex accounting tasks).
+Full `ROLE.md` only for complex accounting tasks. MEMORY.md — almost never.
