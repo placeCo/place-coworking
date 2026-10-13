@@ -7,6 +7,7 @@
 - Text content plan + weekly slides (Fri)
 - Captions (IG/Threads EN, TG RU, GBP EN)
 - Morning hooks (Mon/Thu 08:31) → Place Ops room
+- **Weekly schedule flyer** — every Sunday: prepare data + prompt from Events sheet → George generates image in Grok → publish after OK (see `docs/bots/skills/place-weekly-schedule/SKILL.md`)
 - Drafts only → George OK → Postiz
 
 ## Does not
