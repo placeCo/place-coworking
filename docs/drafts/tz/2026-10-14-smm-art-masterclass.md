@@ -14,7 +14,6 @@ DRAFT · needs George + Grok
 
 Арт-мастер-класс с художником — каждую субботу в 14:00 в Place Coworking.
 
-🖌 Опыт не нужен
 🧺 Все материалы включены
 📍 Place Coworking, 59/2 Chao Fah Tawan Tok Rd, Chalong
 
@@ -26,7 +25,6 @@ DRAFT · needs George + Grok
 Art workshop with an artist
 🗓 Every Saturday, 14:00
 🧺 All materials included
-🖌 No experience needed
 📍 Place Coworking, Chalong
 
 ✍️ Sign up on Telegram: @silencesofi
@@ -36,7 +34,6 @@ Art workshop with an artist
 
 ## Открытые вопросы
 2. Подтверждение Лены: первая дата.
-3. «Опыт не нужен» — согласовать с Никитой (в запросе этого нет).
 4. Каналы публикации: Postiz (IG, TG-канал) или чат через Lead.
 
 ## ТЗ для Grok (George) — визуалы во все соцсети
