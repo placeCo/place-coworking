@@ -12,10 +12,14 @@ Sources: docs/canon/ANALYSIS-HARD-2026-10-15.md (§3 micro-management, §4 gas),
 - Cost scale: low = one short session, no browser; medium = code edit/test; high = browser/long generation (avoid; route via TZ to Grok).
 
 ## Grok split
+Grok has a large limit — route generously. Anything beyond a tiny task (code, long docs, research, analysis, translations, multi-file work) goes to Grok. Ops keeps only tiny tasks, specs, checks and deploys.
 Heavy items go to George's Grok: Ops writes a short spec in docs/drafts/tz/ (first line `DRAFT · needs George + Grok`), Grok does the work, Ops then checks against canon and deploys after George OK.
 - D/D2 Tuya.gs → spec `docs/drafts/tz/2026-10-20-grok-tuya-aliases-colours.md`
 - E2 keyholders code → spec `docs/drafts/tz/2026-10-22-grok-keyholders-night.md`
 - F autoreplies EN/RU/TH → spec `docs/drafts/tz/2026-10-26-grok-autoreplies.md`
+- C TH/EN translation of team questions → spec `docs/drafts/tz/2026-10-19-grok-team-questions-th.md`
+- G leave table + reminder Apps Script → spec `docs/drafts/tz/2026-10-27-grok-leave-reminder.md`
+- I next-backlog analysis (if more than a short status) → spec on 29.10
 
 ## Day by day
 
@@ -32,7 +36,7 @@ Heavy items go to George's Grok: Ops writes a short spec in docs/drafts/tz/ (fir
 | Sat 24.10 | buffer / George review | – |
 | Sun 25.10 | rest | – |
 | Mon 26.10 | F. Autoreplies EN/RU/TH — **Grok**: Ops writes spec; check result 27.10 | low |
-| Tue 27.10 | G. Leave/days-off table + 3-day reminder (Apps Script spec) | low |
+| Tue 27.10 | G. Leave table + reminder — **Grok**: Ops writes spec; check F result | low |
 | Wed 28.10 | H. Urgent-issue flow (status in chat + log) + gas-savings checklist | low |
 | Thu 29.10 | I. Wrap-up: status report to George, next 2-week backlog | low |
 
@@ -54,7 +58,7 @@ Heavy items go to George's Grok: Ops writes a short spec in docs/drafts/tz/ (fir
 ### C. Team list + questions (19.10)
 - Budget: low
 - Goal: prepare onboarding of Thai team to the bot (ANALYSIS §3.4, TEAM-AND-QUESTIONS.md).
-- Steps: Ops fills only known roles; George fills names/contacts; translate the 8 questions to TH/EN (short); define "what each person gets from bot". Payroll fields → hand to Accounting.
+- Steps: Ops fills only known roles; George fills names/contacts; TH/EN translation → Grok (spec 2026-10-19-grok-team-questions-th.md); define "what each person gets from bot". Payroll fields → hand to Accounting.
 - Done: table with at least roles + language + channel; questions ready to send (send only after George OK).
 
 ### D/D2. Tuya.gs EN aliases + status colours for Lena (20–21.10)
@@ -80,7 +84,7 @@ Heavy items go to George's Grok: Ops writes a short spec in docs/drafts/tz/ (fir
 ### G. Leave/days-off table + reminder (27.10)
 - Budget: low
 - Goal: ANALYSIS §3.3 — table + reminder 3 days before.
-- Steps: sheet columns (name, from, to, type, replacement); Apps Script daily trigger spec (one cheap run/day).
+- Steps: sheet columns (name, from, to, type, replacement); Apps Script daily trigger (one cheap run/day) — code by Grok (spec 2026-10-27-grok-leave-reminder.md); Ops checks + deploys.
 - Done: spec + sheet template; code only after George OK.
 
 ### H. Urgent issues + gas checklist (28.10)
