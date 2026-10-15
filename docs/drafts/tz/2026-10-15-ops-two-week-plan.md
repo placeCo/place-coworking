@@ -11,6 +11,12 @@ Sources: docs/canon/ANALYSIS-HARD-2026-10-15.md (§3 micro-management, §4 gas),
 - Week 2 (19.10–29.10): normal pacing, 1–2 tasks/day, one medium task per day max; stop and write a TZ if a task grows to high.
 - Cost scale: low = one short session, no browser; medium = code edit/test; high = browser/long generation (avoid; route via TZ to Grok).
 
+## Grok split
+Heavy items go to George's Grok: Ops writes a short spec in docs/drafts/tz/ (first line `DRAFT · needs George + Grok`), Grok does the work, Ops then checks against canon and deploys after George OK.
+- D/D2 Tuya.gs → spec `docs/drafts/tz/2026-10-20-grok-tuya-aliases-colours.md`
+- E2 keyholders code → spec `docs/drafts/tz/2026-10-22-grok-keyholders-night.md`
+- F autoreplies EN/RU/TH → spec `docs/drafts/tz/2026-10-26-grok-autoreplies.md`
+
 ## Day by day
 
 | Date | Task | Budget |
@@ -19,13 +25,13 @@ Sources: docs/canon/ANALYSIS-HARD-2026-10-15.md (§3 micro-management, §4 gas),
 | Sat 17.10 | B. Daily report template (3 lines) | low |
 | Sun 18.10 | rest — week-1 cap 45% | – |
 | Mon 19.10 | C. Team list skeleton + 8 onboarding questions → George | low |
-| Tue 20.10 | D. Tuya.gs EN aliases (spec + patch) | med |
-| Wed 21.10 | D2. Tuya.gs status colours for Lena | med |
-| Thu 22.10 | E. keyholders-247.gs rework — spec | low |
-| Fri 23.10 | E2. keyholders-247.gs rework — code draft + test in test-project | med |
+| Tue 20.10 | D. Tuya.gs aliases + colours — **Grok**: Ops writes spec | low |
+| Wed 21.10 | D2. Check Grok's Tuya.gs result, test 1 device | low–medium |
+| Thu 22.10 | E. keyholders rework — **Grok**: Ops writes spec | low |
+| Fri 23.10 | E2. Check Grok's code, dry run in test-project | low–medium |
 | Sat 24.10 | buffer / George review | – |
 | Sun 25.10 | rest | – |
-| Mon 26.10 | F. Autoreplies EN/RU/TH — audit + draft | med |
+| Mon 26.10 | F. Autoreplies EN/RU/TH — **Grok**: Ops writes spec; check result 27.10 | low |
 | Tue 27.10 | G. Leave/days-off table + 3-day reminder (Apps Script spec) | low |
 | Wed 28.10 | H. Urgent-issue flow (status in chat + log) + gas-savings checklist | low |
 | Thu 29.10 | I. Wrap-up: status report to George, next 2-week backlog | low |
@@ -52,21 +58,21 @@ Sources: docs/canon/ANALYSIS-HARD-2026-10-15.md (§3 micro-management, §4 gas),
 - Done: table with at least roles + language + channel; questions ready to send (send only after George OK).
 
 ### D/D2. Tuya.gs EN aliases + status colours for Lena (20–21.10)
-- Budget: medium
+- Budget: low for Ops (heavy part → Grok, spec 2026-10-20-grok-tuya-aliases-colours.md)
 - Goal: English device aliases and colour-coded status (e.g. green ok / yellow warn / red offline) readable by Lena.
 - Refs: Ops backlog. NOTE: Tuya.gs is not in the repo (only Line.gs, keyholders) — need source.
 - Steps: get current Tuya.gs (George/Apps Script export) → commit to docs/ops/tuya/; add alias map {deviceId → EN name}; add status→colour mapping in sheet output; test on one device.
 - Done: diff committed; Lena sees EN names + colours in one sample run.
 
 ### E/E2. keyholders-247.gs rework (22–23.10)
-- Budget: low (spec) / medium (code)
+- Budget: low for Ops (code → Grok, spec 2026-10-22-grok-keyholders-night.md)
 - Refs: docs/ops/handover/keyholders-247.gs, docs/ops/handover/test-project/40-Keyholders.gs.
 - Rules: owners (office holders) always have night access; guests only on request (explicit approval/date); never write "24/7" anywhere (texts, sheet headers, logs, file comments). Consider renaming file to keyholders-night.gs.
 - Steps: spec (22.10) → code in test-project, dry run (23.10) → George approves before deploy.
 - Done: grep "24/7" = 0 in outputs; owner/guest logic tested on sample rows.
 
 ### F. Autoreplies EN/RU/TH (26.10)
-- Budget: medium
+- Budget: low for Ops (drafting → Grok, spec 2026-10-26-grok-autoreplies.md)
 - Refs: docs/ops/bots/instagram/AUTOREPLIES.md, docs/ops/line/Line.gs, CORE.en.md.
 - Steps: audit existing replies vs canon (08:00–23:00, prices, ban list, WhatsApp phrase for office/podcast); draft EN/RU/TH set; TH needs native check.
 - Done: one file with 3 languages, banned words = 0; George approves; deploy separately.
