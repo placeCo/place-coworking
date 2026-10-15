@@ -1,31 +1,41 @@
-# Leave / days-off — table + reminder design
+DRAFT · Grok output
 
-Design only. No production deploy.
+# Leave table + reminder design — 15.10.2026
 
-## Columns
-Name | From | To | Type | Replacement | Notified?
+Source: TZ #4 + leave form TZ. Design only, no deploy.
 
-## Reminder
-One cheap daily run (e.g. 09:00 ICT).  
-Notify 3 days before From date.  
-No tight loops.
+## Sheet columns
 
-## Apps Script draft (example)
+| Name | From | To | Type | Replacement | Notified? | Status |
+|------|------|----|------|-------------|-----------|--------|
+| | | | | | no | pending |
 
-```javascript
-function checkLeave() {
-  const sheet = SpreadsheetApp.getActive().getSheetByName('Leave');
-  const data = sheet.getDataRange().getValues();
-  const today = new Date();
-  for (let i = 1; i < data.length; i++) {
-    const from = new Date(data[i][1]);
-    const diff = (from - today) / (1000 * 60 * 60 * 24);
-    if (diff <= 3 && diff >= 0 && !data[i][5]) {
-      // send short message to Ops / George
-      // mark Notified = yes
+(Align with form response + extra Status / Decided by columns from leave form design.)
+
+## Apps Script reminder (cheap daily)
+
+Trigger: one time-based daily at 09:00.
+
+Pseudo-code:
+```
+function dailyLeaveReminder() {
+  var sheet = SpreadsheetApp.getActive().getSheetByName("Leave");
+  var data = sheet.getDataRange().getValues();
+  var today = new Date();
+  for (var i = 1; i < data.length; i++) {
+    var status = data[i][statusCol];
+    var from = new Date(data[i][fromCol]);
+    var notified = data[i][notifiedCol];
+    if (status === "approved" && notified !== "yes" && daysBetween(today, from) === 3) {
+      // post short EN reminder to PLACE Team TG group
+      sheet.getRange(i+1, notifiedCol+1).setValue("yes");
     }
   }
 }
 ```
 
-Trigger: time-driven, once per day.
+Gas limits: one daily run, no tight loops, no large range scans if sheet grows (filter first).
+
+See also full form design in 2026-10-15-leave-request-form.md.
+
+ASSUMPTION: Can reuse the same sheet as the form responses.
