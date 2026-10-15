@@ -6,13 +6,18 @@ Principle (George, 15.10): slow, cheapest-first, gas is limited. Max 1–2 small
 
 Sources: docs/canon/ANALYSIS-HARD-2026-10-15.md (§3 micro-management, §4 gas), docs/ops/TEAM-AND-QUESTIONS.md, docs/ops/PAYROLL-THAI-2026.md, kb/BOT-LOAD.md, existing Ops backlog.
 
+## Budget
+- Week 1 (16.10–18.10): Ops spends max 45% of weekly AI budget on this plan. Only A (message to John, no browser) and B (one small md file). Everything else moved to week 2.
+- Week 2 (19.10–29.10): normal pacing, 1–2 tasks/day, one medium task per day max; stop and write a TZ if a task grows to high.
+- Cost scale: low = one short session, no browser; medium = code edit/test; high = browser/long generation (avoid; route via TZ to Grok).
+
 ## Day by day
 
-| Date | Task | Cost |
+| Date | Task | Budget |
 |------|------|------|
-| Fri 16.10 | A. air3 Tuya quota — check with John (back 16.10) | low |
+| Fri 16.10 | A. air3 Tuya quota — ask John (text only, no console/browser) | low |
 | Sat 17.10 | B. Daily report template (3 lines) | low |
-| Sun 18.10 | rest / buffer | – |
+| Sun 18.10 | rest — week-1 cap 45% | – |
 | Mon 19.10 | C. Team list skeleton + 8 onboarding questions → George | low |
 | Tue 20.10 | D. Tuya.gs EN aliases (spec + patch) | med |
 | Wed 21.10 | D2. Tuya.gs status colours for Lena | med |
@@ -28,48 +33,57 @@ Sources: docs/canon/ANALYSIS-HARD-2026-10-15.md (§3 micro-management, §4 gas),
 ## Task cards
 
 ### A. air3 Tuya quota (16.10)
+- Budget: low
 - Goal: restore/raise Tuya API quota so air3 readings/control work.
 - Refs: Ops backlog; ROLE-CORE (Tuya night read 00:00).
-- Steps: ask John for current quota/plan in Tuya IoT console; log the answer; if quota exhausted, propose reducing poll frequency (night read only, no polling loops).
+- Steps: ask John by message for current quota/plan (he checks the Tuya IoT console, not Ops via browser); log the answer; if quota exhausted, propose reducing poll frequency (night read only, no polling loops).
 - Done: quota status known and written here; night read 00:00 confirmed working or issue logged.
 
 ### B. Daily report template (17.10)
+- Budget: low
 - Goal: 3-line format "done / problem / need" (ANALYSIS §3.2).
 - Steps: write docs/ops/DAILY-REPORT.md with template in EN/RU/TH, who sends, by when, who collects (Ops).
 - Done: template file exists; George approves collector + time.
 
 ### C. Team list + questions (19.10)
+- Budget: low
 - Goal: prepare onboarding of Thai team to the bot (ANALYSIS §3.4, TEAM-AND-QUESTIONS.md).
 - Steps: Ops fills only known roles; George fills names/contacts; translate the 8 questions to TH/EN (short); define "what each person gets from bot". Payroll fields → hand to Accounting.
 - Done: table with at least roles + language + channel; questions ready to send (send only after George OK).
 
 ### D/D2. Tuya.gs EN aliases + status colours for Lena (20–21.10)
+- Budget: medium
 - Goal: English device aliases and colour-coded status (e.g. green ok / yellow warn / red offline) readable by Lena.
 - Refs: Ops backlog. NOTE: Tuya.gs is not in the repo (only Line.gs, keyholders) — need source.
 - Steps: get current Tuya.gs (George/Apps Script export) → commit to docs/ops/tuya/; add alias map {deviceId → EN name}; add status→colour mapping in sheet output; test on one device.
 - Done: diff committed; Lena sees EN names + colours in one sample run.
 
 ### E/E2. keyholders-247.gs rework (22–23.10)
+- Budget: low (spec) / medium (code)
 - Refs: docs/ops/handover/keyholders-247.gs, docs/ops/handover/test-project/40-Keyholders.gs.
 - Rules: owners (office holders) always have night access; guests only on request (explicit approval/date); never write "24/7" anywhere (texts, sheet headers, logs, file comments). Consider renaming file to keyholders-night.gs.
 - Steps: spec (22.10) → code in test-project, dry run (23.10) → George approves before deploy.
 - Done: grep "24/7" = 0 in outputs; owner/guest logic tested on sample rows.
 
 ### F. Autoreplies EN/RU/TH (26.10)
+- Budget: medium
 - Refs: docs/ops/bots/instagram/AUTOREPLIES.md, docs/ops/line/Line.gs, CORE.en.md.
 - Steps: audit existing replies vs canon (08:00–23:00, prices, ban list, WhatsApp phrase for office/podcast); draft EN/RU/TH set; TH needs native check.
 - Done: one file with 3 languages, banned words = 0; George approves; deploy separately.
 
 ### G. Leave/days-off table + reminder (27.10)
+- Budget: low
 - Goal: ANALYSIS §3.3 — table + reminder 3 days before.
 - Steps: sheet columns (name, from, to, type, replacement); Apps Script daily trigger spec (one cheap run/day).
 - Done: spec + sheet template; code only after George OK.
 
 ### H. Urgent issues + gas checklist (28.10)
+- Budget: low
 - Goal: ANALYSIS §3.5 + §4. Short doc: how urgent issues are posted/logged; gas rules for all bots (CORE+ROLE-CORE only, no MEMORY.md, heavy → TZ, no images/long texts in bot sessions).
 - Done: docs/ops/URGENT-AND-GAS.md (≤1 page).
 
 ### I. Wrap-up (29.10)
+- Budget: low
 - Status of A–H, what slipped, next backlog.
 
 ## Route to other bots (not Ops)
