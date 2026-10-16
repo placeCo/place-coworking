@@ -91,7 +91,7 @@
 | WhatsApp-клики по офису | GA4 `office_whatsapp_click` | цифру ставит George |
 | Все лиды в WA / TG | `click_whatsapp`, `click_telegram` по product и языку | — |
 | Продажи Pass (неделя / 10 дней / месяц / 3 мес) | строки «Новые гости» с кодом `S-*` ↔ оплата в Loyverse | — |
-| Доля лидов с кодом источника | строк «Новые гости» с «Откуда — детали» = `S-…` / все новые | — |
+| Доля лидов с кодом источника | строк «Новые гости» с колонкой I «Code» = `S-…` / все новые | — |
 | Техника | Lighthouse mobile ≥ 90 (Perf, A11y, SEO, BP); 0 ошибок в Search Console по hreflang/schema | обязательно к приёмке |
 
 Базовой линии нет: колонка «Откуда пришёл» на 09.10 пустая, старая Google Ads 25.08–08.10 дала 0 покупок (Marketing). Через 4 недели данных — пересмотр целей и порядка языков.
@@ -444,7 +444,7 @@ meeting_hour  meeting   Meeting room (Place Pass residents −20%)   250     per
 
 **UTM-правила:** латиница, нижний регистр, без пробелов. utm_source: google, gbp, instagram, facebook, telegram, flyer, partner, guide. utm_medium: cpc, organic, social, group_post, print, referral. utm_campaign: `<продукт>_<гггг-мм>` (напр. `office_2026-10`). QR листовки → `/?utm_source=flyer&utm_medium=print&utm_campaign=<месяц>`; посты в группах → `utm_medium=group_post`, `utm_content=<группа>`. Бесплатный день по листовке гасит ресепшен по листовке в руке — на посадочной его нет.
 
-**Еженедельно (Marketing, понедельник):** GA4 `office_tour_request` + `office_whatsapp_click` по языкам ↔ строки «Новые гости» с кодом `S-*` ↔ офисные платежи в Loyverse. Админ пишет «Откуда пришёл» = «Сайт», «Откуда — детали» = код целиком; после первой оплаты код — в заметку карточки Loyverse.
+**Еженедельно (Marketing, понедельник):** GA4 `office_tour_request` + `office_whatsapp_click` по языкам ↔ строки «Новые гости» с кодом `S-*` ↔ офисные платежи в Loyverse. Админ пишет Source = «Сайт/Website», код целиком — в колонку I «Code»; после первой оплаты код — в заметку карточки Loyverse.
 
 ---
 
