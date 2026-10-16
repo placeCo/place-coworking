@@ -2,6 +2,7 @@
 // 09.10.2026 ICT. Spec: George 09.10 14:12 (via Marketing), texts from place-marketing/funnel-retention-2026-10-09.md,
 // section 3 «Удержание → Что делать до конца срока».
 //
+// v2 16.10.2026: + D-4/D-3 PLACE Team (EN+TH) & Lena DM, D-1/H-empty PLACE Team & George DM, per-guest/stage dedupe.
 // What it does: once a day (~10:15 ICT) reads Resident info «Лист1», finds passes whose Finish is
 //   today+3 / tomorrow / today / today−7 (and column H empty), composes ONE Telegram message per admin
 //   (RU + short EN) with ready WhatsApp texts (+ wa.me link when column G holds a phone number) and appends it
@@ -27,7 +28,13 @@ var RN_DAY_FROM = 9, RN_DAY_TO = 21;                // daytime window (ICT hours
 var RN_MAX_TG = 3800;                               // Telegram limit is 4096; keep each part under 4000
 var RN_TRUST_CELL_YEAR = true;  // dates in «Лист1» are real date cells (display dd.MM hides the year). true = use the stored year
                                 // (fixes Finish<Start by +1 year); false = ignore stored year, infer the year closest to today.
-var RN_PROP_LAST = 'RN_LAST_SENT_DATE';             // Script Property: last ICT date we wrote to outbox (no double send)
+var RN_PROP_LAST = 'RN_LAST_SENT_DATE';             // legacy (v1 daily lock); v2 dedupes per guest/stage, see RN_KEY_PREFIX
+// v2 (16.10.2026, George OK): D-4/D-3 -> PLACE Team (EN+TH, Marketing texts) + Lena DM (RU); D-1 with H empty -> PLACE Team + George DM.
+var RN_TEAM_CHAT = '-1003641241156';                // PLACE Team supergroup (Code.template.gs)
+var RN_LENA_CHAT = '626363253';                     // Lena (manager), private chat with @PlaceLeadBot
+var RN_PROP_GEORGE = 'GEORGE_CHAT_ID';              // Script Property; missing -> WARN in log, George DM skipped
+var RN_KEY_PREFIX = 'RN_S_';                        // RN_S_<channel>_<stage>_<nameHash>_<finish yyyymmdd> = sent ICT date
+var RN_KEY_KEEP_DAYS = 30;                          // keys whose finish is older than this are deleted
 
 // Canon prices (brief). Day / 10 days change from 01.11.2026. 24/7 is never offered.
 var RN_PRICE_SWITCH = '2026-11-01';
@@ -93,6 +100,12 @@ function rnResolveDates_(startCell, finishCell, todayYmd) {
       st = rnValid_(fy, sm, sd) ? rnYmd_(fy, sm, sd) : null;
       if (st && st > fin) st = rnValid_(fy - 1, sm, sd) ? rnYmd_(fy - 1, sm, sd) : null;
     }
+  }
+  // Stored-year typos seen in «Лист1» (16.10: 2005, 2014, 2526): Start absurdly far from Finish -> rebuild Start from Finish's year.
+  if (st && Math.abs(rnToDays_(fin) - rnToDays_(st)) > 400) {
+    var sm2 = +st.slice(5, 7), sd2 = +st.slice(8), fy2 = +fin.slice(0, 4);
+    st = rnValid_(fy2, sm2, sd2) ? rnYmd_(fy2, sm2, sd2) : null;
+    if (st && st > fin && rnValid_(fy2 - 1, sm2, sd2)) st = rnYmd_(fy2 - 1, sm2, sd2);
   }
   // Year typed/auto-filled wrong across New Year (22.12 -> 21.01 stored in the same year): move Finish +1 year.
   if (st && fin < st) {
@@ -184,8 +197,8 @@ function rnCheckText_(t) {
 
 // rows: values of «Лист1» A:J with Date cells already converted to 'yyyy-MM-dd'. -> {today, buckets, rowsSeen}
 function rnCollect_(rows, todayYmd) {
-  var want = {d3: rnAddDays_(todayYmd, 3), d1: rnAddDays_(todayYmd, 1), d0: todayYmd, dm7: rnAddDays_(todayYmd, -7)};
-  var out = {today: todayYmd, dates: want, d3: [], d1: [], d0: [], dm7: [], offices: [], skipped: [], rowsSeen: 0};
+  var want = {d4: rnAddDays_(todayYmd, 4), d3: rnAddDays_(todayYmd, 3), d1: rnAddDays_(todayYmd, 1), d0: todayYmd, dm7: rnAddDays_(todayYmd, -7)};
+  var out = {today: todayYmd, dates: want, d4: [], d3: [], d1: [], d0: [], dm7: [], esc: [], offices: [], skipped: [], rowsSeen: 0};
   var block = '', officeBlock = false;
   for (var i = 1; i < rows.length; i++) {        // row 1 = header
     var v = rows[i];
@@ -202,7 +215,10 @@ function rnCollect_(rows, todayYmd) {
     for (var k in want) if (want[k] === r.finish) bucket = k;
     if (!bucket) continue;
     r.pass = rnPassKind_(r.type, r.floor);
-    if (rnIsOffice_(r, officeBlock)) { r.bucket = bucket; out.offices.push(r); continue; }
+    r.bucket = bucket;
+    if (bucket === 'd1' && !r.h) out.esc.push(r);                 // D-1, H empty -> team + George
+    if (rnIsOffice_(r, officeBlock)) { r.office = true; if (bucket !== 'd4') out.offices.push(r); else out.d4.push(r); continue; }
+    if (bucket === 'd4') { out.d4.push(r); continue; }             // D-4: team + Lena only, no admin DM / client text
     if (bucket === 'dm7' && r.h) { out.skipped.push({row: r.row, name: r.name, why: 'H filled: ' + r.h}); continue; }
     r.ph = rnPhone_(r.contact);
     r.text = rnClientText_(bucket, r, todayYmd);
@@ -263,6 +279,79 @@ function rnCompose_(c) {
   return parts;
 }
 
+// ---------------- v2: team / Lena / George + per-guest dedupe (pure) ----------------
+
+// FNV-1a 32-bit of the normalized name -> 8 hex chars (stable across row moves).
+function rnHash_(name) {
+  var s = rnClean_(name).toLowerCase(), h = 0x811c9dc5;
+  for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul ? Math.imul(h, 0x01000193) : (h * 0x01000193) | 0; }
+  return ('0000000' + (h >>> 0).toString(16)).slice(-8);
+}
+function rnKey_(channel, stage, r) { return RN_KEY_PREFIX + channel + '_' + stage + '_' + rnHash_(r.name) + '_' + r.finish.replace(/-/g, ''); }
+
+// Marketing final texts 16.10 (verbatim; {type} as in the sheet; no prices/contacts).
+function rnTeamText_(stage, r) {
+  var n = r.name, t = r.pass ? r.pass.label : (r.type || '?'), e = rnDdMm_(r.finish);
+  if (stage === 'd1') return 'Reminder: ' + n + ' (' + t + ') ends tomorrow, ' + e + '. Column H is still empty — please confirm renewal with the guest today and fill it in.\n' +
+    'แจ้งเตือน: ' + n + ' (' + t + ') หมดพรุ่งนี้ ' + e + ' คอลัมน์ H ยังว่างอยู่ กรุณาถามลูกค้าเรื่องการต่อวันนี้และกรอกให้เรียบร้อยค่ะ';
+  return 'Renewal check: ' + n + ' (' + t + ') ends on ' + e + '. Please ask the guest if they will renew and write the answer in column H of Resident info (Extend / Not extend). Thank you!\n' +
+    'เช็คการต่ออายุ: ' + n + ' (' + t + ') หมดวันที่ ' + e + ' กรุณาถามลูกค้าว่าจะต่อหรือไม่ แล้วกรอกคำตอบในคอลัมน์ H ของ Resident info (Extend / Not extend) ขอบคุณค่ะ';
+}
+function rnLine_(r) {
+  return '• ' + r.name + ' — ' + (r.pass ? r.pass.label : r.type) + (r.floor ? ', ' + r.floor : '') + ', до ' + rnDdMm_(r.finish) +
+    (r.office ? ' (офис)' : '') + (r.h ? ' — H: ' + r.h : ' — H пусто') + ' [row ' + r.row + ']';
+}
+
+// c = rnCollect_ result; isSent(key) -> bool; georgeChat may be ''. -> {msgs:[{to, label, text, keys}], warns:[]}
+// Admin digest (v1 behaviour) is filtered per guest/stage the same way and re-composed from the unsent rows only.
+function rnPlan_(c, isSent, georgeChat) {
+  var msgs = [], warns = [];
+  function fresh(list, ch, stage) { return list.filter(function (r) { return !isSent(rnKey_(ch, stage, r)); }); }
+  // 1) PLACE Team: one post per guest (EN then TH). D-4, D-3, D-1 with H empty. Offices excluded (George's).
+  [['d4', c.d4], ['d3', c.d3], ['d1', c.esc]].forEach(function (x) {
+    fresh(x[1].filter(function (r) { return !r.office; }), 'team', x[0]).forEach(function (r) {
+      msgs.push({to: RN_TEAM_CHAT, label: 'team ' + x[0], text: rnTeamText_(x[0], r), keys: [rnKey_('team', x[0], r)]});
+    });
+  });
+  // 2) Lena DM (RU): D-4 + D-3 in one message.
+  var l4 = fresh(c.d4, 'lena', 'd4'), l3 = fresh(c.d3, 'lena', 'd3');
+  if (l4.length || l3.length) {
+    var t = ['🔔 Продления — ' + rnDdMm_(c.today)];
+    if (l4.length) { t.push('Через 4 дня (' + rnDdMm_(c.dates.d4) + '):'); l4.forEach(function (r) { t.push(rnLine_(r)); }); }
+    if (l3.length) { t.push('Через 3 дня (' + rnDdMm_(c.dates.d3) + '):'); l3.forEach(function (r) { t.push(rnLine_(r)); }); }
+    t.push('Команда в PLACE Team получила просьбу уточнить продление и заполнить H.');
+    msgs.push({to: RN_LENA_CHAT, label: 'lena', text: t.join('\n'),
+      keys: l4.map(function (r) { return rnKey_('lena', 'd4', r); }).concat(l3.map(function (r) { return rnKey_('lena', 'd3', r); }))});
+  }
+  // 3) George DM: D-1 with H empty.
+  var g = fresh(c.esc, 'george', 'd1');
+  if (g.length) {
+    if (!georgeChat) warns.push('WARN RN_NO_GEORGE_CHAT_ID: D-1 escalation not sent for ' + g.map(function (r) { return r.name; }).join(', '));
+    else {
+      var gt = ['⚠ Продления: завтра (' + rnDdMm_(c.dates.d1) + ') заканчивается, в H пусто / ends tomorrow, no renewal answer:'];
+      g.forEach(function (r) { gt.push(rnLine_(r)); });
+      gt.push('Команде в PLACE Team отправлено напоминание.');
+      msgs.push({to: String(georgeChat), label: 'george', text: gt.join('\n'), keys: g.map(function (r) { return rnKey_('george', 'd1', r); })});
+    }
+  }
+  // 4) Admin DMs (Tangmo, Leena): v1 digest, only guests not yet sent at that stage.
+  var a = {today: c.today, dates: c.dates, d3: [], d1: [], d0: [], dm7: [], offices: []}, akeys = [];
+  ['d3', 'd1', 'd0', 'dm7', 'offices'].forEach(function (b) {
+    c[b].forEach(function (r) { var st = b === 'offices' ? 'off' + r.bucket : b, k = rnKey_('adm', st, r); if (!isSent(k)) { a[b].push(r); akeys.push(k); } });
+  });
+  var parts = rnCompose_(a);
+  RN_RECIPIENTS.forEach(function (to) {
+    parts.forEach(function (p, i) { msgs.push({to: to.chat_id, label: 'admin ' + to.name, text: p, keys: i === parts.length - 1 ? akeys : []}); });
+  });
+  return {msgs: msgs, warns: warns};
+}
+
+// Keys whose finish date is older than today − RN_KEY_KEEP_DAYS. -> array of keys to delete
+function rnOldKeys_(keys, todayYmd) {
+  var lim = rnAddDays_(todayYmd, -RN_KEY_KEEP_DAYS).replace(/-/g, '');
+  return keys.filter(function (k) { if (k.indexOf(RN_KEY_PREFIX) !== 0) return false; var m = k.match(/_(\d{8})$/); return m && m[1] < lim; });
+}
+
 // ---------------- Apps Script side ----------------
 
 function rnTodayIct_() { return Utilities.formatDate(new Date(), RN_TZ, 'yyyy-MM-dd'); }
@@ -285,17 +374,21 @@ function rnReadRows_() {
   });
 }
 
-function rnBuild_(todayYmd) {
+function rnBuild_(todayYmd, isSent) {
   var c = rnCollect_(rnReadRows_(), todayYmd);
-  return {collected: c, parts: rnCompose_(c)};
+  var g = PropertiesService.getScriptProperties().getProperty(RN_PROP_GEORGE) || '';
+  var plan = rnPlan_(c, isSent || function () { return false; }, g);
+  return {collected: c, plan: plan};
 }
 
 function rnLog_(b) {
   var c = b.collected;
-  Logger.log('RN today=' + c.today + ' rows=' + c.rowsSeen + ' d3(' + c.dates.d3 + ')=' + c.d3.length + ' d1(' + c.dates.d1 + ')=' + c.d1.length +
-    ' d0=' + c.d0.length + ' dm7(' + c.dates.dm7 + ')=' + c.dm7.length + ' offices=' + c.offices.length + ' skipped=' + JSON.stringify(c.skipped));
-  b.parts.forEach(function (p, i) { Logger.log('--- part ' + (i + 1) + '/' + b.parts.length + ' (' + p.length + ' chars) ---\n' + p); });
-  if (!b.parts.length) Logger.log('RN_NOTHING_TO_SEND');
+  Logger.log('RN today=' + c.today + ' rows=' + c.rowsSeen + ' d4(' + c.dates.d4 + ')=' + c.d4.length + ' d3(' + c.dates.d3 + ')=' + c.d3.length +
+    ' d1(' + c.dates.d1 + ')=' + c.d1.length + ' esc=' + c.esc.length + ' d0=' + c.d0.length + ' dm7(' + c.dates.dm7 + ')=' + c.dm7.length +
+    ' offices=' + c.offices.length + ' skipped=' + JSON.stringify(c.skipped));
+  b.plan.warns.forEach(function (w) { Logger.log(w); });
+  b.plan.msgs.forEach(function (m, i) { Logger.log('--- msg ' + (i + 1) + ' -> ' + m.label + ' (' + m.to + ', ' + m.text.length + ' chars) ---\n' + m.text); });
+  if (!b.plan.msgs.length) Logger.log('RN_NOTHING_TO_SEND');
 }
 
 // Dry run: reads the sheet, logs the messages. Writes nothing.
@@ -309,19 +402,20 @@ function renewalsDaily() {
   try {
     var today = rnTodayIct_(), hour = +Utilities.formatDate(new Date(), RN_TZ, 'H');
     if (hour < RN_DAY_FROM || hour >= RN_DAY_TO) { Logger.log('RN_NOT_DAYTIME hour=' + hour); return; }
-    var props = PropertiesService.getScriptProperties();
-    if (props.getProperty(RN_PROP_LAST) === today) { Logger.log('RN_ALREADY_SENT ' + today); return; }
-    var b = rnBuild_(today);
+    var props = PropertiesService.getScriptProperties(), all = props.getProperties();
+    rnOldKeys_(Object.keys(all), today).forEach(function (k) { props.deleteProperty(k); });
+    var b = rnBuild_(today, function (k) { return !!all[k]; });
     rnLog_(b);
-    if (b.parts.length) {
+    if (b.plan.msgs.length) {
       var ob = SpreadsheetApp.openById(RN_INBOX_SHEET_ID).getSheetByName(RN_OUTBOX_TAB);
       if (!ob) throw new Error('RN_NO_OUTBOX (run setupPhotos from Photo.gs first)');
-      var rows = [];
-      RN_RECIPIENTS.forEach(function (to) { b.parts.forEach(function (p) { rows.push([to.chat_id, '', p, '', '', '']); }); });
+      var rows = b.plan.msgs.map(function (m) { return [m.to, '', m.text, '', '', '']; });
       ob.getRange(ob.getLastRow() + 1, 1, rows.length, 6).setValues(rows);
-      Logger.log('RN_OUTBOX_ROWS ' + rows.length);
+      var mark = {};
+      b.plan.msgs.forEach(function (m) { m.keys.forEach(function (k) { mark[k] = today; }); });
+      props.setProperties(mark);                       // mark only after the outbox write succeeded
+      Logger.log('RN_OUTBOX_ROWS ' + rows.length + ' keys=' + Object.keys(mark).length);
     }
-    props.setProperty(RN_PROP_LAST, today);
   } finally { lock.releaseLock(); }
 }
 
@@ -341,5 +435,5 @@ function removeRenewalsTrigger() {
   return n;
 }
 
-if (typeof module !== 'undefined') module.exports = {rnCollect_: rnCollect_, rnCompose_: rnCompose_, rnParseCell_: rnParseCell_,
+if (typeof module !== 'undefined') module.exports = {rnPlan_: rnPlan_, rnOldKeys_: rnOldKeys_, rnKey_: rnKey_, rnHash_: rnHash_, rnTeamText_: rnTeamText_, rnCollect_: rnCollect_, rnCompose_: rnCompose_, rnParseCell_: rnParseCell_,
   rnResolveDates_: rnResolveDates_, rnPhone_: rnPhone_, rnPassKind_: rnPassKind_, setTrustYear: function (b) { RN_TRUST_CELL_YEAR = b; }};

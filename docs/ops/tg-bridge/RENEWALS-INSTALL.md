@@ -44,3 +44,20 @@ The Start/Finish cells in «Лист1» are **real date cells** (all 271 data ro
 - The sheet says Max team ends 30.09 (October isn't recorded), so the 3-day reminder before 01.11 won't fire unless the row is updated. Office start dates (Bamboo 10.10, Igor Gomon 13.10) aren't reminded, because only Finish is tracked.
 - Office detection by name (`Max/Maksim`, `Renat`, `Igor Gomon`, `Bamboo`) would also catch a future guest named Max. Edit `RN_OFFICE_NAME_RE` if needed.
 - Most rows have no phone in column G (emails/@handles), so wa.me links will be rare until reception writes phone numbers.
+
+## v2 (16.10.2026 ICT, OK George): team, Lena, George, per-guest dedupe
+Still **not deployed**. Texts and logic belong to Place Marketing (since 09.10). Ops does the deploy.
+- **D-4 and D-3**: one post per guest to **PLACE Team** `-1003641241156`, using Marketing's final text 16.10 (EN line, then TH). The post has the name, `{type}` as written in the sheet and the finish date dd.MM. No prices or contacts. Offices are excluded. Lena (`626363253`) also gets **one Russian DM** listing D-4 and D-3, offices included.
+- **D-1 with H empty**: one post per guest to PLACE Team (Marketing's «Reminder…» text, EN+TH) plus a **DM to George** from Script Property `GEORGE_CHAT_ID`. If the property is missing, the log shows `WARN RN_NO_GEORGE_CHAT_ID …`, the George DM is skipped and nothing fails.
+- **Tangmo and Leena DMs**: v1 digest (D-3, tomorrow, today, −7, offices), unchanged. D-4 isn't included.
+- **Dedupe**: each guest × stage × channel is sent once. Script Property `RN_S_<channel>_<stage>_<FNV-hash of name>_<finish yyyymmdd>` = the date it was sent. The key is set only after a successful write to outbox. If a new guest is added during the day, a rerun sends only that guest. Keys whose finish is older than 30 days are deleted at the start of each `renewalsDaily`. The daily lock `RN_LAST_SENT_DATE` is no longer used. You can delete it.
+- **Dates (checked 16.10 via the Sheets API, UNFORMATTED)**: all 272 E/F values in «Лист1» are real date cells with a stored year. The year is hidden by the display format everywhere except the 5th floor. So `RN_TRUST_CELL_YEAR = true` stays. Added: if Start and Finish are more than 400 days apart (typos such as 2526, 2005, 2014), Start is rebuilt from the Finish year. Old typo rows don't move into the current dates.
+- Tests: `node docs/ops/tg-bridge/test_renewals.js` (25 checks). Dry run on an export: `RN_ROWS=rows.json RN_DAYS=2026-10-18,2026-10-20 node test_renewals.js` (rows = A:J, dates as yyyy-MM-dd).
+
+### v2 deploy steps
+1. In «Place TG Bridge», open the `Renewals` file and replace its contents with the new `Renewals.gs`. Save. Don't touch Code.gs, Line.gs or Photo.gs.
+2. Script Properties: add `GEORGE_CHAT_ID` (George's private chat id with @PlaceLeadBot, after his /start). Optionally delete `RN_LAST_SENT_DATE`.
+3. Check that @PlaceLeadBot is in PLACE Team and can post there, and that Lena has /start-ed the bot.
+4. Run `renewalsDryRun`. The log shows `RN today=… d4=… esc=…` and `--- msg N -> team d4 / lena / george / admin …`. Nothing is written.
+5. Trigger: if v1 is already installed, leave it as is (`renewalsDaily` ~10:15). Otherwise run `installRenewalsTrigger` once and check there's exactly one `renewalsDaily`.
+6. After the first run: outbox shows rows to `-1003641241156`, `626363253`, the admins (and George), and Script Properties gain `RN_S_*` keys.
