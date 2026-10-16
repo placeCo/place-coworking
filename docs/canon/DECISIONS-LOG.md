@@ -43,3 +43,4 @@
 ## 16.10.2026 — решения George
 - цена переговорной 250 ฿/ч подтверждена George
 - PEA (электричество) оплатить до 22.10
+- каталоги/листинги и сайт (docs/site, CMS) теперь ведёт Marketing; Place Site переходит в подчинение Marketing; доступ partner.deskimo.com — у Marketing (вход по onboarding-ссылке без пароля)

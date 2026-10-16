@@ -172,3 +172,8 @@
 - **Marketing:** справочники/листинги (directories), напоминания о продлении, включая тексты и логику `Renewals.gs`.
 - **Ops:** только надзор за командой и техническая инфраструктура (скрипты, API, Apps Script, Tuya, LINE, Google Ads — техническая часть), плюс утренний бриф 11:15 и проверка Tuya в 00:00.
 - Там, где выше владелец «Place Ops», исполнитель определяется по этому разделению.
+
+## Update 16.10.2026 (George)
+- Marketing owns directories/listings AND the site (docs/site, CMS). Place Site reports to Marketing.
+- Deskimo partner access: onboarding link (no password) handed to Marketing; admin panel access not yet granted by Deskimo.
+- Ops: no site or listings duties.
