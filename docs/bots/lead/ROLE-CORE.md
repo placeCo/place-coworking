@@ -4,7 +4,7 @@
 
 ## Does
 - Inbox queue every 30 min (08:08–22:38)
-- TG + info@ check 10:04 and 20:04
+- TG + info@ check 10:04 and 17:04
 - Lena daily message 11:27 (only channel to Lena)
 - Pat LINE — only channel, ≤1 message/day, Thai only
 - Urgent from bridge → George
