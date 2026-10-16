@@ -125,6 +125,7 @@ function poll() {
       sh.appendRow([when, chat, String(m.chat.id), name, f.username ? '@' + f.username : '', text, '', '']);
       sent++;
       if (ORDERS_CHAT_RE.test(chat)) try { ordersUpsert_(ordersSheet_(), m, text, name, !!(u.edited_message || u.edited_channel_post)); } catch (e) { Logger.log('ORDERS_ERR ' + e); }
+      if (String(m.chat.id) === PAY_CHAT_ID) try { paymentsSave_(paymentsSheet_(), m, u, tok, null); } catch (e) { Logger.log('PAY_ERR ' + e); }
       if (opsNeeded_(m, text)) opsQueue_({chat: chat, chat_id: m.chat.id, from: name + (f.username ? ' @' + f.username : ''), text: text, date: when, message_id: m.message_id, reply_to: m.reply_to_message ? (describe_(m.reply_to_message) || '').slice(0, 300) : null});
     }
     opsFlush_();
@@ -221,4 +222,78 @@ function dryRunOrders() {
   log.push(ordersUpsert_(fake, {chat: chat, message_id: 900004, date: t0 + 200}, 'สั่งของ29.09.69 นมเมจิ5ลิตร 1แกลลอน', 'KA TE', false));
   Logger.log(JSON.stringify({ops: log, rows: fake.rows}, null, 1));
   return {ops: log, rows: fake.rows};
+}
+
+// ===== Payments Place (-1003702681187) -> Drive folder + tab «Payments» in Place Inbox =====
+// Called from poll() inside try/catch, after the email/inbox path. Text-only messages are logged with file empty.
+const PAY_CHAT_ID = '-1003702681187';
+const PAY_TAB = 'Payments';
+const PAY_HDR = ['date', 'time', 'msg_id', 'caption', 'sender', 'file', 'edited', 'update_id'];
+const PAY_FOLDER_ID = '1AperaOOXihbZfUeKy5kd1fWoMuxzU-It'; // «Payments Place — receipts» (info@)
+
+function paymentsSheet_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sh = ss.getSheetByName(PAY_TAB) || ss.insertSheet(PAY_TAB);
+  if (sh.getLastRow() === 0) sh.appendRow(PAY_HDR);
+  return sh;
+}
+
+// io (optional, for tests): {fetchFile: function(fileId, name) -> url}
+function paymentsSave_(sh, m, u, tok, io) {
+  var isEdit = !!(u.edited_message || u.edited_channel_post);
+  var tz = 'Asia/Bangkok', d = new Date(m.date * 1000);
+  var f = m.from || {};
+  var sender = ([f.first_name, f.last_name].filter(Boolean).join(' ') || m.author_signature || m.chat.title || '?') + (f.username ? ' @' + f.username : '');
+  var caption = m.caption || m.text || '';
+  var fileId = null, name = '';
+  if (m.photo && m.photo.length) { fileId = m.photo[m.photo.length - 1].file_id; name = 'photo.jpg'; }
+  else if (m.document) { fileId = m.document.file_id; name = m.document.file_name || 'document'; }
+
+  // dedupe by msg_id: an edit only updates caption/edited, never re-downloads
+  var n = sh.getLastRow();
+  if (n > 1) {
+    var ids = sh.getRange(2, 3, n - 1, 1).getValues();
+    for (var i = 0; i < ids.length; i++) if (String(ids[i][0]) === String(m.message_id)) {
+      if (isEdit) {
+        sh.getRange(i + 2, 4, 1, 1).setValues([[caption]]);
+        sh.getRange(i + 2, 7, 1, 2).setValues([[Utilities.formatDate(new Date((m.edit_date || m.date) * 1000), tz, 'yyyy-MM-dd HH:mm'), u.update_id]]);
+      }
+      return 'update:' + m.message_id;
+    }
+  }
+  var url = '';
+  if (fileId) {
+    var fname = Utilities.formatDate(d, tz, 'yyyy-MM-dd_HHmm') + '_' + m.message_id + '_' + name;
+    url = io && io.fetchFile ? io.fetchFile(fileId, fname) : paymentsFetch_(tok, fileId, fname);
+  }
+  sh.appendRow([Utilities.formatDate(d, tz, 'yyyy-MM-dd'), Utilities.formatDate(d, tz, 'HH:mm:ss'), m.message_id,
+    caption, sender, url, isEdit ? 'yes' : '', u.update_id]);
+  return (fileId ? 'file:' : 'text:') + m.message_id;
+}
+
+function paymentsFetch_(tok, fileId, fname) {
+  var r = JSON.parse(UrlFetchApp.fetch('https://api.telegram.org/bot' + tok + '/getFile?file_id=' + encodeURIComponent(fileId), {muteHttpExceptions: true}).getContentText());
+  if (!r.ok) return 'ERR getFile: ' + (r.description || '?'); // e.g. >20 MB
+  var blob = UrlFetchApp.fetch('https://api.telegram.org/file/bot' + tok + '/' + r.result.file_path).getBlob().setName(fname);
+  return DriveApp.getFolderById(PAY_FOLDER_ID).createFile(blob).getUrl();
+}
+
+function dryRunPayments() {
+  var fake = {rows: [PAY_HDR.slice()],
+    getLastRow: function () { return this.rows.length; },
+    appendRow: function (r) { this.rows.push(r.slice()); },
+    getRange: function (r, c, nr, nc) { var self = this; return {
+      getValues: function () { return self.rows.slice(r - 1, r - 1 + nr).map(function (x) { return x.slice(c - 1, c - 1 + nc); }); },
+      setValues: function (v) { for (var i = 0; i < nr; i++) for (var j = 0; j < nc; j++) self.rows[r - 1 + i][c - 1 + j] = v[i][j]; } }; }};
+  var saved = [];
+  var io = {fetchFile: function (id, fname) { saved.push(fname); return 'https://drive.mock/' + fname; }};
+  var chat = {id: -1003702681187, title: 'Payments Place', type: 'supergroup'};
+  var from = {first_name: 'Lena', username: 'yasozidayu'};
+  var t0 = 1790000000, log = [];
+  log.push(paymentsSave_(fake, {chat: chat, from: from, message_id: 501, date: t0, caption: 'Room 3 rent Oct', photo: [{file_id: 's'}, {file_id: 'BIG'}]}, {update_id: 1, message: {}}, 'T', io));
+  log.push(paymentsSave_(fake, {chat: chat, from: from, message_id: 502, date: t0 + 60, document: {file_id: 'D', file_name: 'slip.pdf'}}, {update_id: 2, message: {}}, 'T', io));
+  log.push(paymentsSave_(fake, {chat: chat, from: from, message_id: 503, date: t0 + 120, text: 'paid cash 500'}, {update_id: 3, message: {}}, 'T', io));
+  log.push(paymentsSave_(fake, {chat: chat, from: from, message_id: 501, date: t0, edit_date: t0 + 300, caption: 'Room 3 rent Oct (paid)', photo: [{file_id: 'BIG'}]}, {update_id: 4, edited_message: {}}, 'T', io));
+  Logger.log(JSON.stringify({ops: log, saved: saved, rows: fake.rows}, null, 1));
+  return {ops: log, saved: saved, rows: fake.rows};
 }
