@@ -23,10 +23,10 @@ Rule: draft in git only — no live CMS, no Tilda publish without written OK fro
 
 ### Canon facts (all locales same)
 - Hours **08:00–23:00** · address **Chalong** (not Kathu)
-- Trial = **1 free day floor 3 only**
+- No free day on site — free day only via ads/flyers
 - Pass prices: **50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000**
 - Floor 5 offices: **30000** or **20000** yearly
-- Meeting: from **250** · residents **−20%**
+- Meeting: **250** · residents **−20%**
 
 ### BAN (spot-check)
 No: 3 free days any floor · floor-1 separate tariff · floor-2 hot desk menu · day 300 · Mon–Fri 24h · separate night passes · 5h@150 · Filming 500/h · Kathu
@@ -47,7 +47,7 @@ Without OK George — **do not publish**. No hard calendar deadline.
 
 ### Quick spot-check list (copy pack)
 - [ ] Home shows all three cards: Pass / Offices / Studio
-- [ ] Pass table: 50 · 400 (until 31 Oct; 500 from 1 Nov) · 1800 · 6000 · 15000 (+ trial 1 free day floor 3)
+- [ ] Pass table: 50 · 400 (until 31 Oct; 500 from 1 Nov) · 1800 · 6000 · 15000
 - [ ] Offices: one 2+5 card; floor 5 30000 / 20000 yearly; no floor-2 hot-desk menu
 - [ ] Studio: short + manager CTA; no Filming 500/h
 - [ ] Meeting pointer: 250 · −20% residents

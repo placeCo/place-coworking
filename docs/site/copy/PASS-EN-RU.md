@@ -14,21 +14,16 @@ Do not publish / Tilda go-live without written OK from George.
 Place Pass is your coworking access at Place in Chalong. You work in the open space on **floor 3**. Floor **1** is included: library, glassed café zone, and meeting rooms (bookable add-on). Not a separate “desk on floor 1” product.
 
 ### What’s included
-- Open-space work on **floor 3** (trial and day/week/month work here)
+- Open-space work on **floor 3** (day/week/month work here)
 - Floor **1**: library, café zone, meeting rooms nearby
 - Public hours **08:00–23:00**
 - One product / one entry — floors 1 and 3 together
-
-### Trial
-**1 free day** on **floor 3 only**.  
-Not three days. Not any floor. Studio, offices, and rooftop are not included.
 
 ### Price table (Pass)
 
 | Product | Price | Note |
 |---------|-------|------|
-| Trial | 1 free day | Floor 3 only |
-| 1 hour | **50฿** | Short call / quick stop — not a substitute for trial |
+| 1 hour | **50฿** | Short call / quick stop |
 | 1 day (~10h) | **400฿** until 31 Oct · **500฿** from 1 Nov | Old day 300 removed |
 | 1 week | **1,800฿** | Better value than 5×400 (Oct) / 4×500 (from 1 Nov) |
 | 1 month (08:00–23:00) | **6,000฿** | Year-round showcase price |
@@ -42,13 +37,13 @@ Short drop-in → day **400** (until 31 Oct; from 1 Nov — **500**). Better val
 ### Also in the building
 - **Offices** on floors **2 and 5** (not hot desk) → Offices page / manager
 - **Studio** floor **4** via manager
-- **Meeting rooms** from **250฿/h**, Pass residents **−20%**
+- **Meeting rooms** **250฿/h**, Pass residents **−20%**
 
 ### CTAs
-Free trial (floor 3) · Week 1,800 · Month 6,000 · WhatsApp / Telegram / +66951170481
+Week 1,800 · Month 6,000 · WhatsApp / Telegram / +66951170481
 
 ### FAQ pointer
-See site FAQ: day price, why not 300, trial rules, hours, which floor → `docs/site/FAQ-SITE-EN-RU.md`
+See site FAQ: day price, why not 300, hours, which floor → `docs/site/FAQ-SITE-EN-RU.md`
 
 ---
 
@@ -61,20 +56,15 @@ See site FAQ: day price, why not 300, trial rules, hours, which floor → `docs/
 Place Pass — доступ в коворкинг Place в Чалонге. Работаете в open space на **3 этаже**. Этаж **1** входит: библиотека, застеклённая кафе-зона, переговорки (бронь отдельно). Не отдельный продукт «столы на 1-м».
 
 ### Что входит
-- Работа в open space на **3 этаже** (триал и день/неделя/месяц — здесь)
+- Работа в open space на **3 этаже** (день/неделя/месяц — здесь)
 - Этаж **1**: библиотека, кафе-зона, переговорки рядом
 - Публичные часы **08:00–23:00**
 - Один продукт / один вход — 1 и 3 вместе
-
-### Триал
-**1 бесплатный день** только на **3 этаже**.  
-Не три дня. Не любой этаж. Студия, офисы и крыша не входят.
 
 ### Таблица цен (Pass)
 
 | Продукт | Цена | Примечание |
 |---------|------|------------|
-| Триал | 1 бесплатный день | Только 3 этаж |
 | 1 час | **50฿** | Короткий созвон — не замена пробы |
 | 1 день (~10ч) | **400฿** до 31.10 · **500฿** с 01.11 | Старый день 300 снят |
 | 1 неделя | **1 800฿** | Выгоднее, чем 5×400 (окт) / 4×500 (с 01.11) |
@@ -89,20 +79,20 @@ Place Pass — доступ в коворкинг Place в Чалонге. Ра�
 ### Также в здании
 - **Офисы** на **2 и 5** (не hot desk) → страница Offices / менеджер
 - **Студия** 4 этаж через менеджера
-- **Переговорки** от **250฿/ч**, резидентам Pass **−20%**
+- **Переговорки** **250฿/ч**, резидентам Pass **−20%**
 
 ### CTA
-Бесплатный день (3 этаж) · Неделя 1 800 · Месяц 6 000 · WhatsApp / Telegram / +66951170481
+Неделя 1 800 · Месяц 6 000 · WhatsApp / Telegram / +66951170481
 
 ### Указатель FAQ
-См. FAQ сайта: цена дня, почему не 300, триал, часы, какой этаж → `docs/site/FAQ-SITE-EN-RU.md`
+См. FAQ сайта: цена дня, почему не 300, часы, какой этаж → `docs/site/FAQ-SITE-EN-RU.md`
 
 ---
 
 ## 中文 (ZH stub)
 
 **TODO translate — same Pass facts as EN/RU.**  
-Do not invent ZH. Keep: 1+3 one entry · work + trial on floor 3 · hours 08:00–23:00 · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 · trial = 1 free day floor 3 only · no 5h@150, no day 300, no 3 free days.
+Do not invent ZH. Keep: 1+3 one entry · work on floor 3 · hours 08:00–23:00 · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 · no free day on site (ads/flyers only) · no 5h@150, no day 300, no 3 free days.
 
 ---
 

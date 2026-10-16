@@ -14,7 +14,6 @@ Work Pass on floors **1 + 3** (open space on the 3rd).
 Private **offices on 2 and 5**.  
 **Studio on 4** — via manager.
 
-First Pass day free on floor 3.  
 Day **400฿** (until 31 Oct; from 1 Nov — 500฿) · Week **1,800฿** · Month **6,000฿**.
 
 **Hours:** 08:00–23:00  
@@ -24,8 +23,8 @@ Day **400฿** (until 31 Oct; from 1 Nov — 500฿) · Week **1,800฿** · Mon
 ### Three showcase cards (must show all three)
 
 **1. Place Pass**  
-One entry to floors **1 + 3**. You work in the open space on **floor 3** (trial there too). Floor 1: library, glassed café zone, meeting rooms.  
-CTA → Free trial day (floor 3) · Day 400 (until 31 Oct) · Week 1,800 · Month 6,000
+One entry to floors **1 + 3**. You work in the open space on **floor 3**. Floor 1: library, glassed café zone, meeting rooms.  
+CTA → Day 400 (until 31 Oct) · Week 1,800 · Month 6,000
 
 **2. Offices**  
 Dedicated office space on **floors 2 and 5** — not a public hot desk. Floor 5 from **30,000฿/mo** (or **20,000฿/mo** yearly). Details & tour via manager.  
@@ -39,15 +38,14 @@ CTA → Ask the manager (floor 4)
 Public Place Pass: **08:00–23:00**. Office tenants have night access to their own office.
 
 ### Primary CTAs (allowed)
-- Free trial day (floor 3 only)
 - Telegram / WhatsApp / phone +66951170481
 - Week 1,800 · Month 6,000
 - Offices → manager / tour
 - Studio → floor-4 manager
 
 ### Short pointers (Home footer or secondary links)
-- **Meeting rooms** — from 250฿/h · Pass residents −20% · book via us → see Meeting block / FAQ
-- **FAQ** — day (400 until 31 Oct, 500 from 1 Nov), trial, hours, floors, offices, studio → FAQ-SITE-EN-RU.md
+- **Meeting rooms** — 250฿/h · Pass residents −20% · book via us → see Meeting block / FAQ
+- **FAQ** — day (400 until 31 Oct, 500 from 1 Nov), hours, floors, offices, studio → FAQ-SITE-EN-RU.md
 
 ---
 
@@ -60,7 +58,6 @@ Public Place Pass: **08:00–23:00**. Office tenants have night access to their 
 Закрытые **офисы на 2 и 5**.  
 **Студия на 4** — через менеджера.
 
-Первый день Pass бесплатно на 3 этаже.  
 День **400฿** (до 31.10; с 01.11 — 500฿) · Неделя **1 800฿** · Месяц **6 000฿**.
 
 **Часы:** 08:00–23:00  
@@ -70,8 +67,8 @@ Public Place Pass: **08:00–23:00**. Office tenants have night access to their 
 ### Три карточки витрины (обязательны все три)
 
 **1. Place Pass**  
-Один вход на этажи **1 + 3**. Работаете в open space на **3 этаже** (триал тоже там). На 1-м: библиотека, застеклённая кафе-зона, переговорки.  
-CTA → Бесплатный день (3 этаж) · День 400 (до 31.10) · Неделя 1 800 · Месяц 6 000
+Один вход на этажи **1 + 3**. Работаете в open space на **3 этаже**. На 1-м: библиотека, застеклённая кафе-зона, переговорки.  
+CTA → День 400 (до 31.10) · Неделя 1 800 · Месяц 6 000
 
 **2. Офисы**  
 Офисное пространство на **2 и 5 этажах** — не публичный hot desk. 5 этаж от **30 000฿/мес** (или **20 000฿/мес** при годе). Детали и тур — у менеджера.  
@@ -85,22 +82,21 @@ CTA → Написать менеджеру (4 этаж)
 Публично Place Pass: **08:00–23:00**. Арендаторы офисов имеют ночной доступ в свой офис.
 
 ### Главные CTA (разрешённые)
-- Бесплатный день (только 3 этаж)
 - Telegram / WhatsApp / телефон +66951170481
 - Неделя 1 800 · Месяц 6 000
 - Офисы → менеджер / тур
 - Студия → менеджер 4 этажа
 
 ### Короткие указатели
-- **Переговорки** — от 250฿/ч · резидентам Pass −20% · бронь через нас
-- **FAQ** — день (400 до 31.10, с 01.11 — 500), триал, часы, этажи, офисы, студия → FAQ-SITE-EN-RU.md
+- **Переговорки** — 250฿/ч · резидентам Pass −20% · бронь через нас
+- **FAQ** — день (400 до 31.10, с 01.11 — 500), часы, этажи, офисы, студия → FAQ-SITE-EN-RU.md
 
 ---
 
 ## 中文 (ZH stub)
 
 **TODO translate — same facts as EN/RU. Do not invent ZH copy.**  
-Facts to keep identical: Pass 1+3 · Offices 2+5 · Studio 4 via manager · hours 08:00–23:00 · Chalong (not Kathu) · free day only for ad/flyer leads or code GOOGLEDAY · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 · floor 5 offices 30000 or 20000 yearly · meeting from 250 −20% residents.  
+Facts to keep identical: Pass 1+3 · Offices 2+5 · Studio 4 via manager · hours 08:00–23:00 · Chalong (not Kathu) · free day only for ad/flyer leads or code GOOGLEDAY · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 · floor 5 offices 30000 or 20000 yearly · meeting 250 −20% residents.  
 When FAQ ZH exists, align wording; until then keep stub + EN facts.
 
 ---

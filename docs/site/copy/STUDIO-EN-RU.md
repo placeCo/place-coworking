@@ -25,9 +25,9 @@ Podcast and photo studio in the same building as Place Pass and offices. Format 
 - Self-booking calendar as if it were a Pass table
 
 ### Also in the building
-- **Place Pass** floors **1 + 3** (work on 3 · trial 1 free day on 3)
+- **Place Pass** floors **1 + 3** (work on 3)
 - **Offices** floors **2 and 5**
-- **Meeting rooms** from **250฿/h** (−20% Pass residents)
+- **Meeting rooms** **250฿/h** (−20% Pass residents)
 
 ### FAQ pointer
 “Studio / filming?” → Through the manager. No public filming 500฿/h. → `docs/site/FAQ-SITE-EN-RU.md`
@@ -53,9 +53,9 @@ Podcast and photo studio in the same building as Place Pass and offices. Format 
 - Самозапись «как стол Pass»
 
 ### Также в здании
-- **Place Pass** этажи **1 + 3** (работа на 3-м · триал 1 бесплатный день на 3-м)
+- **Place Pass** этажи **1 + 3** (работа на 3-м)
 - **Офисы** этажи **2 и 5**
-- **Переговорки** от **250฿/ч** (−20% резидентам Pass)
+- **Переговорки** **250฿/ч** (−20% резидентам Pass)
 
 ### Указатель FAQ
 «Студия / съёмка?» → Через менеджера. Публичного тарифа съёмка 500฿/час нет. → `docs/site/FAQ-SITE-EN-RU.md`

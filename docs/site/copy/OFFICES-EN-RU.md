@@ -25,8 +25,8 @@ We lease **floors 2 and 5** as office space (private office use). Not sold as a 
 Book an office tour · WhatsApp / call **+66951170481** · info@placecoworking.com · Telegram @coworking_place_phuket
 
 ### Also in the building
-- **Place Pass** (floors **1 + 3**) — work on floor 3 · trial 1 free day floor 3
-- **Meeting rooms** — from **250฿/h**, Pass residents **−20%**
+- **Place Pass** (floors **1 + 3**) — work on floor 3
+- **Meeting rooms** — **250฿/h**, Pass residents **−20%**
 - **Studio** floor **4** via manager
 
 ### FAQ pointer
@@ -54,8 +54,8 @@ Book an office tour · WhatsApp / call **+66951170481** · info@placecoworking.c
 Тур по офисам · WhatsApp / звонок **+66951170481** · info@placecoworking.com · Telegram @coworking_place_phuket
 
 ### Также в здании
-- **Place Pass** (этажи **1 + 3**) — работа на 3-м · триал 1 бесплатный день на 3-м
-- **Переговорки** — от **250฿/ч**, резидентам Pass **−20%**
+- **Place Pass** (этажи **1 + 3**) — работа на 3-м
+- **Переговорки** — **250฿/ч**, резидентам Pass **−20%**
 - **Студия** 4 этаж через менеджера
 
 ### Указатель FAQ
