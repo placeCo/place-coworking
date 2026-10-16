@@ -15,7 +15,7 @@ Private **offices on 2 and 5**.
 **Studio on 4** — via manager.
 
 First Pass day free on floor 3.  
-Day **400฿** (until 31 Oct; from 1 Nov — 500฿) · Week **1,800฿** · Month **6,000฿** · With nights **9,000฿**.
+Day **400฿** (until 31 Oct; from 1 Nov — 500฿) · Week **1,800฿** · Month **6,000฿**.
 
 **Hours:** 08:00–23:00  
 **Address:** 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130 · Not Kathu  
@@ -36,12 +36,12 @@ Podcast / photo studio on **floor 4**. Book only through the floor-4 manager —
 CTA → Ask the manager (floor 4)
 
 ### Hours strip
-Public Place Pass: **08:00–23:00**. Not 24/7 by default. Overnight only with Month 24/7 (**9,000฿** + key deposit).
+Public Place Pass: **08:00–23:00**. Office tenants have night access to their own office.
 
 ### Primary CTAs (allowed)
 - Free trial day (floor 3 only)
 - Telegram / WhatsApp / phone +66951170481
-- Week 1,800 · Month 6,000 · Month 24/7 9,000
+- Week 1,800 · Month 6,000
 - Offices → manager / tour
 - Studio → floor-4 manager
 
@@ -61,7 +61,7 @@ Public Place Pass: **08:00–23:00**. Not 24/7 by default. Overnight only with M
 **Студия на 4** — через менеджера.
 
 Первый день Pass бесплатно на 3 этаже.  
-День **400฿** (до 31.10; с 01.11 — 500฿) · Неделя **1 800฿** · Месяц **6 000฿** · С ночами **9 000฿**.
+День **400฿** (до 31.10; с 01.11 — 500฿) · Неделя **1 800฿** · Месяц **6 000฿**.
 
 **Часы:** 08:00–23:00  
 **Адрес:** 59/2 Chao Fah Tawan Tok Rd, Chalong, Mueang Phuket District, Phuket 83130 · Не Kathu  
@@ -82,12 +82,12 @@ CTA → Тур по офисам · WhatsApp / звонок
 CTA → Написать менеджеру (4 этаж)
 
 ### Полоса часов
-Публично Place Pass: **08:00–23:00**. Здание не круглосуточное по умолчанию. Ночь — только месяц 24/7 (**9 000฿** + депозит ключа).
+Публично Place Pass: **08:00–23:00**. Арендаторы офисов имеют ночной доступ в свой офис.
 
 ### Главные CTA (разрешённые)
 - Бесплатный день (только 3 этаж)
 - Telegram / WhatsApp / телефон +66951170481
-- Неделя 1 800 · Месяц 6 000 · Месяц 24/7 9 000
+- Неделя 1 800 · Месяц 6 000
 - Офисы → менеджер / тур
 - Студия → менеджер 4 этажа
 
@@ -100,7 +100,7 @@ CTA → Написать менеджеру (4 этаж)
 ## 中文 (ZH stub)
 
 **TODO translate — same facts as EN/RU. Do not invent ZH copy.**  
-Facts to keep identical: Pass 1+3 · Offices 2+5 · Studio 4 via manager · hours 08:00–23:00 · Chalong (not Kathu) · trial = 1 free day floor 3 only · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 / 9000 · floor 5 offices 30000 or 20000 yearly · meeting from 250 −20% residents.  
+Facts to keep identical: Pass 1+3 · Offices 2+5 · Studio 4 via manager · hours 08:00–23:00 · Chalong (not Kathu) · free day only for ad/flyer leads or code GOOGLEDAY · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 · floor 5 offices 30000 or 20000 yearly · meeting from 250 −20% residents.  
 When FAQ ZH exists, align wording; until then keep stub + EN facts.
 
 ---

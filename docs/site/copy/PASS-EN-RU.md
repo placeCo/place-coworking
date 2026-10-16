@@ -33,12 +33,11 @@ Not three days. Not any floor. Studio, offices, and rooftop are not included.
 | 1 week | **1,800฿** | Better value than 5×400 (Oct) / 4×500 (from 1 Nov) |
 | 1 month (08:00–23:00) | **6,000฿** | Year-round showcase price |
 | 3 months | **15,000฿** | = 5,000฿/mo — only long deal on showcase |
-| Month 24/7 | **9,000฿** | Nights 22:00–08:00 + key deposit |
 
 Low-season discounts: reception / chat only — **not** a second price on the site.
 
 ### Upsell line
-Short drop-in → day **400** (until 31 Oct; from 1 Nov — **500**). Better value → week **1,800** or month **6,000**. Need nights → month 24/7 **9,000**.
+Short drop-in → day **400** (until 31 Oct; from 1 Nov — **500**). Better value → week **1,800** or month **6,000**.
 
 ### Also in the building
 - **Offices** on floors **2 and 5** (not hot desk) → Offices page / manager
@@ -46,10 +45,10 @@ Short drop-in → day **400** (until 31 Oct; from 1 Nov — **500**). Better val
 - **Meeting rooms** from **250฿/h**, Pass residents **−20%**
 
 ### CTAs
-Free trial (floor 3) · Week 1,800 · Month 6,000 · Month 24/7 9,000 · WhatsApp / Telegram / +66951170481
+Free trial (floor 3) · Week 1,800 · Month 6,000 · WhatsApp / Telegram / +66951170481
 
 ### FAQ pointer
-See site FAQ: day price, why not 300, trial rules, hours, 24/7, which floor → `docs/site/FAQ-SITE-EN-RU.md`
+See site FAQ: day price, why not 300, trial rules, hours, which floor → `docs/site/FAQ-SITE-EN-RU.md`
 
 ---
 
@@ -81,12 +80,11 @@ Place Pass — доступ в коворкинг Place в Чалонге. Ра�
 | 1 неделя | **1 800฿** | Выгоднее, чем 5×400 (окт) / 4×500 (с 01.11) |
 | 1 месяц (08:00–23:00) | **6 000฿** | Круглая цена на витрине весь год |
 | 3 месяца | **15 000฿** | = 5 000฿/мес — единственная длинная «выгода» |
-| Месяц 24/7 | **9 000฿** | Ночи 22:00–08:00 + депозит ключа |
 
 Скидка низкого сезона — только в переписке / на ресепшене, **не** вторая цена на сайте.
 
 ### Апселл
-Короткий заход → день **400** (до 31.10; с 01.11 — **500**). Выгоднее → неделя **1 800** или месяц **6 000**. Нужны ночи → месяц 24/7 **9 000**.
+Короткий заход → день **400** (до 31.10; с 01.11 — **500**). Выгоднее → неделя **1 800** или месяц **6 000**.
 
 ### Также в здании
 - **Офисы** на **2 и 5** (не hot desk) → страница Offices / менеджер
@@ -94,19 +92,19 @@ Place Pass — доступ в коворкинг Place в Чалонге. Ра�
 - **Переговорки** от **250฿/ч**, резидентам Pass **−20%**
 
 ### CTA
-Бесплатный день (3 этаж) · Неделя 1 800 · Месяц 6 000 · Месяц 24/7 9 000 · WhatsApp / Telegram / +66951170481
+Бесплатный день (3 этаж) · Неделя 1 800 · Месяц 6 000 · WhatsApp / Telegram / +66951170481
 
 ### Указатель FAQ
-См. FAQ сайта: цена дня, почему не 300, триал, часы, 24/7, какой этаж → `docs/site/FAQ-SITE-EN-RU.md`
+См. FAQ сайта: цена дня, почему не 300, триал, часы, какой этаж → `docs/site/FAQ-SITE-EN-RU.md`
 
 ---
 
 ## 中文 (ZH stub)
 
 **TODO translate — same Pass facts as EN/RU.**  
-Do not invent ZH. Keep: 1+3 one entry · work + trial on floor 3 · hours 08:00–23:00 · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 / 9000 · trial = 1 free day floor 3 only · no 5h@150, no day 300, no 3 free days.
+Do not invent ZH. Keep: 1+3 one entry · work + trial on floor 3 · hours 08:00–23:00 · prices 50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 · trial = 1 free day floor 3 only · no 5h@150, no day 300, no 3 free days.
 
 ---
 
 ## BAN (Pass page)
-3 free days any floor · day 300 · 5h@150 · separate floor-1 price column · Mon–Fri 24h without 9000 · Kathu · “any floor” work · roof as Pass zone
+3 free days any floor · day 300 · 5h@150 · separate floor-1 price column · Mon–Fri 24h · Month 24/7 9000 · Kathu · “any floor” work · roof as Pass zone

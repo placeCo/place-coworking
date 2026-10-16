@@ -1,7 +1,7 @@
 # Quick replies — Place Coworking Phuket
 
 **STATUS: NOT ACTIVATED.** Text library only. Nothing here is switched on in any channel. A person turns things on by hand after George says OK.
-**Marketing review: PENDING** (Place Marketing, agent 88eed13e-…). The draft has not been sent to them yet, see the note in QUICK-REPLIES.md.
+**Canonical file: [QUICK-REPLIES.md](QUICK-REPLIES.md)** — merged Lead + Marketing versions (16.10.2026): Part A 31 scenarios short+long EN/TH, Part B 25 channel texts EN/TH/RU with ready-to-paste FB instant reply, away message and Telegram /start, rules, Channel status and [CHECK] list. The old docs/marketing/quick-replies.md is removed; edit only this file.
 
 Canon: docs/canon/PLACE-BRIEF-2026-10-09.md + docs/canon/DECISIONS-LOG.md. If they disagree with this file, canon wins.
 
@@ -18,4 +18,4 @@ Canon: docs/canon/PLACE-BRIEF-2026-10-09.md + docs/canon/DECISIONS-LOG.md. If th
 | Telegram bot @Placecoworking_bot (future) | message text | 4 096 chars |
 | LINE OA @294bqkju | Greeting / auto-response | 500 chars per bubble. Note: the OA runs on Messaging API (webhook → Line.gs), so the OA Manager auto-reply may not fire. |
 
-Each text in QUICK-REPLIES.md is under 500 chars per language, so one language block fits everywhere. Pasting EN+TH together into Messenger (500) means you have to check the total length.
+Each Part B text in QUICK-REPLIES.md is under 500 chars per language, so one language block fits everywhere. Pasting EN+TH together into Messenger (500) means you have to check the total length.

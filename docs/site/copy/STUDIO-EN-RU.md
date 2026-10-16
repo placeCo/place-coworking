@@ -70,4 +70,4 @@ Do not invent ZH. Keep: floor **4** · podcast / photo · CTA manager only · no
 ---
 
 ## BAN (Studio page)
-Filming 500฿/h · full public package list without George OK · selling studio as Pass seat · Kathu · 24/7 without 9000
+Filming 500฿/h · full public package list without George OK · selling studio as Pass seat · Kathu · 24/7 · Month 24/7 9000

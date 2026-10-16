@@ -13,7 +13,7 @@ Rule: draft in git only — no live CMS, no Tilda publish without written OK fro
 | [STUDIO-EN-RU.md](./STUDIO-EN-RU.md) | Studio short + manager CTA floor 4 | EN + RU · ZH stub |
 
 ### Related (not in this folder — already on main / canon)
-- `docs/site/MEETING-ROOMS-BLOCK.md` — Meeting rooms from 250฿/h, −20% residents (pointer from Home / Pass / Offices)
+- `docs/site/MEETING-ROOMS-BLOCK.md` — Meeting rooms 250฿/h, −20% residents (pointer from Home / Pass / Offices)
 - `docs/site/FAQ-SITE-EN-RU.md` — full FAQ EN+RU (pointer from all pages)
 - `docs/site/SITE-REDESIGN-TZ-2026-09-24.md` — full redesign TZ
 - `docs/site/CHECKLIST-TILDA-6RED-2026-09-25.md` — Tilda / go-live spot-check (draft)
@@ -24,7 +24,7 @@ Rule: draft in git only — no live CMS, no Tilda publish without written OK fro
 ### Canon facts (all locales same)
 - Hours **08:00–23:00** · address **Chalong** (not Kathu)
 - Trial = **1 free day floor 3 only**
-- Pass prices: **50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000 / 9000**
+- Pass prices: **50 / 400 (until 31 Oct; 500 from 1 Nov) / 1800 / 6000 / 15000**
 - Floor 5 offices: **30000** or **20000** yearly
 - Meeting: from **250** · residents **−20%**
 
@@ -47,10 +47,10 @@ Without OK George — **do not publish**. No hard calendar deadline.
 
 ### Quick spot-check list (copy pack)
 - [ ] Home shows all three cards: Pass / Offices / Studio
-- [ ] Pass table: 50 · 400 (until 31 Oct; 500 from 1 Nov) · 1800 · 6000 · 15000 · 9000 (+ trial 1 free day floor 3)
+- [ ] Pass table: 50 · 400 (until 31 Oct; 500 from 1 Nov) · 1800 · 6000 · 15000 (+ trial 1 free day floor 3)
 - [ ] Offices: one 2+5 card; floor 5 30000 / 20000 yearly; no floor-2 hot-desk menu
 - [ ] Studio: short + manager CTA; no Filming 500/h
-- [ ] Meeting pointer: from 250 · −20% residents
+- [ ] Meeting pointer: 250 · −20% residents
 - [ ] FAQ linked / consistent with FAQ-SITE-EN-RU
 - [ ] Hours 08:00–23:00 · Chalong · no Kathu
 - [ ] ZH = same facts or stub TODO (no invented ZH)
