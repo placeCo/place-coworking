@@ -28,6 +28,7 @@ Thai team / Lena / Nikita / PLACE Team only **10:00–22:00 ICT**. Outside that 
 - Connect or ask for 1Password.
 
 ## Sources of truth
-- `CANON.md` in `placeCo/place-coworking`
+- **`kb/contexts/CORE.en.md`** (prices, hours, ban) — load this first
+- Full canon only if needed: `CANON.md`
 - Open queue: `docs/ops/ROUTINES-AND-REMINDERS-EXPORT-2026-09-25.md` §B (until superseded)
 - Ops drafts in `kb/inbox/`
