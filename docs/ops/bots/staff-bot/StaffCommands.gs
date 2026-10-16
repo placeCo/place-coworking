@@ -371,7 +371,7 @@ function scPrices_(now, lang) {
       '• свободные офисы не подтверждаем → «напишите в WhatsApp, покажем что свободно». 4 этаж не предлагать.', '',
       'ДОПОЛНИТЕЛЬНО', '• доп. монитор: 200 ฿ / 10 ч или 1 500 ฿ / мес', '• переговорки: резидентам Place Pass −20% (цена → George / WhatsApp)',
       '• подкаст: одна комната, свою цену не называем → запись в WhatsApp ' + SC_WA,
-      '• промокод партнёров (не публично): бесплатный день, −10% неделя/месяц, −20% переговорки → код в «Новые гости»', '',
+      '• промокод партнёров (не публично): бесплатный день, −10% неделя/месяц, −20% переговорки → код в «Новые гости», колонка I «Code» (коды сайта S-* — туда же)', '',
       'Бесплатный день — только по рекламе/листовке. Никогда: 3 бесплатных дня, день 250/300, месяц 3 000/3 500, «самый дешёвый».',
       'WhatsApp ' + SC_WA + ' · 59/2 Chao Fah Tawan Tok Rd, Chalong']},
     th: {day: before ? '400 ฿ (ถึง 31.10; ตั้งแต่ 01.11 — 500 ฿)' : '500 ฿', ten: before ? '2 500 ฿ (ถึง 31.10; ตั้งแต่ 01.11 — 3 500 ฿)' : '3 500 ฿', t: [
@@ -382,7 +382,7 @@ function scPrices_(now, lang) {
       '• ห้ามยืนยันว่าออฟฟิศว่าง → «ทักมาทาง WhatsApp เดี๋ยวเราแจ้งว่าห้องไหนว่างค่ะ» ห้ามเสนอชั้น 4', '',
       'เพิ่มเติม', '• จอเสริม: 200 ฿ / 10 ชม. หรือ 1 500 ฿ / เดือน', '• ห้องประชุม: สมาชิก Place Pass ลด 20% (ราคา → George / WhatsApp)',
       '• พอดแคสต์: ห้องเดียว ไม่แจ้งราคาเอง → จองทาง WhatsApp ' + SC_WA,
-      '• โค้ดพาร์ทเนอร์ (ไม่เปิดเผยสาธารณะ): ฟรี 1 วัน, ลด 10% สัปดาห์/เดือน, ลด 20% ห้องประชุม → จดโค้ดใน «Новые гости»', '',
+      '• โค้ดพาร์ทเนอร์ (ไม่เปิดเผยสาธารณะ): ฟรี 1 วัน, ลด 10% สัปดาห์/เดือน, ลด 20% ห้องประชุม → จดโค้ดใน «Новые гости» คอลัมน์ I «Code» (โค้ดเว็บไซต์ S-* ก็ใส่ที่นี่)', '',
       'วันฟรีเฉพาะลูกค้าที่มีโฆษณา/ใบปลิวเท่านั้นค่ะ ห้ามพูด: ฟรี 3 วัน, วันละ 250/300, เดือนละ 3 000/3 500, «ถูกที่สุด»',
       'WhatsApp ' + SC_WA + ' · 59/2 Chao Fah Tawan Tok Rd, Chalong']},
     en: {day: before ? '400 ฿ (until 31.10; from 01.11 — 500 ฿)' : '500 ฿', ten: before ? '2 500 ฿ (until 31.10; from 01.11 — 3 500 ฿)' : '3 500 ฿', t: [
@@ -393,7 +393,7 @@ function scPrices_(now, lang) {
       '• never confirm free offices → «message us on WhatsApp, we\'ll show what\'s free». Never offer floor 4.', '',
       'EXTRAS', '• extra monitor: 200 ฿ / 10 h or 1 500 ฿ / month', '• meeting rooms: Place Pass residents −20% (price → George / WhatsApp)',
       '• podcast: one room, no price from us → booking on WhatsApp ' + SC_WA + ' (light/camera rental, no own price)',
-      '• partner promo code only (not public): free day, −10% week/month, −20% meeting rooms → write the code in «Новые гости»', '',
+      '• partner promo code only (not public): free day, −10% week/month, −20% meeting rooms → write the code in «Новые гости», column I «Code» (site S-* codes too)', '',
       'NO free day unless the guest holds an ad/flyer. Never: 3 free days, day 250/300, month 3 000/3 500, «cheapest».',
       'WhatsApp ' + SC_WA + ' · 59/2 Chao Fah Tawan Tok Rd, Chalong']}
   };
