@@ -146,7 +146,7 @@ function grp(text, extra) { return Object.assign({message_id: ++mid, date: 0, fr
   ctx.handleStaffCommand_(dm('кто продлевается завтра'), 'TOK', false);
   ok(rnCalls[rnCalls.length - 1] === '2026-10-10' && /Продления 2026-10-10: никого/.test(sends[sends.length - 1].text), 'renewals tomorrow → none text');
   ctx.handleStaffCommand_(dm('брони завтра'), 'TOK', false);
-  ok(/📅 Bookings 10\.10/.test(sends[sends.length - 1].text) && /Kirill/.test(sends[sends.length - 1].text), 'bookings tomorrow via bookingsToday_', sends[sends.length - 1].text);
+  ok(/📅 BOOKING 10\.10/.test(sends[sends.length - 1].text) && /Kirill/.test(sends[sends.length - 1].text), 'bookings tomorrow via bookingsToday_', sends[sends.length - 1].text);
   ctx.handleStaffCommand_(dm('/prices'), 'TOK', false);
   ok(/PRICES \(canon/.test(sends[sends.length - 1].text), 'slash /prices still works (EN)');
   ok(ctx.handleStaffCommand_(dm('/light'), 'TOK', false) === false, '/light → false (Tuya)');
@@ -227,7 +227,7 @@ function grp(text, extra) { return Object.assign({message_id: ++mid, date: 0, fr
   });
   ok(bt.rows.length === n, 'usage replies wrote nothing');
   ctx.handleStaffCommand_(dm('брони завтра'), 'TOK', false);
-  ok(/Брони бот/.test(last()) && /15:00–16:00 Meeting room — Иван \+66812345678 \(new\)/.test(last()) && !/Podcast — Олег/.test(last()), 'bookings list includes «Брони бот» rows (not cancelled)', last());
+  ok(/🇷🇺 Русский/.test(last()) && /• Комната: Meeting room\n• Время: 15:00–16:00\n• Гость: Иван \+66812345678\n✅ Задача: внести в сетку/.test(last()) && !/Гость: Олег\n[^\n]*\n?• Комната: Podcast/.test(last()) && !/🇹🇭/.test(last()), 'bookings list includes «Брони бот» rows (not cancelled)', last());
   // edited booking is not re-written
   ok(ctx.handleStaffCommand_(dm('бронь переговорка завтра 20:00 Иван'), 'TOK', true) === true && bt.rows.length === n, 'edited booking not written');
 }

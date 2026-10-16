@@ -2,7 +2,7 @@
 var BKG = (function (PropertiesService, SpreadsheetApp, GmailApp, MailApp, UrlFetchApp, ScriptApp, Logger) {
 
 /**
- * Place Coworking — G-5 «Bookings today» from Events and booking (→ PLACE Team: ENGLISH ONLY, George 05.10.2026). DRAFT TEMPLATE, NOT DEPLOYED.
+ * Place Coworking — G-5 «Bookings today» from Events and booking (→ PLACE Team: EN+TH structured, George 16.10.2026). DRAFT TEMPLATE, NOT DEPLOYED.
  * READ-ONLY: never writes to the sheet, never sends. Returns text for the existing 10:07 run.
  *
  * Sheet layout (checked read-only 29.09.2026): each tab = one space; row 4 = "Time" + one column
@@ -22,10 +22,10 @@ var BK_MONTHS = {jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7,
 function dryRunBookings() { var t = bookingsToday_(new Date()); Logger.log(t); return t; }
 
 /** Text for one day from the grid tabs (also used by StaffCommands /bookings, which appends «Брони бот» rows itself). */
-function bookingsToday_(now) { return bkFormat_(bkCollect_(now, false)); }
+function bookingsToday_(now, lang) { return bkFormat_(bkCollect_(now, false), lang); }
 
 /** Text for the 10:07 job: grid tabs + «Брони бот» rows (bookings made with the bot command «бронь …», not in the grid yet). */
-function bookingsJob_(now) { return bkFormat_(bkCollect_(now, true)); }
+function bookingsJob_(now, lang) { return bkFormat_(bkCollect_(now, true), lang); }   // lang: 'en+th' (default) | 'ru' | 'en'
 
 /** FIX 10.10.2026: every source is either read OK (empty or with bookings) or listed in `failed` with a reason.
  *  «none» is printed only when nothing failed (sheet opened, every tab found, today's column found) and all were empty. */
@@ -36,7 +36,7 @@ function bkCollect_(now, withBot) {
   var ymd = Utilities.formatDate(now, BK_TZ, 'yyyy-MM-dd'), s = ymd.split('-');
   var today = new Date(+s[0], +s[1] - 1, +s[2]);
   var horizon = new Date(today.getFullYear(), today.getMonth(), today.getDate() + look);
-  var c = {dd: s[2] + '.' + s[1], lines: [], failed: [], empty: [], warn: []};
+  var c = {dd: s[2] + '.' + s[1], lines: [], items: [], failed: [], empty: [], warn: []};
   var ss = null;
   try { ss = SpreadsheetApp.openById(p.getProperty('EVENTS_SHEET_ID') || BK_ID); if (!ss) throw new Error('openById returned nothing'); }
   catch (e) { c.failed.push({tab: 'Events and booking', why: bkErr_(e)}); return c; }
@@ -54,12 +54,17 @@ function bkCollect_(now, withBot) {
         return;
       }
       if (cols.last && cols.last < horizon) c.warn.push(label + ': grid ends ' + bkDmy_(cols.last));
-      var items = [];
+      var items = [], cur = null;   // 16.10.2026: consecutive slots with the same text = one booking (Room / Time / Guest)
       for (var r = hr; r < disp.length; r++) {
-        var v = String(disp[r][col] || '').trim();
-        if (v) items.push((String(disp[r][0] || '').trim() || '?') + ' ' + v.replace(/\s+/g, ' ').slice(0, 60));
+        var v = String(disp[r][col] || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+        var slot = String(disp[r][0] || '').trim() || '?';
+        if (v && cur && cur.guest === v) { cur.last = slot; continue; }
+        if (cur) items.push(cur);
+        cur = v ? {room: label, first: slot, last: slot, guest: v} : null;
       }
-      if (items.length) c.lines.push(label + ': ' + items.join('; ')); else c.empty.push(label);
+      if (cur) items.push(cur);
+      items.forEach(function (it) { c.items.push({room: it.room, time: bkRange_(it.first, it.last), guest: it.guest, task: ''}); });
+      if (items.length) c.lines.push(label + ': ' + items.length); else c.empty.push(label);
     } catch (e) { c.failed.push({tab: label, why: bkErr_(e)}); }
   });
   if (withBot) {
@@ -67,22 +72,52 @@ function bkCollect_(now, withBot) {
       var bt = ss.getSheetByName(BK_BOT_TAB);   // missing tab = nobody used «бронь …» yet → no bot rows, not a failure
       var rows = bt && bt.getLastRow() >= 2 ? bt.getRange(2, 1, bt.getLastRow() - 1, 9).getDisplayValues() : [];
       var bot = rows.filter(function (r) { return bkYmd_(r[1]) === ymd && !BK_CANCELLED.test(String(r[8])); })
-        .map(function (r) { return String(r[2]).trim() + '–' + String(r[3]).trim() + ' ' + String(r[4]).trim() + ' — ' + String(r[5]).trim().slice(0, 40) + ' (' + (String(r[8]).trim() || 'new') + ')'; })
-        .sort();
-      if (bot.length) c.lines.push('🤖 ' + BK_BOT_TAB + ' (not in the grid yet): ' + bot.join('; ')); else c.empty.push(BK_BOT_TAB);
+        .map(function (r) { return {room: String(r[4]).trim(), time: String(r[2]).trim() + '–' + String(r[3]).trim(),
+          guest: String(r[5]).trim().slice(0, 40), task: 'add to the grid', bot: true}; })
+        .sort(function (a, b) { return a.time < b.time ? -1 : a.time > b.time ? 1 : 0; });
+      bot.forEach(function (b) { c.items.push(b); });
+      if (bot.length) c.lines.push(BK_BOT_TAB + ': ' + bot.length); else c.empty.push(BK_BOT_TAB);
     } catch (e) { c.failed.push({tab: BK_BOT_TAB, why: bkErr_(e)}); }
   }
   return c;
 }
 
-/** short (George 01.10): one line per room, warnings one line each. PLACE Team = English only (George 05.10);
- *  the «не смог прочитать» wording was requested explicitly (10.10.2026). */
-function bkFormat_(c) {
-  var head = '📅 Bookings ' + c.dd;
-  var body = c.lines.length ? '\n' + c.lines.join('\n') : (c.failed.length ? '' : ': none');
-  var fail = c.failed.map(function (f) { return '\n⚠️ could not read ' + f.tab + ': ' + f.why; }).join('');
-  var empty = c.failed.length && c.empty.length ? '\nread OK, empty: ' + c.empty.join(', ') : '';
-  return head + body + fail + empty + (c.warn.length ? '\n⚠️ ' + c.warn.join('\n⚠️ ') : '');
+/** 16.10.2026 (George): every group message clearly structured. PLACE Team = English + Thai blocks, one bullet group per booking.
+ *  lang: 'en+th' (default, PLACE Team), 'ru' (Russian groups), 'en' (other international groups). Text only; never sends. */
+var BK_L = {
+  en: {flag: '🇬🇧 English', room: 'Room', time: 'Time', guest: 'Guest', task: 'Task', none: '• No bookings today',
+       fail: 'could not read', emptyOk: 'read OK, empty', grid: 'grid ends', add: 'add to the grid'},
+  th: {flag: '🇹🇭 ภาษาไทย', room: 'ห้อง', time: 'เวลา', guest: 'ลูกค้า', task: 'งาน', none: '• วันนี้ไม่มีการจอง',
+       fail: 'อ่านไม่ได้', emptyOk: 'อ่านได้ ไม่มีจอง', grid: 'ตารางสิ้นสุด', add: 'ใส่ในตารางจอง'},
+  ru: {flag: '🇷🇺 Русский', room: 'Комната', time: 'Время', guest: 'Гость', task: 'Задача', none: '• Броней на сегодня нет',
+       fail: 'не смог прочитать', emptyOk: 'прочитано, пусто', grid: 'сетка заканчивается', add: 'внести в сетку'}
+};
+function bkFormat_(c, lang) {
+  c.items.sort(function (a, b) { var x = a.time.replace('.', ':'), y = b.time.replace('.', ':'); return x < y ? -1 : x > y ? 1 : 0; });
+  var langs = lang === 'ru' ? ['ru'] : lang === 'en' ? ['en'] : ['en', 'th'];
+  var blocks = langs.map(function (l) { return bkBlock_(c, BK_L[l]); });
+  return '📅 BOOKING ' + c.dd + '\n\n' + blocks.join('\n\n━━━━━━━━━━\n\n');
+}
+function bkBlock_(c, L) {
+  var out = [L.flag];
+  c.items.forEach(function (it, i) {
+    if (i) out.push('');
+    out.push('• ' + L.room + ': ' + it.room, '• ' + L.time + ': ' + it.time, '• ' + L.guest + ': ' + (it.guest || '—'));
+    if (it.task) out.push('✅ ' + L.task + ': ' + (it.task === 'add to the grid' ? L.add : it.task));
+  });
+  if (!c.items.length && !c.failed.length) out.push(L.none);
+  if (c.failed.length || c.warn.length) out.push('');
+  c.failed.forEach(function (f) { out.push('⚠️ ' + L.fail + ' ' + f.tab + ': ' + f.why); });
+  if (c.failed.length && c.empty.length) out.push('ℹ️ ' + L.emptyOk + ': ' + c.empty.join(', '));
+  c.warn.forEach(function (w) { out.push('⚠️ ' + w.replace('grid ends', L.grid)); });
+  return out.join('\n');
+}
+/** «09:00» + «10:30» (30-min slots) → «09:00–11:00»; unparseable → as is. */
+function bkRange_(a, b) {
+  var m = String(b).match(/^(\d{1,2})[:.](\d{2})$/);
+  if (!m) return a === b ? a : a + '–' + b;
+  var t = +m[1] * 60 + +m[2] + 30, end = ('0' + Math.floor(t / 60)).slice(-2) + ':' + ('0' + t % 60).slice(-2);
+  return a.replace('.', ':') + '–' + end;
 }
 
 var BK_BOT_TAB = 'Брони бот';   // written by StaffCommands «бронь …»: created_ict, date, start, end, room, name_contact, by, raw_text, status

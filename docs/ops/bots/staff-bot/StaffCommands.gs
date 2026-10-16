@@ -439,6 +439,8 @@ function scRenewals_(d) {
 
 function scBookings_(d) {
   var ymd = d.ymd || scToday_(), out = [];
+  // 16.10.2026 (George): structured group format. bookingsJob_ = grid + «Брони бот» rows in one Room/Time/Guest list.
+  if (typeof bookingsJob_ === 'function') return bookingsJob_(new Date(ymd + 'T12:00:00+07:00'), d.lang === 'ru' ? 'ru' : 'en+th');
   if (typeof bookingsToday_ === 'function') out.push(bookingsToday_(new Date(ymd + 'T12:00:00+07:00')));
   else out.push(scT_(d.lang, 'no_bk') + ' (' + ymd + ')');
   try {
