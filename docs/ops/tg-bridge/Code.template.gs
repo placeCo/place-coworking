@@ -97,7 +97,8 @@ function poll() {
     var props = PropertiesService.getScriptProperties();
     var tok = props.getProperty('TOKEN') || TOKEN;
     var off = Number(props.getProperty('OFFSET') || 0);
-    var res = UrlFetchApp.fetch('https://api.telegram.org/bot' + tok + '/getUpdates?timeout=0&offset=' + off, {muteHttpExceptions: true});
+    var res = UrlFetchApp.fetch('https://api.telegram.org/bot' + tok + '/getUpdates?timeout=0&offset=' + off +
+      '&allowed_updates=' + encodeURIComponent(JSON.stringify(ALLOWED_UPDATES)), {muteHttpExceptions: true});
     var r = JSON.parse(res.getContentText());
     if (!r.ok || !r.result.length) { opsFlush_(); return; }
     var label = GmailApp.getUserLabelByName(LABEL) || GmailApp.createLabel(LABEL);
@@ -107,6 +108,10 @@ function poll() {
       var u = r.result[i];
       var m = u.message || u.edited_message || u.channel_post || u.edited_channel_post;
       props.setProperty('OFFSET', String(u.update_id + 1));
+      if (u.business_connection || u.business_message || u.edited_business_message) {
+        try { contactsHandle_(u); } catch (e) { Logger.log('CONTACTS_ERR ' + e); }
+        continue; // business chats: Контакты only, never replied to, never in the main queue
+      }
       if (!m) continue;
       var text = describe_(m);
       if (!text) continue; // service messages (joins etc.)
@@ -296,4 +301,97 @@ function dryRunPayments() {
   log.push(paymentsSave_(fake, {chat: chat, from: from, message_id: 501, date: t0, edit_date: t0 + 300, caption: 'Room 3 rent Oct (paid)', photo: [{file_id: 'BIG'}]}, {update_id: 4, edited_message: {}}, 'T', io));
   Logger.log(JSON.stringify({ops: log, saved: saved, rows: fake.rows}, null, 1));
   return {ops: log, saved: saved, rows: fake.rows};
+}
+
+// ===== Telegram Business (@coworking_place, read-only chatbot) -> tab «Контакты» in Place Inbox =====
+// Called from poll() inside try/catch. Never sends anything to Telegram. Email to info@ only for a NEW contact.
+const ALLOWED_UPDATES = ['message', 'edited_message', 'channel_post', 'edited_channel_post', 'callback_query',
+  'business_connection', 'business_message', 'edited_business_message'];
+const CONTACTS_TAB = 'Контакты';
+const CONTACTS_HDR = ['first_seen', 'last_seen', 'user_id', 'username', 'first_name', 'last_name', 'phone', 'first_message_text', 'msg_count'];
+const BIZ_OWNER_USERNAME = 'coworking_place';
+
+function initContacts() {
+  var sh = contactsSheet_();
+  Logger.log('CONTACTS_OK rows=' + sh.getLastRow());
+}
+
+function contactsSheet_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sh = ss.getSheetByName(CONTACTS_TAB);
+  if (!sh) sh = ss.insertSheet(CONTACTS_TAB, ss.getNumSheets()); // at the end: getSheets()[0] stays «queue»
+  if (sh.getLastRow() === 0) { sh.appendRow(CONTACTS_HDR); sh.setFrozenRows(1); }
+  return sh;
+}
+
+function contactsHandle_(u) {
+  var props = PropertiesService.getScriptProperties();
+  if (u.business_connection) {
+    var bu = u.business_connection.user || {};
+    if (bu.id) props.setProperty('BIZ_OWNER_ID', String(bu.id));
+    Logger.log('BIZ_CONN owner=' + bu.id + ' enabled=' + u.business_connection.is_enabled);
+    return 'conn';
+  }
+  var m = u.business_message || u.edited_business_message;
+  if (!m || !m.chat || m.chat.type !== 'private') return 'skip';
+  var f = m.from || {};
+  var ownerId = props.getProperty('BIZ_OWNER_ID') || '';
+  if (!f.id || (ownerId && String(f.id) === ownerId) || (f.username || '').toLowerCase() === BIZ_OWNER_USERNAME) return 'owner';
+  var res = contactsUpsert_(contactsSheet_(), m, !!u.edited_business_message);
+  if (res === 'new') {
+    try { contactsNotify_(m); } catch (e) { Logger.log('CONTACTS_MAIL_ERR ' + e); }
+  }
+  return res;
+}
+
+// Upsert by user_id. Returns 'new' | 'updated'. Edits refresh last_seen/phone but do not bump msg_count.
+function contactsUpsert_(sh, m, isEdit) {
+  var f = m.from || {};
+  var id = String(f.id);
+  var when = ictTime_(m.edit_date && isEdit ? m.edit_date : m.date);
+  var phone = (m.contact && m.contact.phone_number && (!m.contact.user_id || String(m.contact.user_id) === id)) ? String(m.contact.phone_number) : '';
+  if (m.contact && m.contact.phone_number && !phone) phone = String(m.contact.phone_number); // shared someone's contact: still record
+  var n = sh.getLastRow();
+  if (n > 1) {
+    var ids = sh.getRange(2, 3, n - 1, 1).getValues();
+    for (var i = 0; i < ids.length; i++) if (String(ids[i][0]) === id) {
+      var row = i + 2, cur = sh.getRange(row, 1, 1, 9).getValues()[0];
+      sh.getRange(row, 1, 1, 9).setValues([[cur[0], when, cur[2], f.username ? '@' + f.username : cur[3],
+        f.first_name || cur[4], f.last_name || cur[5], phone || cur[6], cur[7], (Number(cur[8]) || 0) + (isEdit ? 0 : 1)]]);
+      return 'updated';
+    }
+  }
+  sh.appendRow([when, when, id, f.username ? '@' + f.username : '', f.first_name || '', f.last_name || '', phone,
+    (describe_(m) || '').slice(0, 1000), 1]);
+  return 'new';
+}
+
+// Same mail path as poll(): GmailApp.sendEmail to TO with 'TG |' subject, then label TG-inbox.
+function contactsNotify_(m) {
+  var f = m.from || {};
+  var name = [f.first_name, f.last_name].filter(Boolean).join(' ') || '?';
+  var body = 'Новый контакт в личке @' + BIZ_OWNER_USERNAME + ' (Telegram Business)\n\nВремя (ICT): ' + ictTime_(m.date) +
+    '\nИмя: ' + name + (f.username ? '\nUsername: @' + f.username + ' (https://t.me/' + f.username + ')' : '') +
+    '\nuser_id: ' + f.id + (m.contact && m.contact.phone_number ? '\nТелефон: ' + m.contact.phone_number : '') +
+    '\n\nПервое сообщение:\n' + (describe_(m) || '(пусто)') + '\n\nВкладка «' + CONTACTS_TAB + '» в Place Inbox. Бот не отвечает, ответить вручную с @' + BIZ_OWNER_USERNAME + '.';
+  GmailApp.sendEmail(TO, 'TG | Новый контакт | ' + name + (f.username ? ' @' + f.username : ''), body);
+  Utilities.sleep(3000);
+  var label = GmailApp.getUserLabelByName(LABEL) || GmailApp.createLabel(LABEL);
+  GmailApp.search('to:' + TO + ' subject:"TG | Новый контакт" -label:' + LABEL + ' newer_than:1d').forEach(function (t) { t.addLabel(label); });
+}
+
+// Dry run: in-memory sheet, no Telegram/email/spreadsheet writes.
+function dryRunContacts() {
+  var fake = {rows: [CONTACTS_HDR.slice()],
+    getLastRow: function () { return this.rows.length; },
+    appendRow: function (r) { this.rows.push(r.slice()); },
+    getRange: function (r, c, nr, nc) { var self = this; return {
+      getValues: function () { return self.rows.slice(r - 1, r - 1 + nr).map(function (x) { return x.slice(c - 1, c - 1 + nc); }); },
+      setValues: function (v) { for (var i = 0; i < nr; i++) for (var j = 0; j < nc; j++) self.rows[r - 1 + i][c - 1 + j] = v[i][j]; } }; }};
+  var chat = {id: 111, type: 'private'}, from = {id: 111, first_name: 'Anna', username: 'anna_t'}, t0 = 1790000000, log = [];
+  log.push(contactsUpsert_(fake, {chat: chat, from: from, message_id: 1, date: t0, text: 'Hi, price for a day pass?'}, false));
+  log.push(contactsUpsert_(fake, {chat: chat, from: from, message_id: 2, date: t0 + 60, text: 'Thanks'}, false));
+  log.push(contactsUpsert_(fake, {chat: chat, from: from, message_id: 3, date: t0 + 120, contact: {phone_number: '+66800000000', first_name: 'Anna', user_id: 111}}, false));
+  Logger.log(JSON.stringify({ops: log, rows: fake.rows}, null, 1));
+  return {ops: log, rows: fake.rows};
 }
